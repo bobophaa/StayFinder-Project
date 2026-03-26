@@ -1,11 +1,21 @@
-<script setup></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <NavBar />
+  <main :class="{ 'content-padding': !isHeroPage }">
+    <RouterView />
+  </main>
 </template>
 
-<style scoped></style>
+<script setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import NavBar from '@/components/layout/NavBar.vue'
+
+const route = useRoute()
+const isHeroPage = computed(() => route.path === '/')
+</script>
+
+<style>
+.content-padding {
+  padding-top: 90px; 
+}
+</style>
