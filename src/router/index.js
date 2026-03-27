@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 // --- Import Views  ---
-import LandingPage from '@/views/LandingPage.vue'
+// import LandingPage from '@/views/LandingPage.vue'
+import HomePage from '@/views/HomePage.vue'
 import AllRooms from '@/views/User/AllRooms.vue'
 import RoomDetails from '@/views/User/RoomDetails.vue'
 import LoginView from '@/views/Auth/LoginView.vue'
@@ -22,7 +23,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     // Public Routes
-    { path: '/', name: 'home', component: LandingPage },
+    { path: '/', name: 'home', component: HomePage },
     { path: '/rooms', name: 'allRooms', component: AllRooms },
     { path: '/room-details/:id', name: 'roomDetails', component: RoomDetails },
 
