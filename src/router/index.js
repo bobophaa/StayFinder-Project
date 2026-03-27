@@ -16,7 +16,7 @@ const router = createRouter({
         { path: '/reset-password', name: 'resetPassword', component: () => import('@/views/Auth/ResetPasswordView.vue') },
 
         // --- User Protected Routes (Need to Login) ---
-        { path: '/profile', name: 'profile', component: () => import('@/views/User/ProfileInfo.vue'), meta: { require: true } },
+        { path: '/profile-layout', name: '/profile-layout', component: () => import('@/views/User/ProfileInfo.vue'), meta: { require: true } },
         { path: '/changepw', name: 'changepw', component: () => import('@/views/User/ChangePassword.vue'), meta: { require: true } },
         { path: '/wishlist', name: 'wishlist', component: () => import('@/views/User/Wishlist.vue'), meta: { require: true } },
         { path: '/my-bookings', name: 'myBookings', component: () => import('@/views/User/MyBookings.vue'), meta: { require: true } },
