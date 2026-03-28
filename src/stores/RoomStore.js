@@ -1,0 +1,61 @@
+import { defineStore } from 'pinia'
+import api from '@/api/http'
+
+export const useRoomStore = defineStore('room', {
+  state: () => ({
+    rooms: [],
+    loading: false,
+    error: null
+  }),
+  actions: {
+
+async fetchRooms() {
+  this.loading = true;
+  this.error = null;
+  try {
+const response = await api.get('/rooms?page=1&per_page=50&sort_col=id&sort_dir=desc');    
+    this.rooms = response.data.data;
+    
+  } catch (err) {
+    this.error = "Erro";
+    console.error(err);
+  } finally {
+    this.loading = false;
+  }
+},
+    async fetchRoomById(id) {
+  this.loading = true;
+  this.error = null;
+  this.room = null; // Clear previous room data
+  try {
+    const res = await api.get(`/rooms/${id}`);
+    // Your Postman shows data is inside res.data.data
+    this.room = res.data.data;
+  } catch (err) {
+    this.error = "Could not find room details.";
+    console.error(err);
+  } finally {
+    this.loading = false;
+  }
+},// src/stores/RoomStore.js
+// src/stores/RoomStore.js
+// RoomStore.js
+async addRoom(formData) {
+  this.loading = true;
+  try {
+    const res = await api.post('/rooms', formData);
+    if (res.data.result === true) {
+      return true;
+    }
+    // Log detailed error from server if result is false
+    console.error("API Error Details:", res.data);
+    return false;
+  } catch (err) {
+    console.error("Submission failed:", err.response?.data);
+    return false;
+  } finally {
+    this.loading = false;
+  }
+}
+  }
+})
