@@ -7,11 +7,9 @@
 
     <div v-else>
       <div class="header-banner"></div>
-
       <div class="container">
         <div class="profile-card shadow-sm">
           <div class="profile-main-content d-flex align-items-center">
-
             <div class="avatar-wrapper position-relative" v-click-outside="closeMenu">
               <div class="avatar-box">
                 <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="Profile" />
@@ -52,14 +50,12 @@
 
       <div class="container mt-4 pb-5">
         <div class="form-card shadow-sm">
-
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h5 class="fw-bold mb-0">Profile Information</h5>
-              <small class="text-muted">ID: #{{ user.id || '---' }} · Joined N/A</small>
+              <small class="text-muted">ID: #{{ user.id || '---' }}</small>
             </div>
-
-            <router-link to="/profile/security" class="btn btn-security rounded-pill px-3">
+            <router-link to="/ChangePassword" class="btn btn-security rounded-pill px-3">
               <i class="bi bi-shield-lock-fill me-2"></i> Security
             </router-link>
           </div>
@@ -69,21 +65,21 @@
               <div class="col-md-6">
                 <label :class="{ 'text-danger': errors.name }">FULL NAME</label>
                 <input v-model="form.name" class="form-control-custom" :class="{ 'is-invalid-custom': errors.name }"
-                  placeholder="Enter your full name">
+                  placeholder="Enter your full name" />
                 <div v-if="errors.name" class="error-msg">{{ errors.name }}</div>
               </div>
 
               <div class="col-md-6">
                 <label :class="{ 'text-danger': errors.email }">EMAIL</label>
                 <input v-model="form.email" class="form-control-custom" :class="{ 'is-invalid-custom': errors.email }"
-                  placeholder="email@example.com">
+                  placeholder="email@example.com" />
                 <div v-if="errors.email" class="error-msg">{{ errors.email }}</div>
               </div>
 
               <div class="col-md-6">
                 <label :class="{ 'text-danger': errors.phone }">PHONE</label>
                 <input v-model="form.phone" class="form-control-custom" :class="{ 'is-invalid-custom': errors.phone }"
-                  placeholder="Phone number">
+                  placeholder="Phone number" />
                 <div v-if="errors.phone" class="error-msg">{{ errors.phone }}</div>
               </div>
 
@@ -97,7 +93,7 @@
 
               <div class="col-12">
                 <label>CURRENT JOB</label>
-                <input v-model="form.current_job" class="form-control-custom" placeholder="e.g. Software Engineer">
+                <input v-model="form.current_job" class="form-control-custom" placeholder="e.g. Web Developer" />
               </div>
             </div>
 
@@ -109,6 +105,24 @@
         </div>
       </div>
     </div>
+
+    <div v-if="showConfirmModal" class="modal-backdrop">
+      <div class="modal-card shadow-lg">
+        <h5 class="fw-bold mb-3">Confirm Update</h5>
+        <p>Are you sure you want to update your profile information?</p>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button class="btn btn-secondary" @click="showConfirmModal = false">Cancel</button>
+          <button class="btn btn-primary" @click="confirmUpdateProfile" :disabled="loading">
+            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <transition name="fade">
+      <div v-if="toast.show" class="toast-message" :class="toast.type">{{ toast.message }}</div>
+    </transition>
   </div>
 </template>
 
@@ -122,6 +136,17 @@ const loading = ref(false)
 const fileInput = ref(null)
 const avatarPreview = ref(null)
 const showActionsMenu = ref(false)
+const showConfirmModal = ref(false)
+
+// --- FORM DATA ---
+const form = reactive({
+  name: '',
+  email: '',
+  phone: '',
+  gender: 1,
+  current_job: ''
+})
+const errors = reactive({ name: '', email: '', phone: '' })
 
 const tabLinks = [
   { name: 'Profile Information', path: '/profile' },
@@ -131,97 +156,85 @@ const tabLinks = [
   { name: 'Rent Checklist', path: '/profile/rent-checklist' }
 ]
 
-const form = reactive({
-  name: '',
-  email: '',
-  phone: '',
-  gender: 1,
-  current_job: ''
-})
-
-const errors = reactive({
-  name: '',
-  email: '',
-  phone: ''
-})
-
-// --- VALIDATION LOGIC ---
-const validateForm = () => {
-  let isValid = true
-  errors.name = ''
-  errors.email = ''
-  errors.phone = ''
-
-  if (!form.name || form.name.trim() === '') {
-    errors.name = 'Full name is required'
-    isValid = false
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!form.email) {
-    errors.email = 'Email address is required'
-    isValid = false
-  } else if (!emailRegex.test(form.email)) {
-    errors.email = 'Please enter a valid email address'
-    isValid = false
-  }
-
-  const phoneRegex = /^[0-9]{8,15}$/
-  if (form.phone && !phoneRegex.test(form.phone)) {
-    errors.phone = 'Phone must be between 8 and 15 digits'
-    isValid = false
-  }
-
-  return isValid
+// --- TOAST NOTIFICATION ---
+const toast = reactive({ show: false, message: '', type: 'success' })
+const showToast = (msg, type = 'success') => {
+  toast.message = msg
+  toast.type = type
+  toast.show = true
+  setTimeout(() => (toast.show = false), 3000)
 }
 
-// --- API ACTIONS ---
+// --- FETCH USER DATA ---
 const fetchUserData = async () => {
   try {
     const res = await api.get('/me')
     user.value = res.data.data
     Object.assign(form, user.value)
   } catch (err) {
-    console.error("Fetch error:", err)
+    console.error("Fetch user error:", err)
   }
 }
 
-const updateProfile = async () => {
-  if (!validateForm()) return 
+// --- VALIDATION ---
+const validateForm = () => {
+  let isValid = true
+  errors.name = errors.email = errors.phone = ''
+  if (!form.name?.trim()) { errors.name = 'Full name is required'; isValid = false }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!form.email) { errors.email = 'Email required'; isValid = false }
+  else if (!emailRegex.test(form.email)) { errors.email = 'Invalid email'; isValid = false }
+  return isValid
+}
 
+// --- PROFILE INFO UPDATE ---
+const updateProfile = () => {
+  if (!validateForm()) return
+  showConfirmModal.value = true
+}
+
+const confirmUpdateProfile = async () => {
+  showConfirmModal.value = false
   loading.value = true
   try {
     await api.post('/profile/info', form)
     Object.assign(user.value, form)
-    alert('Profile updated successfully!')
+    showToast('Profile updated successfully!', 'success')
   } catch (err) {
-    alert('Update failed. Please check your connection.')
+    showToast(err.response?.data?.message || 'Update failed', 'error')
   } finally {
     loading.value = false
   }
 }
 
-// --- IMAGE HANDLERS ---
+// --- AVATAR UPLOAD (FIXED KEY TO "avatar") ---
 const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
 const closeMenu = () => (showActionsMenu.value = false)
-const triggerUpload = () => {
-  fileInput.value.click()
-  closeMenu()
-}
+const triggerUpload = () => { fileInput.value.click(); closeMenu() }
 
 const handleFileUpload = async (e) => {
   const file = e.target.files[0]
   if (!file) return
 
+  // បង្កើត Preview ឱ្យ User ឃើញភ្លាមៗ
   avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData()
-  fd.append('image', file)
 
+  const fd = new FormData()
+  fd.append('avatar', file) // ប្តូរទៅជា 'avatar' តាម API របស់អ្នក
+
+  loading.value = true
   try {
     await api.post('/profile/image', fd)
-    await fetchUserData()
+    showToast('Profile image updated!', 'success')
+    await fetchUserData() // ទាញយក data ថ្មីដើម្បី Update រូបភាពពិតប្រាកដ
   } catch (err) {
-    alert("Image upload failed")
+    const msg = err.response?.data?.message || 'Image upload failed'
+    showToast(msg, 'error')
+    avatarPreview.value = null // ជម្រះរូបភាព Preview ចោលវិញបើ Error
+  } finally {
+    loading.value = false
+    // ជម្រះតម្លៃ input ដើម្បីអាចរើសរូបដដែលម្ដងទៀតបានបើចង់
+    e.target.value = ''
   }
 }
 
@@ -231,31 +244,29 @@ const removeImage = async () => {
     await api.delete('/profile/image')
     avatarPreview.value = null
     user.value.avatar = null
+    showToast('Profile image deleted', 'success')
     closeMenu()
-  } catch (err) {
-    alert("Delete failed")
+  } catch {
+    showToast('Delete failed', 'error')
   }
 }
 
-// --- DIRECTIVE: Click Outside ---
+// --- CLICK OUTSIDE DIRECTIVE ---
 const vClickOutside = {
   mounted(el, binding) {
     el.clickOutsideEvent = (event) => {
-      if (!(el === event.target || el.contains(event.target))) {
-        binding.value()
-      }
+      if (!(el === event.target || el.contains(event.target))) binding.value()
     }
     document.addEventListener('click', el.clickOutsideEvent)
   },
-  unmounted(el) {
-    document.removeEventListener('click', el.clickOutsideEvent)
-  }
+  unmounted(el) { document.removeEventListener('click', el.clickOutsideEvent) }
 }
 
 onMounted(fetchUserData)
 </script>
 
 <style scoped>
+/* រចនាប័ទ្មរក្សាទុកដូចដើម ប៉ុន្តែបន្ថែមការតុបតែងខ្លះៗ */
 .profile-page {
   background: #f9fafb;
   min-height: 100vh;
@@ -271,11 +282,9 @@ onMounted(fetchUserData)
   border-radius: 24px;
   padding: 0 30px;
   margin-top: -50px;
-  position: relative;
   border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-/* AVATAR HOVER STYLE */
 .avatar-wrapper {
   margin-top: -55px;
   width: 115px;
@@ -313,7 +322,7 @@ onMounted(fetchUserData)
   background: rgba(0, 0, 0, 0.45);
   border-radius: 50%;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s;
   cursor: pointer;
 }
 
@@ -347,7 +356,6 @@ onMounted(fetchUserData)
   background-color: #f8f9fa;
 }
 
-/* TABS */
 .tabs-container {
   display: flex;
   gap: 25px;
@@ -379,33 +387,10 @@ onMounted(fetchUserData)
   border-radius: 10px 10px 0 0;
 }
 
-/* FORM STYLING */
 .form-card {
   background: white;
   border-radius: 20px;
   padding: 30px;
-}
-
-.btn-security {
-  background-color: #f8f9fa;
-  border: 1px solid #eee;
-  color: #555;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.btn-security:hover {
-  border-color: #ff5f00;
-  color: #ff5f00;
-}
-
-label {
-  font-size: 11px;
-  font-weight: 800;
-  color: #bbb;
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 8px;
 }
 
 .form-control-custom {
@@ -423,7 +408,15 @@ label {
   background-color: #fff;
 }
 
-/* VALIDATION UI */
+label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #bbb;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
 .is-invalid-custom {
   border-color: #dc3545 !important;
   background-color: #fff8f8 !important;
@@ -443,6 +436,7 @@ label {
   border-radius: 12px;
   border: none;
   font-weight: 700;
+  transition: 0.3s;
 }
 
 .btn-save:hover:not(:disabled) {
@@ -450,8 +444,59 @@ label {
   transform: translateY(-1px);
 }
 
-.btn-save:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.btn-security {
+  background: #f8f9fa;
+  border: 1px solid #eee;
+  color: #555;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px 30px;
+  max-width: 400px;
+  width: 100%;
+}
+
+.toast-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  z-index: 9999;
+}
+
+.toast-message.success {
+  background-color: #28a745;
+}
+
+.toast-message.error {
+  background-color: #dc3545;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>
