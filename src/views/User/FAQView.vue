@@ -18,7 +18,7 @@ const handleGetStarted = () => {
 </script>
 
 <template>
-  <div class="faq-page bg-light min-vh-100 pb-5">
+  <div class="faq-page bg-light min-vh-100 py-5">
     <section class="faq-hero-pro text-white position-relative overflow-hidden">
       <div class="hero-bg-overlay"></div>
       <div class="container py-5 z-index-2 position-relative text-center">
