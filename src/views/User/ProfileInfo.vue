@@ -1,5 +1,6 @@
 <template>
   <div class="profile-page">
+    <!-- LOADING -->
     <div v-if="!user" class="text-center mt-5 pt-5">
       <div class="spinner-border text-orange"></div>
       <p class="mt-2 text-muted">Loading profile...</p>
@@ -7,21 +8,21 @@
 
     <div v-else>
       <div class="header-banner"></div>
-
       <div class="container">
         <div class="profile-card shadow-sm">
           <div class="profile-main-content d-flex align-items-center">
-
             <div class="avatar-wrapper position-relative" v-click-outside="closeMenu">
               <div class="avatar-box">
                 <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="Profile" />
                 <span v-else>{{ user.name?.charAt(0) || 'U' }}</span>
-              </div>
 
+                <div v-if="loading && uploadingAvatar" class="avatar-loading">
+                  <div class="spinner-border text-white"></div>
+                </div>
+              </div>
               <div class="avatar-overlay d-flex align-items-center justify-content-center" @click="toggleMenu">
                 <i class="bi bi-camera-fill text-white fs-4"></i>
               </div>
-
               <div v-if="showActionsMenu" class="avatar-actions-menu shadow-lg">
                 <button class="menu-item" @click="triggerUpload">
                   <i class="bi bi-cloud-arrow-up me-2"></i> Update image
@@ -42,6 +43,7 @@
             </div>
           </div>
 
+          <!-- TABS -->
           <div class="tabs-container mt-4">
             <router-link v-for="tab in tabLinks" :key="tab.path" :to="tab.path" class="tab-link" active-class="active">
               {{ tab.name }}
@@ -50,18 +52,20 @@
         </div>
       </div>
 
+      <!-- PROFILE FORM -->
       <div class="container mt-4 pb-5">
         <div class="form-card shadow-sm">
-
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h5 class="fw-bold mb-0">Profile Information</h5>
-              <small class="text-muted">ID: #{{ user.id || '---' }} · Joined N/A</small>
+              <small class="text-muted">ID: #{{ user.id || '---' }}</small>
             </div>
-
-            <router-link to="/profile/security" class="btn btn-security rounded-pill px-3">
-              <i class="bi bi-shield-lock-fill me-2"></i> Security
-            </router-link>
+            <div class="d-flex gap-2">
+              <button class="btn btn-save" v-if="!isEditing" @click="enableEdit">Update Information</button>
+              <router-link v-if="isEditing" to="/ChangePassword" class="btn btn-security rounded-pill px-3">
+                <i class="bi bi-shield-lock-fill me-2"></i> Security
+              </router-link>
+            </div>
           </div>
 
           <form @submit.prevent="updateProfile">
@@ -69,27 +73,27 @@
               <div class="col-md-6">
                 <label :class="{ 'text-danger': errors.name }">FULL NAME</label>
                 <input v-model="form.name" class="form-control-custom" :class="{ 'is-invalid-custom': errors.name }"
-                  placeholder="Enter your full name">
+                  placeholder="Enter your full name" :readonly="!isEditing" />
                 <div v-if="errors.name" class="error-msg">{{ errors.name }}</div>
               </div>
 
               <div class="col-md-6">
                 <label :class="{ 'text-danger': errors.email }">EMAIL</label>
                 <input v-model="form.email" class="form-control-custom" :class="{ 'is-invalid-custom': errors.email }"
-                  placeholder="email@example.com">
+                  placeholder="email@example.com" :readonly="!isEditing" />
                 <div v-if="errors.email" class="error-msg">{{ errors.email }}</div>
               </div>
 
               <div class="col-md-6">
                 <label :class="{ 'text-danger': errors.phone }">PHONE</label>
                 <input v-model="form.phone" class="form-control-custom" :class="{ 'is-invalid-custom': errors.phone }"
-                  placeholder="Phone number">
+                  placeholder="Phone number" :readonly="!isEditing" />
                 <div v-if="errors.phone" class="error-msg">{{ errors.phone }}</div>
               </div>
 
               <div class="col-md-6">
                 <label>GENDER</label>
-                <select v-model="form.gender" class="form-control-custom">
+                <select v-model="form.gender" class="form-control-custom" :disabled="!isEditing">
                   <option :value="1">Male</option>
                   <option :value="2">Female</option>
                 </select>
@@ -97,18 +101,39 @@
 
               <div class="col-12">
                 <label>CURRENT JOB</label>
-                <input v-model="form.current_job" class="form-control-custom" placeholder="e.g. Software Engineer">
+                <input v-model="form.current_job" class="form-control-custom" placeholder="e.g. Web Developer"
+                  :readonly="!isEditing" />
               </div>
             </div>
 
-            <button class="btn-save mt-4" :disabled="loading">
+            <button v-if="isEditing" class="btn-save mt-4" :disabled="loading" type="submit">
               <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              Update Profile
+              Save Changes
             </button>
           </form>
         </div>
       </div>
     </div>
+
+    <!-- CONFIRM MODAL -->
+    <div v-if="showConfirmModal" class="modal-backdrop">
+      <div class="modal-card shadow-lg">
+        <h5 class="fw-bold mb-3">Confirm Update</h5>
+        <p>Are you sure you want to update your profile information?</p>
+        <div class="d-flex justify-content-end gap-2 mt-4">
+          <button class="btn btn-secondary" @click="showConfirmModal = false">Cancel</button>
+          <button class="btn btn-primary" @click="confirmUpdateProfile" :disabled="loading">
+            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <transition name="fade">
+      <div v-if="toast.show" class="toast-message" :class="toast.type">{{ toast.message }}</div>
+    </transition>
   </div>
 </template>
 
@@ -122,15 +147,10 @@ const loading = ref(false)
 const fileInput = ref(null)
 const avatarPreview = ref(null)
 const showActionsMenu = ref(false)
+const showConfirmModal = ref(false)
+const isEditing = ref(false)
 
-const tabLinks = [
-  { name: 'Profile Information', path: '/profile' },
-  { name: 'Bookings', path: '/profile/bookings' },
-  { name: 'Checklist', path: '/profile/checklist' },
-  { name: 'Rented Rooms', path: '/profile/rented-rooms' },
-  { name: 'Rent Checklist', path: '/profile/rent-checklist' }
-]
-
+// --- FORM DATA ---
 const form = reactive({
   name: '',
   email: '',
@@ -138,118 +158,120 @@ const form = reactive({
   gender: 1,
   current_job: ''
 })
+const errors = reactive({ name: '', email: '', phone: '' })
 
-const errors = reactive({
-  name: '',
-  email: '',
-  phone: ''
-})
+// --- TABS ---
+const tabLinks = [
+  { name: 'Profile Information', path: '/profile' },
+  { name: 'Bookings', path: '/my-bookings' },
+  { name: 'Checklist', path: '/profile/checklist' },
+  { name: 'Rented Rooms', path: '/profile/rented-rooms' },
+  { name: 'Rent Checklist', path: '/profile/rent-checklist' }
+]
 
-// --- VALIDATION LOGIC ---
-const validateForm = () => {
-  let isValid = true
-  errors.name = ''
-  errors.email = ''
-  errors.phone = ''
-
-  if (!form.name || form.name.trim() === '') {
-    errors.name = 'Full name is required'
-    isValid = false
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!form.email) {
-    errors.email = 'Email address is required'
-    isValid = false
-  } else if (!emailRegex.test(form.email)) {
-    errors.email = 'Please enter a valid email address'
-    isValid = false
-  }
-
-  const phoneRegex = /^[0-9]{8,15}$/
-  if (form.phone && !phoneRegex.test(form.phone)) {
-    errors.phone = 'Phone must be between 8 and 15 digits'
-    isValid = false
-  }
-
-  return isValid
+// --- TOAST ---
+const toast = reactive({ show: false, message: '', type: 'success' })
+const showToast = (msg, type = 'success') => {
+  toast.message = msg
+  toast.type = type
+  toast.show = true
+  setTimeout(() => (toast.show = false), 3000)
 }
 
-// --- API ACTIONS ---
+// --- FETCH USER ---
 const fetchUserData = async () => {
   try {
     const res = await api.get('/me')
     user.value = res.data.data
-    Object.assign(form, user.value)
+    Object.assign(form, {
+      name: user.value.name || '',
+      email: user.value.email || '',
+      phone: user.value.phone || '',
+      gender: user.value.gender || 1,
+      current_job: user.value.current_job || ''
+    })
   } catch (err) {
-    console.error("Fetch error:", err)
+    console.error("Fetch user error:", err)
   }
 }
 
-const updateProfile = async () => {
-  if (!validateForm()) return 
+// --- VALIDATION ---
+const validateForm = () => {
+  let isValid = true
+  errors.name = errors.email = errors.phone = ''
+  if (!form.name?.trim()) { errors.name = 'Full name is required'; isValid = false }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!form.email) { errors.email = 'Email required'; isValid = false }
+  else if (!emailRegex.test(form.email)) { errors.email = 'Invalid email'; isValid = false }
+  return isValid
+}
 
+// --- PROFILE UPDATE ---
+const enableEdit = () => { isEditing.value = true }
+const updateProfile = () => { if (!validateForm()) return; showConfirmModal.value = true }
+const confirmUpdateProfile = async () => {
+  showConfirmModal.value = false
   loading.value = true
   try {
     await api.post('/profile/info', form)
     Object.assign(user.value, form)
-    alert('Profile updated successfully!')
+    showToast('Profile updated successfully!', 'success')
+    isEditing.value = false
   } catch (err) {
-    alert('Update failed. Please check your connection.')
-  } finally {
-    loading.value = false
-  }
+    showToast(err.response?.data?.message || 'Update failed', 'error')
+  } finally { loading.value = false }
 }
 
-// --- IMAGE HANDLERS ---
 const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
 const closeMenu = () => (showActionsMenu.value = false)
-const triggerUpload = () => {
-  fileInput.value.click()
-  closeMenu()
-}
+const triggerUpload = () => { fileInput.value.click(); closeMenu() }
+const uploadingAvatar = ref(false)
 
 const handleFileUpload = async (e) => {
   const file = e.target.files[0]
   if (!file) return
+  if (file.size > 2 * 1024 * 1024) { showToast('File is too large (Max 2MB)', 'error'); return }
 
   avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData()
-  fd.append('image', file)
+  const fd = new FormData(); fd.append('image', file)
 
+  loading.value = true
+  uploadingAvatar.value = true
   try {
-    await api.post('/profile/image', fd)
+    await api.post('/profile/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
     await fetchUserData()
+    avatarPreview.value = null
+    showToast('Profile image updated successfully!', 'success')
   } catch (err) {
-    alert("Image upload failed")
+    avatarPreview.value = null
+    showToast(err.response?.data?.message || 'Image upload failed', 'error')
+  } finally {
+    loading.value = false
+    uploadingAvatar.value = false
+    e.target.value = ''
   }
 }
 
 const removeImage = async () => {
-  if (!confirm('Delete profile picture?')) return
+  if (!confirm('Are you sure you want to delete your profile picture?')) return
+  loading.value = true
   try {
     await api.delete('/profile/image')
-    avatarPreview.value = null
     user.value.avatar = null
+    avatarPreview.value = null
+    showToast('Profile image deleted successfully!', 'success')
     closeMenu()
   } catch (err) {
-    alert("Delete failed")
-  }
+    showToast(err.response?.data?.message || 'Delete failed', 'error')
+  } finally { loading.value = false }
 }
 
-// --- DIRECTIVE: Click Outside ---
 const vClickOutside = {
   mounted(el, binding) {
-    el.clickOutsideEvent = (event) => {
-      if (!(el === event.target || el.contains(event.target))) {
-        binding.value()
-      }
-    }
+    el.clickOutsideEvent = (event) => { if (!(el === event.target || el.contains(event.target))) binding.value() }
     document.addEventListener('click', el.clickOutsideEvent)
   },
-  unmounted(el) {
-    document.removeEventListener('click', el.clickOutsideEvent)
-  }
+  unmounted(el) { document.removeEventListener('click', el.clickOutsideEvent) }
 }
 
 onMounted(fetchUserData)
@@ -259,6 +281,16 @@ onMounted(fetchUserData)
 .profile-page {
   background: #f9fafb;
   min-height: 100vh;
+}
+
+.avatar-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
 
 .header-banner {
@@ -271,15 +303,15 @@ onMounted(fetchUserData)
   border-radius: 24px;
   padding: 0 30px;
   margin-top: -50px;
-  position: relative;
   border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-/* AVATAR HOVER STYLE */
+/* ===== AVATAR ===== */
 .avatar-wrapper {
   margin-top: -55px;
   width: 115px;
   z-index: 5;
+  position: relative;
 }
 
 .avatar-box {
@@ -313,8 +345,11 @@ onMounted(fetchUserData)
   background: rgba(0, 0, 0, 0.45);
   border-radius: 50%;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .avatar-wrapper:hover .avatar-overlay {
@@ -341,13 +376,14 @@ onMounted(fetchUserData)
   background: none;
   padding: 10px 18px;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .menu-item:hover {
   background-color: #f8f9fa;
 }
 
-/* TABS */
+/* ===== TABS ===== */
 .tabs-container {
   display: flex;
   gap: 25px;
@@ -379,33 +415,11 @@ onMounted(fetchUserData)
   border-radius: 10px 10px 0 0;
 }
 
-/* FORM STYLING */
+/* ===== FORM ===== */
 .form-card {
   background: white;
   border-radius: 20px;
   padding: 30px;
-}
-
-.btn-security {
-  background-color: #f8f9fa;
-  border: 1px solid #eee;
-  color: #555;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.btn-security:hover {
-  border-color: #ff5f00;
-  color: #ff5f00;
-}
-
-label {
-  font-size: 11px;
-  font-weight: 800;
-  color: #bbb;
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 8px;
 }
 
 .form-control-custom {
@@ -423,7 +437,15 @@ label {
   background-color: #fff;
 }
 
-/* VALIDATION UI */
+label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #bbb;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
 .is-invalid-custom {
   border-color: #dc3545 !important;
   background-color: #fff8f8 !important;
@@ -436,6 +458,7 @@ label {
   margin-top: 5px;
 }
 
+/* ===== BUTTONS ===== */
 .btn-save {
   background: #ff5f00;
   color: white;
@@ -443,15 +466,91 @@ label {
   border-radius: 12px;
   border: none;
   font-weight: 700;
+  transition: all 0.25s ease;
+  cursor: pointer;
 }
 
 .btn-save:hover:not(:disabled) {
   background: #e65600;
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(255, 95, 0, 0.3);
 }
 
 .btn-save:disabled {
-  opacity: 0.6;
+  opacity: 0.7;
   cursor: not-allowed;
+}
+
+.btn-security {
+  background: #f8f9fa;
+  border: 1px solid #eee;
+  color: #555;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.btn-security:hover {
+  background: #ff5f00;
+  color: #fff;
+  border-color: #ff5f00;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(255, 95, 0, 0.25);
+}
+
+.btn-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* ===== MODAL ===== */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px 30px;
+  max-width: 400px;
+  width: 100%;
+}
+
+/* ===== TOAST ===== */
+.toast-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  z-index: 9999;
+}
+
+.toast-message.success {
+  background-color: #28a745;
+}
+
+.toast-message.error {
+  background-color: #dc3545;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>
