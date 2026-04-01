@@ -58,7 +58,7 @@
           <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
               <h5 class="fw-bold mb-0">Profile Information</h5>
-              <small class="text-muted">ID: #{{ user.id || '---' }}</small>
+              <small class="text-muted">ID: {{ user.id || '---' }}</small>
             </div>
             <div class="d-flex gap-2">
               <button class="btn btn-save" v-if="!isEditing" @click="enableEdit">Update Information</button>
