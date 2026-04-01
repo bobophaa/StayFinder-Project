@@ -1,4 +1,5 @@
 <template>
+
  <Navbar v-if="!$route.meta.hideNavbar" />
   <main :class="{ 'content-padding': !isHeroPage }">
     <RouterView />
