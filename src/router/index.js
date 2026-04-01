@@ -27,10 +27,6 @@ const router = createRouter({
     { path: '/rooms', name: 'allRooms', component: AllRooms },
     { path: '/room-details/:id', name: 'roomDetails', component: RoomDetails },
 
-        // --- User Protected Routes (Need to Login) ---
-        { path: '/profile', name: 'profile', component: () => import('@/views/User/ProfileInfo.vue'), meta: { require: true } },
-        { path: '/changepw', name: 'changepw', component: () => import('@/views/User/ChangePassword.vue'), meta: { require: true } },
-  
     // Auth Routes
     { path: '/login', name: 'login', component: LoginView },
     { path: '/register', name: 'register', component: RegisterView },
@@ -38,13 +34,37 @@ const router = createRouter({
     { path: '/verify-otp', name: 'verifyOtp', component: VerifyOTP },
     { path: '/reset-password', name: 'resetPassword', component: ResetPassword },
 
-    // Protected Routes (User)
-    { path: '/profile', name: 'profile', component: ProfileInfo, meta: { require: true } },
-    { path: '/wishlist', name: 'wishlist', component: Wishlist, meta: { require: true } },
-    { path: '/my-bookings', name: 'myBookings', component: MyBookings, meta: { require: true } },
-    { path: '/my-rented', name: 'myRented', component: MyRented, meta: { require: true } },
-    { path: '/Info', name: 'Infomation', component: InformationPage, meta: { require: true } },
-    { path: '/Info', name: 'Promo', component: PromotionCard, meta: { require: true } },
+    // --- User Protected Routes (Need to Login) ---
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/User/ProfileInfo.vue'),
+      meta: { require: true },
+    },
+    {
+      path: '/wishlist',
+      name: 'wishlist',
+      component: () => import('@/views/User/Wishlist.vue'),
+      meta: { require: true },
+    },
+    {
+      path: '/my-bookings',
+      name: 'myBookings',
+      component: () => import('@/views/User/MyBookings.vue'),
+      meta: { require: true },
+    },
+    {
+      path: '/my-rented',
+      name: 'myRented',
+      component: () => import('@/views/User/MyRented.vue'),
+      meta: { require: true },
+    },
+    {
+      path: '/info',
+      name: 'info',
+      component: () => import('@/views/User/InformationPage.vue'),
+      meta: { require: true },
+    },
 
     {
       path: '/faq',
