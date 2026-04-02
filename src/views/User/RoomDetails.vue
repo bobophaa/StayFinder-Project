@@ -154,28 +154,28 @@
             <div class="price-breakdown mb-4 bg-light rounded-3 p-3">
               <div class="d-flex justify-content-between mb-2 small">
                 <span>Electric</span>
-                <span class="fw-bold text-success ">${{ roomStore.room.pay_electric }}</span>
+                <span class="fw-bold text-success">${{ roomStore.room.pay_electric }}</span>
               </div>
               <div class="d-flex justify-content-between mb-2 small">
                 <span>Water</span>
-                <span class="fw-bold text-success ">${{ roomStore.room.pay_water }}</span>
+                <span class="fw-bold text-success">${{ roomStore.room.pay_water }}</span>
               </div>
-               <div class="d-flex justify-content-between mb-2 small">
+              <div class="d-flex justify-content-between mb-2 small">
                 <span>Trash</span>
-                <span class="fw-bold text-success ">${{ roomStore.room.pay_trash }}</span>
+                <span class="fw-bold text-success">${{ roomStore.room.pay_trash }}</span>
               </div>
             </div>
 
-            <router-link
-              to="/"
-              class="btn btn-orange w-100 py-3 fw-bold rounded-3 mb-3 shadow-sm text-decoration-none"
+            <button
+              class="open-btn btn btn-orange w-100 py-3 fw-bold rounded-3 mb-3 shadow-sm text-decoration-none"
+              @click="showModal = true"
             >
               Request Booking
-            </router-link>
+            </button>
 
             <router-link
               to="/"
-              class="btn btn-outline-secondary  w-100 py-3 fw-bold rounded-3 text-decoration-none text-navy"
+              class="btn btn-outline-secondary w-100 py-3 fw-bold rounded-3 text-decoration-none text-navy"
             >
               Rent Now
             </router-link>
@@ -184,10 +184,54 @@
       </div>
     </div>
   </div>
+
+  <!-- ========== AddBooking ============= -->
+  <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+    <div class="page">
+      <div class="booking-card">
+        <!-- Close -->
+        <button class="close-btn" @click="showModal = false">✕</button>
+
+        <div class="booking-head">
+          <img src="@/assets/images/image.png" class="img-logo" alt="Room Icon" />
+          <h3>Book Your Room</h3>
+          <p>Secure your stay quickly and easily</p>
+        </div>
+
+        <div class="booking-body">
+          <div v-if="status" :class="['alert', status]">
+            {{ message }}
+          </div>
+
+          <div class="field">
+            <label>Room ID</label>
+            <input class="placeholer-opacity" type="number" v-model="room_id" />
+          </div>
+
+          <div class="field">
+            <label>Check-in Date</label>
+            <input type="datetime-local" v-model="checkin_date" />
+          </div>
+
+          <div class="field">
+            <label>Payment Proof</label>
+            <label class="upload-zone" :class="{ filled: !!fileName }">
+              <span>{{ fileName ?? 'Click to upload image or PDF' }}</span>
+              <input type="file" @change="handleFileChange" hidden />
+            </label>
+          </div>
+        </div>
+
+        <div class="booking-footer">
+          <button class="btn-reset" @click="reset">Reset</button>
+          <button class="btn-submit" @click="handleBooking">Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-
 .text-navy {
   color: #032142;
 }
@@ -239,7 +283,6 @@
   height: 250px;
   border: 1px dashed #ced4da;
 }
-
 
 .card {
   transition: box-shadow 0.3s ease;
@@ -304,16 +347,241 @@
 .bi-egg-fried {
   color: #58d68d;
 }
+
+/* 
+Booking Style
+ */
+
+.open-btn:hover {
+  opacity: 0.9;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Center page */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card */
+.booking-card {
+  position: relative;
+  width: 420px;
+  background: rgba(255, 255, 255, 0.911);
+
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  animation: fadeIn 0.3s ease;
+  z-index: 99;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.booking-head {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.booking-head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.booking-head p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.booking-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+input {
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.upload-zone {
+  border: 2px dashed #cbd5e1;
+  padding: 14px;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.upload-zone:hover {
+  border-color: #2563eb;
+}
+
+.upload-zone.filled {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.booking-footer {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  opacity: 0.9;
+}
+
+.btn-reset {
+  border: 1px solid #e2e8f0;
+  background: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.alert {
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.alert.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.alert.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.img-logo {
+  width: 80px;
+  height: 50px;
+}
 </style>
 <script setup>
+import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRoomStore } from '@/stores/RoomStore'
+import api from '@/api/http'
 
 const route = useRoute()
 const roomStore = useRoomStore()
+const room_id = ref(0)
+const checkin_date = ref('2025-01-01T15:00')
+const file = ref(null)
+const fileName = ref(null)
+const status = ref(null)
+const message = ref('')
 
-onMounted(() => {
-  roomStore.fetchRoomById(route.params.id)
+// control modal
+const showModal = ref(false)
+
+const handleFileChange = (e) => {
+  const selected = e.target.files[0]
+  file.value = selected
+  fileName.value = selected?.name ?? null
+}
+
+const formatDate = (val) => val.replace('T', ' ') + ':00'
+
+const handleBooking = async () => {
+  if (!room_id.value || !checkin_date.value || !file.value) {
+    status.value = 'error'
+    message.value = 'All fields are required.'
+    return
+  }
+  try {
+    const formData = new FormData()
+    formData.append('room_id', room_id.value)
+    formData.append('checkin_date', formatDate(checkin_date.value))
+    formData.append('transaction_file', file.value)
+
+    const res = await api.post('books', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+
+    status.value = 'success'
+    message.value = res.data?.message ?? 'Booking room successfully.'
+  } catch (error) {
+    status.value = 'error'
+    message.value = error?.response?.data?.message ?? 'Booking failed.'
+  }
+}
+
+const reset = () => {
+  room_id.value = 0
+  checkin_date.value = '2025-01-01T15:00'
+  file.value = null
+  fileName.value = null
+  status.value = null
+}
+onMounted(async () => {
+  await roomStore.fetchRoomById(route.params.id)
+  room_id.value = roomStore.room.id
 })
 </script>

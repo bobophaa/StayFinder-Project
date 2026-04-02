@@ -18,7 +18,7 @@ import MyRented from '@/views/User/MyRented.vue'
 import FAQView from '@/views/User/FAQView.vue'
 import PromotionCard from '@/components/ui/PromotionCard.vue'
 import InformationPage from '@/views/User/InformationPage.vue'
-
+ 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -65,13 +65,6 @@ const router = createRouter({
       component: () => import('@/views/User/InformationPage.vue'),
       meta: { require: true },
     },
-    {
-      path: '/ChangePassword',
-      name: 'changePassword',
-      component: () => import('@/views/User/ChangePassword.vue'),
-      meta: { require: true },
-    },
-
     {
       path: '/faq',
       name: 'faq',
