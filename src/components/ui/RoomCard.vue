@@ -29,7 +29,7 @@
         </div>
 
         <router-link
-          :to="'/room-details/' + item.id"
+          :to="'/rooms/' + item.id"
           class="btn btn-outline-navy btn-sm rounded-pill px-3"
         >
           View Details

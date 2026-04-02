@@ -32,33 +32,20 @@
             </router-link>
           </li>
           <li class="nav-item">
-
-<router-link 
-  to="/rooms" 
-  class="nav-link px-3"
-  active-class="active-link"
->
-  Explore Rooms
-</router-link>
+            <router-link to="/rooms" class="nav-link px-3" active-class="active-link">
+              Explore Rooms
+            </router-link>
           </li>
           <li class="nav-item">
-<router-link 
-  to="/about" 
-  class="nav-link px-3"
-  active-class="active-link"
->
-  About Us
-</router-link>
+            <router-link to="/About" class="nav-link px-3" active-class="active-link">
+              About Us
+            </router-link>
           </li>
           <li class="nav-item">
-
-<router-link 
-  to="/faq" 
-  class="nav-link px-3"
-  active-class="active-link"
->
-  FAQ
-</router-link>          </li>
+            <router-link to="/faq" class="nav-link px-3" active-class="active-link">
+              FAQ
+            </router-link>
+          </li>
         </ul>
 
         <!-- Right Side -->
@@ -85,7 +72,7 @@
 
             <!-- Profile -->
             <router-link to="/profile" class="profile-circle shadow-sm">
-              <img :src="authStore.user?.image || defaultAvatar" alt="User" />
+              <img :src="user?.avatar || defaultAvatar" alt="avatar" />
             </router-link>
             <router-link to="/info" class="btn-main px-3"> List Your Property </router-link>
 
@@ -111,6 +98,7 @@ const authStore = useAuthStore()
 const wishlistStore = useWishlistStore()
 const route = useRoute()
 const router = useRouter()
+const user = computed(() => authStore.user)
 
 const isScrolled = ref(false)
 const defaultAvatar = 'https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg'
@@ -244,8 +232,9 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   top: -5px;
   right: -5px;
   font-size: 9px;
-}.nav-link {
-  color: rgba(255,255,255,0.8);
+}
+.nav-link {
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
   transition: 0.3s;
 }
@@ -264,7 +253,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 
 /* underline effect */
 .active-link::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -5px;
   left: 50%;
@@ -274,5 +263,4 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   background: #ff5f00;
   border-radius: 10px;
 }
-
 </style>

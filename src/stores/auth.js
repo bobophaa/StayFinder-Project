@@ -1,10 +1,16 @@
-
 import { defineStore } from 'pinia'
 import api from '@/api/http'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    // user: JSON.parse(localStorage.getItem('user')) || null,
+    user: (() => {
+      try {
+        const data = localStorage.getItem('user')
+        return data && data !== 'undefined' ? JSON.parse(data) : null
+      } catch (e) {
+        return null
+      }
+    })(),
     token: localStorage.getItem('token') || null,
 
     emailOrPhone: '',
@@ -183,7 +189,6 @@ export const useAuthStore = defineStore('auth', {
       this.error = ''
       this.successMessage = ''
       try {
-       
         await api.post('/reset/pass', {
           email: this.forgotEmail,
           otp: this.verificationCode.toUpperCase(),
@@ -221,4 +226,3 @@ export const useAuthStore = defineStore('auth', {
     },
   },
 })
-

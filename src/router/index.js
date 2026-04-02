@@ -16,6 +16,7 @@ import MyBookings from '@/views/User/MyBookings.vue'
 import MyRented from '@/views/User/MyRented.vue'
 import FAQView from '@/views/User/FAQView.vue'
 import InformationPage from '@/views/User/InformationPage.vue'
+import AboutUs from '@/views/User/AboutUs.vue'
 
 // Create router
 const router = createRouter({
@@ -24,8 +25,9 @@ const router = createRouter({
     // --- Public Routes ---
     { path: '/', name: 'home', component: HomePage },
     { path: '/rooms', name: 'allRooms', component: AllRooms },
-    { path: '/room-details/:id', name: 'roomDetails', component: RoomDetails },
+    { path: '/rooms/:id', name: 'roomDetails', component: RoomDetails },
     { path: '/faq', name: 'faq', component: FAQView },
+
 
     { path: '/login', name: 'login', component: LoginView, meta: { hideNavbar: true } },
     { path: '/register', name: 'register', component: RegisterView, meta: { hideNavbar: true } },
@@ -35,6 +37,7 @@ const router = createRouter({
 
     // --- User Protected Routes ---
     { path: '/profile', name: 'profile', component: ProfileInfo, meta: { requiresAuth: true } },
+     { path: '/about', name: 'about', component:AboutUs, meta: { requiresAuth: true } },
     { path: '/wishlist', name: 'wishlist', component: Wishlist, meta: { requiresAuth: true } },
     { path: '/my-bookings', name: 'myBookings', component: MyBookings, meta: { requiresAuth: true } },
     { path: '/my-rented', name: 'myRented', component: MyRented, meta: { requiresAuth: true } },

@@ -203,6 +203,10 @@
 </template>
 
 <style scoped>
+.room-detail-page {
+  margin-top: 100px;
+
+}
 .text-navy {
   color: #032142;
 }
