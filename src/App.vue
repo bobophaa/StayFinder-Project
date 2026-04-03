@@ -16,13 +16,13 @@ const authStore = useAuthStore()
 
 const isHeroPage = computed(() => route.path === '/')
 
-// ✅ This is what was missing — restores user + avatar on every page refresh
 onMounted(async () => {
   await authStore.restoreSession()
 })
 </script>
 
 <style>
+
 .center-screen-layout {
   display: flex;
   justify-content: center;
