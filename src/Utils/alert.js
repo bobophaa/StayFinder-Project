@@ -21,7 +21,9 @@ export const alertSuccess = (message) => {
     icon: 'success',
     title: 'Success!',
     text: message,
-    confirmButtonColor: '#ff5f00', // Your Orange Theme Color
+    showConfirmButton: false, 
+    timer: 1500, 
+    timerProgressBar: true
   });
 };
 
@@ -33,7 +35,8 @@ export const alertError = (message) => {
     icon: 'error',
     title: 'Error!',
     text: message || 'Something went wrong. Please try again.',
-    confirmButtonColor: '#031c36', // Your Navy Theme Color
+    // confirmButtonColor: '#031c36',
+     // Your Navy Theme Color
   });
 };
 
@@ -48,7 +51,7 @@ export const confirmDelete = async (title = "Are you sure?") => {
     showCancelButton: true,
     confirmButtonColor: '#d33', // Red for delete
     cancelButtonColor: '#031c36', // Navy for cancel
-    confirmButtonText: 'Yes, delete it!',
+    confirmButtonText: 'Yes, Log Out!',
     cancelButtonText: 'Cancel'
   });
   return result.isConfirmed;
