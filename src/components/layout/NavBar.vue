@@ -12,7 +12,7 @@
         <img src="@/assets/images/image.png" height="60" class="me-2" />
       </router-link>
 
-      <!-- Toggle -->
+      <!-- Mobile Toggle -->
       <button
         class="navbar-toggler border-white"
         type="button"
@@ -24,33 +24,26 @@
 
       <!-- Menu -->
       <div class="collapse navbar-collapse" id="navbarNav">
-        <!-- Center Menu -->
+        <!-- Center links -->
         <ul class="navbar-nav mx-auto">
-          <li class="nav-item hvr-underline-from-left">
-            <router-link to="/" class="nav-link px-3" active-class="active-link">
-              Home
-            </router-link>
+          <li class="nav-item">
+            <router-link to="/" class="nav-link px-3" active-class="active-link">Home</router-link>
           </li>
-          <li class="nav-item hvr-underline-from-left">
-            <router-link to="/rooms" class="nav-link px-3" active-class="active-link">
-              Explore Rooms
-            </router-link>
+          <li class="nav-item">
+            <router-link to="/rooms" class="nav-link px-3" active-class="active-link">Explore Rooms</router-link>
           </li>
-          <li class="nav-item hvr-underline-from-left">
-            <router-link to="/About" class="nav-link px-3" active-class="active-link">
-              About Us
-            </router-link>
+          <li class="nav-item">
+            <router-link to="/About" class="nav-link px-3" active-class="active-link">About Us</router-link>
           </li>
-          <li class="nav-item hvr-underline-from-left">
-            <router-link to="/faq" class="nav-link px-3" active-class="active-link">
-              FAQ
-            </router-link>
+          <li class="nav-item">
+            <router-link to="/faq" class="nav-link px-3" active-class="active-link">FAQ</router-link>
           </li>
         </ul>
 
-        <!-- Right Side -->
+        <!-- Right side -->
         <div class="d-flex align-items-center gap-3">
-          <!-- NOT LOGIN -->
+
+          <!-- NOT logged in -->
           <template v-if="!authStore.isLoggedIn">
             <router-link to="/login" class="btn-outline-main text-white text-decoration-none">
               Log In
@@ -60,24 +53,30 @@
             </router-link>
           </template>
 
-          <!-- LOGIN -->
+          <!-- Logged in -->
           <template v-else>
             <!-- Wishlist -->
             <router-link to="/wishlist" class="icon-circle shadow-sm">
               <i class="bi bi-heart-fill"></i>
-              <span v-if="wishlistStore.items.length" class="wishlist-badge">
+              <span v-if="wishlistStore.items?.length" class="wishlist-badge">
                 {{ wishlistStore.items.length }}
               </span>
             </router-link>
 
-            <!-- Profile -->
+            <!-- Avatar — shows user photo or default -->
             <router-link to="/profile" class="profile-circle shadow-sm">
-              <img :src="user?.avatar || defaultAvatar" alt="avatar" />
+              <img
+                :src="authStore.user?.avatar || defaultAvatar"
+                :key="authStore.user?.avatar"
+                alt="avatar"
+                @error="onAvatarError"
+              />
             </router-link>
-            <router-link to="/info" class="btn-main px-3"> List Your Property </router-link>
+
+            <router-link to="/info" class="btn-main px-3">List Your Property</router-link>
 
             <!-- Logout -->
-            <button @click="handleLogout" class="logout-btn">
+            <button @click="handleLogout" class="logout-btn" title="Log out">
               <i class="bi bi-box-arrow-right"></i>
             </button>
           </template>
@@ -94,28 +93,30 @@ import { useAuthStore } from '@/stores/auth'
 import { useWishlistStore } from '@/stores/WishlistStore'
 import { alertSuccess, confirmDelete } from '@/Utils/alert'
 
-const authStore = useAuthStore()
+const authStore     = useAuthStore()
 const wishlistStore = useWishlistStore()
-const route = useRoute()
-const router = useRouter()
-const user = computed(() => authStore.user)
+const route         = useRoute()
+const router        = useRouter()
 
-const isScrolled = ref(false)
+const isScrolled    = ref(false)
 const defaultAvatar = 'https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg'
 
-// detect homepage
+// Detect homepage for transparent navbar
 const isHeroPage = computed(() => route.name === 'home' || route.path === '/')
 
-// scroll effect
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 50
+// Fallback if avatar URL is broken
+const onAvatarError = (e: Event) => {
+  (e.target as HTMLImageElement).src = defaultAvatar
 }
 
-// logout
+// Scroll handler
+const handleScroll = () => { isScrolled.value = window.scrollY > 50 }
+
+// Logout
 const handleLogout = async () => {
-  const confirm = await confirmDelete('Log out?')
-  if (confirm) {
-    authStore.logout()
+  const confirmed = await confirmDelete('Log out?')
+  if (confirmed) {
+    await authStore.logout()
     alertSuccess('Logged out successfully!')
     router.push('/login')
   }
@@ -126,17 +127,9 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 </script>
 
 <style scoped>
-.transition-all {
-  transition: all 0.4s ease-in-out;
-}
-
-.navbar {
-  z-index: 1000;
-}
-
-.bg-navy {
-  background-color: #031c36 !important;
-}
+.transition-all { transition: all 0.4s ease-in-out; }
+.navbar         { z-index: 1000; }
+.bg-navy        { background-color: #031c36 !important; }
 
 /* Buttons */
 .btn-main {
@@ -147,151 +140,66 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   font-weight: 600;
   transition: 0.3s;
 }
+.btn-main:hover { background-color: #e65600; transform: translateY(-2px); color: white; }
 
-.btn-main:hover {
-  background-color: #e65600;
-  transform: translateY(-2px);
-}
+.btn-outline-main { border: 1px solid transparent; padding: 6px 10px; transition: 0.3s; }
+.btn-outline-main:hover { color: #ff5f00 !important; }
 
-.btn-outline-main {
-  border: 1px solid transparent;
-  padding: 6px 10px;
-  transition: 0.3s;
-}
-
-.btn-outline-main:hover {
-  color: #ff5f00 !important;
-}
-
-/* Profile */
+/* Profile circle */
 .profile-circle {
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid #fff;
+  display: block;
+  flex-shrink: 0;
 }
-
-.profile-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.profile-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 /* Wishlist */
 .icon-circle {
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.15);
+  width: 40px; height: 40px;
+  background: rgba(255,255,255,0.15);
   backdrop-filter: blur(10px);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   color: #ff4d4d;
   position: relative;
+  transition: 0.2s;
 }
+.icon-circle:hover { transform: scale(1.1); background-color: rgba(255,255,255,0.25); }
 
 .wishlist-badge {
   position: absolute;
-  top: -3px;
-  right: -3px;
-  background: red;
-  color: white;
-  font-size: 10px;
-  width: 18px;
-  height: 18px;
+  top: -5px; right: -5px;
+  background: red; color: white;
+  font-size: 9px;
+  width: 18px; height: 18px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
 }
 
 /* Logout */
 .logout-btn {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 20px;
-  transition: 0.3s;
+  background: transparent; border: none;
+  color: white; font-size: 20px;
+  transition: 0.3s; cursor: pointer;
 }
+.logout-btn:hover { color: #ff5f00; transform: scale(1.1); }
 
-.logout-btn:hover {
-  color: #ff5f00;
-  transform: scale(1.1);
-}
-.icon-circle:hover {
-  transform: scale(1.1);
-  background-color: rgba(255, 255, 255, 0.25);
-}
-.icon-circle.active {
-  background-color: #ff5f00;
-  color: white;
-}
-.wishlist-badge {
-  top: -5px;
-  right: -5px;
-  font-size: 9px;
-}
-.nav-link {
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 500;
-  transition: 0.3s;
-}
+/* Nav links */
+.nav-link { color: rgba(255,255,255,0.8); font-weight: 500; transition: 0.3s; }
+.nav-link:hover { color: #ff5f00; }
 
-/* Hover */
-.nav-link:hover {
-  color: #ff5f00;
-}
-
-/* ACTIVE 🔥 */
-.active-link {
-  color: #ff5f00 !important;
-  font-weight: 700;
-  position: relative;
-}
-
-/* underline effect */
+.active-link { color: #ff5f00 !important; font-weight: 700; position: relative; }
 .active-link::after {
   content: '';
   position: absolute;
-  bottom: -5px;
-  left: 50%;
+  bottom: -5px; left: 50%;
   transform: translateX(-50%);
-  width: 60%;
-  height: 3px;
+  width: 60%; height: 3px;
   background: #ff5f00;
   border-radius: 10px;
-}
-/* Underline From Left */
-.hvr-underline-from-left {
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-  position: relative;
-  overflow: hidden;
-}
-.hvr-underline-from-left:before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  left: 0;
-  right: 100%;
-  bottom: 0;
-  background: #ff5e00;
-  height: 4px;
-  -webkit-transition-property: right;
-  transition-property: right;
-  -webkit-transition-duration: 0.3s;
-  transition-duration: 0.3s;
-  -webkit-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
-}
-.hvr-underline-from-left:hover:before,
-.hvr-underline-from-left:focus:before,
-.hvr-underline-from-left:active:before {
-  right: 0;
 }
 </style>
