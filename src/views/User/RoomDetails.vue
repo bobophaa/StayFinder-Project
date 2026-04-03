@@ -17,12 +17,28 @@
       </div>
 
       <div class="gallery-container mb-5">
-        <div class="main-image-wrapper shadow-sm">
+        <div class="main-image-wrapper shadow-sm position-relative">
           <img
             :src="roomStore.room.image"
             class="img-fluid rounded-4 main-gallery-img"
             alt="Room"
           />
+
+          <div
+            @click.stop.prevent="handleToggle"
+            class="heart-container position-absolute top-0 end-0 m-3 d-flex align-items-center justify-content-center shadow-sm p-2 rounded-circle"
+            :class="{ 'is-active': wishlistStore.isWishlisted(roomStore.room.id) }"
+            style="background: white; cursor: pointer"
+          >
+            <i
+              :class="
+                wishlistStore.isWishlisted(roomStore.room.id)
+                  ? 'bi bi-heart-fill text-danger'
+                  : 'bi bi-heart text-muted'
+              "
+            ></i>
+          </div>
+
           <div class="promo-tag" v-if="roomStore.room.percent_promotion > 0">
             -{{ roomStore.room.percent_promotion }}% Off
           </div>
@@ -154,15 +170,15 @@
             <div class="price-breakdown mb-4 bg-light rounded-3 p-3">
               <div class="d-flex justify-content-between mb-2 small">
                 <span>Electric</span>
-                <span class="fw-bold text-success ">${{ roomStore.room.pay_electric }}</span>
+                <span class="fw-bold text-success">${{ roomStore.room.pay_electric }}</span>
               </div>
               <div class="d-flex justify-content-between mb-2 small">
                 <span>Water</span>
-                <span class="fw-bold text-success ">${{ roomStore.room.pay_water }}</span>
+                <span class="fw-bold text-success">${{ roomStore.room.pay_water }}</span>
               </div>
-               <div class="d-flex justify-content-between mb-2 small">
+              <div class="d-flex justify-content-between mb-2 small">
                 <span>Trash</span>
-                <span class="fw-bold text-success ">${{ roomStore.room.pay_trash }}</span>
+                <span class="fw-bold text-success">${{ roomStore.room.pay_trash }}</span>
               </div>
             </div>
 
@@ -175,7 +191,7 @@
 
             <router-link
               to="/"
-              class="btn btn-outline-secondary  w-100 py-3 fw-bold rounded-3 text-decoration-none text-navy"
+              class="btn btn-outline-secondary w-100 py-3 fw-bold rounded-3 text-decoration-none text-navy"
             >
               Rent Now
             </router-link>
@@ -187,7 +203,10 @@
 </template>
 
 <style scoped>
+.room-detail-page {
+  margin-top: 100px;
 
+}
 .text-navy {
   color: #032142;
 }
@@ -239,7 +258,6 @@
   height: 250px;
   border: 1px dashed #ced4da;
 }
-
 
 .card {
   transition: box-shadow 0.3s ease;
@@ -304,11 +322,41 @@
 .bi-egg-fried {
   color: #58d68d;
 }
+.heart-container {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: 0.2s;
+  z-index: 10;
+}
+.heart-container:hover {
+  transform: scale(1.1);
+  transition: 0.2s;
+}
+.is-active i {
+  color: #ff0000;
+}
 </style>
 <script setup>
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRoomStore } from '@/stores/RoomStore'
+import { useWishlistStore } from '@/stores/WishlistStore'
+
+const wishlistStore = useWishlistStore()
+
+function handleToggle() {
+  wishlistStore.toggleWishlist(roomStore.room)
+}
 
 const route = useRoute()
 const roomStore = useRoomStore()

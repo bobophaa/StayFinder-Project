@@ -38,7 +38,7 @@
         <span class="text-white-50 small mb-2">/month</span>
       </div>
 
-      <router-link :to="'/room-details/' + item.id" class="btn btn-grab shadow-sm w-100 py-2 fw-bold">
+      <router-link :to="'/rooms/' + item.id" class="btn btn-grab shadow-sm w-100 py-2 fw-bold">
        BOOK NOW
       </router-link>
     </div>

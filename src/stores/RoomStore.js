@@ -37,9 +37,7 @@ const response = await api.get('/rooms?page=1&per_page=50&sort_col=id&sort_dir=d
   } finally {
     this.loading = false;
   }
-},// src/stores/RoomStore.js
-// src/stores/RoomStore.js
-// RoomStore.js
+},
 async addRoom(formData) {
   this.loading = true;
   try {
@@ -47,7 +45,6 @@ async addRoom(formData) {
     if (res.data.result === true) {
       return true;
     }
-    // Log detailed error from server if result is false
     console.error("API Error Details:", res.data);
     return false;
   } catch (err) {
