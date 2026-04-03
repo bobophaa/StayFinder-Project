@@ -17,12 +17,28 @@
       </div>
 
       <div class="gallery-container mb-5">
-        <div class="main-image-wrapper shadow-sm">
+        <div class="main-image-wrapper shadow-sm position-relative">
           <img
             :src="roomStore.room.image"
             class="img-fluid rounded-4 main-gallery-img"
             alt="Room"
           />
+
+          <div
+            @click.stop.prevent="handleToggle"
+            class="heart-container position-absolute top-0 end-0 m-3 d-flex align-items-center justify-content-center shadow-sm p-2 rounded-circle"
+            :class="{ 'is-active': wishlistStore.isWishlisted(roomStore.room.id) }"
+            style="background: white; cursor: pointer"
+          >
+            <i
+              :class="
+                wishlistStore.isWishlisted(roomStore.room.id)
+                  ? 'bi bi-heart-fill text-danger'
+                  : 'bi bi-heart text-muted'
+              "
+            ></i>
+          </div>
+
           <div class="promo-tag" v-if="roomStore.room.percent_promotion > 0">
             -{{ roomStore.room.percent_promotion }}% Off
           </div>
@@ -232,6 +248,11 @@
 </template>
 
 <style scoped>
+.room-detail-page {
+  margin-top: 100px;
+
+}
+
 .text-navy {
   color: #032142;
 }
@@ -519,7 +540,29 @@ input:focus {
 }
 .img-logo {
   width: 80px;
-  height: 50px;
+  height: 50px;}
+.heart-container {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: 0.2s;
+  z-index: 10;
+}
+.heart-container:hover {
+  transform: scale(1.1);
+  transition: 0.2s;
+}
+.is-active i {
+  color: #ff0000;
 }
 </style>
 <script setup>
@@ -528,6 +571,13 @@ import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRoomStore } from '@/stores/RoomStore'
 import api from '@/api/http'
+import { useWishlistStore } from '@/stores/WishlistStore'
+
+const wishlistStore = useWishlistStore()
+
+function handleToggle() {
+  wishlistStore.toggleWishlist(roomStore.room)
+}
 
 const route = useRoute()
 const roomStore = useRoomStore()
