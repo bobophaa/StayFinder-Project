@@ -248,7 +248,6 @@
 </template>
 
 <style scoped>
-
 .room-detail-page {
   margin-top: 100px;
 
@@ -369,6 +368,179 @@
 .bi-egg-fried {
   color: #58d68d;
 }
+
+/* 
+Booking Style
+ */
+
+.open-btn:hover {
+  opacity: 0.9;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Center page */
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card */
+.booking-card {
+  position: relative;
+  width: 420px;
+  background: rgba(255, 255, 255, 0.911);
+
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: 'DM Sans', sans-serif;
+  animation: fadeIn 0.3s ease;
+  z-index: 99;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.booking-head {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.booking-head h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.booking-head p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.booking-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+input {
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.upload-zone {
+  border: 2px dashed #cbd5e1;
+  padding: 14px;
+  text-align: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.upload-zone:hover {
+  border-color: #2563eb;
+}
+
+.upload-zone.filled {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.booking-footer {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  opacity: 0.9;
+}
+
+.btn-reset {
+  border: 1px solid #e2e8f0;
+  background: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.alert {
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.alert.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.alert.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.img-logo {
+  width: 80px;
+  height: 50px;}
 .heart-container {
   position: absolute;
   top: 15px;
@@ -398,6 +570,7 @@ import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRoomStore } from '@/stores/RoomStore'
+import api from '@/api/http'
 import { useWishlistStore } from '@/stores/WishlistStore'
 
 const wishlistStore = useWishlistStore()

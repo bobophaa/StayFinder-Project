@@ -17,8 +17,7 @@ import MyRented from '@/views/User/MyRented.vue'
 import FAQView from '@/views/User/FAQView.vue'
 import InformationPage from '@/views/User/InformationPage.vue'
 import AboutUs from '@/views/User/AboutUs.vue'
-
-// Create router
+ 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -27,6 +26,7 @@ const router = createRouter({
     { path: '/rooms', name: 'allRooms', component: AllRooms },
     { path: '/rooms/:id', name: 'roomDetails', component: RoomDetails },
     { path: '/faq', name: 'faq', component: FAQView },
+     { path: '/about', name: 'about', component: AboutUs },
 
 
     { path: '/login', name: 'login', component: LoginView, meta: { hideNavbar: true } },

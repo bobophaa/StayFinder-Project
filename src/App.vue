@@ -22,7 +22,6 @@ onMounted(async () => {
 </script>
 
 <style>
-
 .center-screen-layout {
   display: flex;
   justify-content: center;
@@ -30,4 +29,4 @@ onMounted(async () => {
   height: 100vh;
   width: 100%;
 }
-</style>
+</style> 
