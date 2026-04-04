@@ -30,20 +30,24 @@
             <router-link to="/" class="nav-link px-3" active-class="active-link">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/rooms" class="nav-link px-3" active-class="active-link">Explore Rooms</router-link>
+            <router-link to="/rooms" class="nav-link px-3" active-class="active-link"
+              >Explore Rooms</router-link
+            >
           </li>
           <li class="nav-item">
-            <router-link to="/About" class="nav-link px-3" active-class="active-link">About Us</router-link>
+            <router-link to="/About" class="nav-link px-3" active-class="active-link"
+              >About Us</router-link
+            >
           </li>
           <li class="nav-item">
-            <router-link to="/faq" class="nav-link px-3" active-class="active-link">FAQ</router-link>
+            <router-link to="/faq" class="nav-link px-3" active-class="active-link"
+              >FAQ</router-link
+            >
           </li>
         </ul>
 
-        <!-- Right side -->
         <div class="d-flex align-items-center gap-3">
-
-          <!-- NOT logged in -->
+          <!-- if user not  -->
           <template v-if="!authStore.isLoggedIn">
             <router-link to="/login" class="btn-outline-main text-white text-decoration-none">
               Log In
@@ -93,12 +97,12 @@ import { useAuthStore } from '@/stores/auth'
 import { useWishlistStore } from '@/stores/WishlistStore'
 import { alertSuccess, confirmDelete } from '@/Utils/alert'
 
-const authStore     = useAuthStore()
+const authStore = useAuthStore()
 const wishlistStore = useWishlistStore()
-const route         = useRoute()
-const router        = useRouter()
+const route = useRoute()
+const router = useRouter()
 
-const isScrolled    = ref(false)
+const isScrolled = ref(false)
 const defaultAvatar = 'https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg'
 
 // Detect homepage for transparent navbar
@@ -106,11 +110,13 @@ const isHeroPage = computed(() => route.name === 'home' || route.path === '/')
 
 // Fallback if avatar URL is broken
 const onAvatarError = (e: Event) => {
-  (e.target as HTMLImageElement).src = defaultAvatar
+  ;(e.target as HTMLImageElement).src = defaultAvatar
 }
 
 // Scroll handler
-const handleScroll = () => { isScrolled.value = window.scrollY > 50 }
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 50
+}
 
 // Logout
 const handleLogout = async () => {
@@ -127,9 +133,15 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 </script>
 
 <style scoped>
-.transition-all { transition: all 0.4s ease-in-out; }
-.navbar         { z-index: 1000; }
-.bg-navy        { background-color: #031c36 !important; }
+.transition-all {
+  transition: all 0.4s ease-in-out;
+}
+.navbar {
+  z-index: 1000;
+}
+.bg-navy {
+  background-color: #031c36 !important;
+}
 
 /* Buttons */
 .btn-main {
@@ -140,65 +152,110 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   font-weight: 600;
   transition: 0.3s;
 }
-.btn-main:hover { background-color: #e65600; transform: translateY(-2px); color: white; }
+.btn-main:hover {
+  background-color: #e65600;
+  transform: translateY(-2px);
+  color: white;
+}
 
-.btn-outline-main { border: 1px solid transparent; padding: 6px 10px; transition: 0.3s; }
-.btn-outline-main:hover { color: #ff5f00 !important; }
+.btn-outline-main {
+  border: 1px solid transparent;
+  padding: 6px 10px;
+  transition: 0.3s;
+}
+.btn-outline-main:hover {
+  color: #ff5f00 !important;
+}
 
 /* Profile circle */
 .profile-circle {
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid #fff;
   display: block;
   flex-shrink: 0;
 }
-.profile-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.profile-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 /* Wishlist */
 .icon-circle {
-  width: 40px; height: 40px;
-  background: rgba(255,255,255,0.15);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #ff4d4d;
   position: relative;
   transition: 0.2s;
 }
-.icon-circle:hover { transform: scale(1.1); background-color: rgba(255,255,255,0.25); }
+.icon-circle:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.25);
+}
 
 .wishlist-badge {
   position: absolute;
-  top: -5px; right: -5px;
-  background: red; color: white;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
   font-size: 9px;
-  width: 18px; height: 18px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 700;
 }
 
 /* Logout */
 .logout-btn {
-  background: transparent; border: none;
-  color: white; font-size: 20px;
-  transition: 0.3s; cursor: pointer;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  transition: 0.3s;
+  cursor: pointer;
 }
-.logout-btn:hover { color: #ff5f00; transform: scale(1.1); }
+.logout-btn:hover {
+  color: #ff5f00;
+  transform: scale(1.1);
+}
 
 /* Nav links */
-.nav-link { color: rgba(255,255,255,0.8); font-weight: 500; transition: 0.3s; }
-.nav-link:hover { color: #ff5f00; }
+.nav-link {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  transition: 0.3s;
+}
+.nav-link:hover {
+  color: #ff5f00;
+}
 
-.active-link { color: #ff5f00 !important; font-weight: 700; position: relative; }
+.active-link {
+  color: #ff5f00 !important;
+  font-weight: 700;
+  position: relative;
+}
 .active-link::after {
   content: '';
   position: absolute;
-  bottom: -5px; left: 50%;
+  bottom: -5px;
+  left: 50%;
   transform: translateX(-50%);
-  width: 60%; height: 3px;
+  width: 60%;
+  height: 3px;
   background: #ff5f00;
   border-radius: 10px;
 }
