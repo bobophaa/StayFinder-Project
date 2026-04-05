@@ -189,12 +189,13 @@
               Request Booking
             </button>
 
-            <router-link
+            <button
               to="/"
               class="btn btn-outline-secondary w-100 py-3 fw-bold rounded-3 text-decoration-none text-navy"
+              @click="showModal2 = true"
             >
               Rent Now
-            </router-link>
+            </button>
           </div>
         </div>
       </div>
@@ -245,12 +246,45 @@
       </div>
     </div>
   </div>
+
+  <!-- ================ Add Rent ====================== -->
+
+  <div v-if="showModal2" class="modal-overlay" @click.self="closeModal2">
+    <div class="modal-card">
+      <h4 class="mb-3 text-center modal-title">Rent Room</h4>
+
+      <!-- Room ID -->
+      <div class="mb-3">
+        <label class="form-label">Room ID</label>
+        <input v-model="room_id" type="number" class="form-control" placeholder="Enter Room ID" />
+      </div>
+
+      <!-- File Upload -->
+      <div class="mb-3">
+        <label class="form-label">Transaction Image</label>
+        <input type="file" class="form-control" @change="handleFile" />
+      </div>
+
+      <!-- Status -->
+      <div
+        v-if="rentMessage"
+        :class="['alert', rentStatus === 'success' ? 'alert-success' : 'alert-danger']"
+      >
+        {{ rentMessage }}
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-secondary" @click="closeModal2">Cancel</button>
+        <button class="btn btn-primary" @click="handleRent">Submit</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
 .room-detail-page {
   margin-top: 100px;
-
 }
 
 .text-navy {
@@ -540,7 +574,8 @@ input:focus {
 }
 .img-logo {
   width: 80px;
-  height: 50px;}
+  height: 50px;
+}
 .heart-container {
   position: absolute;
   top: 15px;
@@ -563,6 +598,66 @@ input:focus {
 }
 .is-active i {
   color: #ff0000;
+}
+
+/* Modal overlay for showModal2 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Modal card for showModal2 */
+.modal-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 400px;
+  max-width: 90%;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Buttons inside modal */
+.modal-card .btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+.modal-card .btn-primary {
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+}
+.modal-card .btn-primary:hover {
+  background-color: #1d4ed8;
+}
+.modal-card .btn-secondary {
+  background-color: #e2e8f0;
+  color: #333;
+  border: none;
+}
+.modal-card .btn-secondary:hover {
+  background-color: #cbd5e1;
 }
 </style>
 <script setup>
@@ -590,6 +685,7 @@ const message = ref('')
 
 // control modal
 const showModal = ref(false)
+const showModal2 = ref(false)
 
 const handleFileChange = (e) => {
   const selected = e.target.files[0]
@@ -617,6 +713,12 @@ const handleBooking = async () => {
 
     status.value = 'success'
     message.value = res.data?.message ?? 'Booking room successfully.'
+
+    // Close modal on success
+    showModal.value = false
+
+    // Reset fields
+    reset()
   } catch (error) {
     status.value = 'error'
     message.value = error?.response?.data?.message ?? 'Booking failed.'
@@ -629,6 +731,59 @@ const reset = () => {
   file.value = null
   fileName.value = null
   status.value = null
+}
+
+//  ============== handle rent ==============
+
+const handleFile = (e) => {
+  file.value = e.target.files[0]
+}
+
+const closeModal = () => {
+  showModal.value = false
+  message.value = ''
+}
+
+const closeModal2 = () => {
+  showModal2.value = false
+  rentMessage.value = ''
+  rentStatus.value = null
+}
+
+const rentMessage = ref('')
+const rentStatus = ref(null)
+
+const handleRent = async () => {
+  if (!room_id.value || !file.value) {
+    rentStatus.value = 'error'
+    rentMessage.value = 'Room ID and transaction file are required.'
+    return
+  }
+
+  try {
+    const formData = new FormData()
+    formData.append('room_id', room_id.value)
+    formData.append('transaction_file', file.value)
+
+    const res = await api.post('/rents', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+
+    rentStatus.value = 'success'
+    rentMessage.value = res.data?.message || 'Rent request sent successfully.'
+
+    // Close modal on success
+    showModal2.value = false
+
+    // Reset fields
+    room_id.value = ''
+    file.value = null
+  } catch (err) {
+    rentStatus.value = 'error'
+    rentMessage.value = err.response?.data?.message || 'Something went wrong.'
+  }
 }
 onMounted(async () => {
   await roomStore.fetchRoomById(route.params.id)
