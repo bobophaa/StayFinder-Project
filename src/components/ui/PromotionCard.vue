@@ -1,47 +1,48 @@
 <template>
   <div class="promo-card-v3 position-relative shadow-lg overflow-hidden">
     <div class="gold-shine"></div>
+    <router-link :to="'/rooms/' + item.id" class="stretched-link text-decoration-none">
+      <div class="image-container position-relative">
+        <img :src="item.image" class="promo-img w-100" :alt="item.title" />
 
-    <div class="image-container position-relative">
-      <img :src="item.image" class="promo-img w-100" :alt="item.title" />
-      
-      <div class="exclusive-badge">
-        <i class="bi bi-star-fill text-warning"></i> EXCLUSIVE
-      </div>
-
-      <div class="discount-circle">
-        <span class="fw-bold">{{ item.percent_promotion }}%</span>
-        <span class="d-block small">OFF</span>
-      </div>
-    </div>
-
-    <div class="card-body-v3 p-4 bg-navy text-white">
-      <div class="d-flex justify-content-between align-items-center mb-2">   <h5 class="fw-bold mb-1">{{ item.title }}</h5>
-        <!-- <span class="limited-tag ">LIMITED OFFER</span> -->
-        <div @click.stop.prevent="handleToggle" 
-             class="promo-wishlist"
-             :class="{ 'active': wishlistStore.isWishlisted(item.id) }">
-          <i :class="wishlistStore.isWishlisted(item.id) ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+        <div class="discount-circle">
+          <span class="fw-bold">{{ item.percent_promotion }}%</span>
+          <span class="d-block small">OFF</span>
         </div>
       </div>
 
-      <!-- <h5 class="fw-bold mb-1">{{ item.title }}</h5> -->
-      <p class="small opacity-75 mb-3">
-        <i class="bi bi-geo-alt-fill text-orange"></i> {{ item.district?.name || 'Phnom Penh' }}
-      </p>
+      <div class="card-body-v3 p-4 bg-navy text-white">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-1">{{ item.title }}</h5>
 
-      <div class="price-box-v3 d-flex align-items-end gap-2 mb-3">
-        <div class="d-flex flex-column">
-          <span class="text-decoration-line-through text-white-50 fs-5">${{ item.price }}</span>
-          <span class="text-orange fw-bold fs-2">${{ discountedPrice }}</span>
+          <div
+            @click.stop.prevent="handleToggle"
+            class="promo-wishlist"
+            :class="{ active: wishlistStore.isWishlisted(item.id) }"
+          >
+            <i
+              :class="wishlistStore.isWishlisted(item.id) ? 'bi bi-heart-fill' : 'bi bi-heart'"
+            ></i>
+          </div>
         </div>
-        <span class="text-white-50 small mb-2">/month</span>
-      </div>
 
-      <router-link :to="'/rooms/' + item.id" class="btn btn-grab shadow-sm w-100 py-2 fw-bold">
-       BOOK NOW
-      </router-link>
-    </div>
+        <p class="small opacity-75 mb-3">
+          <i class="bi bi-geo-alt-fill text-orange"></i> {{ item.district?.name || 'Phnom Penh' }}
+        </p>
+
+        <div class="price-box-v3 d-flex align-items-end gap-2 mb-3">
+          <div class="d-flex flex-column">
+            <span class="text-decoration-line-through text-white-50 fs-5">${{ item.price }}</span>
+            <span class="text-orange fw-bold fs-2">${{ discountedPrice }}</span>
+          </div>
+          <span class="text-white-50 small mb-2">/month</span>
+        </div>
+
+        <router-link :to="'/rooms/' + item.id" class="btn btn-grab shadow-sm w-100 py-2 fw-bold">
+          BOOK NOW
+        </router-link>
+      </div>
+    </router-link>
   </div>
 </template>
 
@@ -63,7 +64,6 @@
   object-fit: cover;
   border-radius: 26px 26px 0 0;
 }
-
 
 .discount-circle {
   position: absolute;
@@ -124,57 +124,40 @@
   transition: 0.2s;
 }
 
-.promo-wishlist.active { color: #dc3545; }
-</style><script setup>
+.promo-wishlist.active {
+  color: #dc3545;
+}
+</style>
+<script setup>
+import { computed } from 'vue'
 
-import { computed } from 'vue';
+import { useWishlistStore } from '@/stores/WishlistStore'
 
-import { useWishlistStore } from '@/stores/WishlistStore';
-
-import { useRouter } from 'vue-router'; 
-
-
+import { RouterLink, useRouter } from 'vue-router'
 
 const props = defineProps({
-
   item: { type: Object, required: true },
+})
 
-});
+const wishlistStore = useWishlistStore()
 
-
-
-const wishlistStore = useWishlistStore();
-
-const router = useRouter();
-
-
-
+const router = useRouter()
 
 const discountedPrice = computed(() => {
+  const discount = (props.item.price * props.item.percent_promotion) / 100
 
-  const discount = (props.item.price * props.item.percent_promotion) / 100;
-
-  return (props.item.price - discount).toFixed(2);
-
-});
-
-
+  return (props.item.price - discount).toFixed(2)
+})
 
 const handleToggle = () => {
-
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token')
 
   if (!token) {
+    router.push('/login')
 
-    router.push('/login');
-
-    return;
-
+    return
   }
 
-  wishlistStore.toggleWishlist(props.item);
-
-};
-
+  wishlistStore.toggleWishlist(props.item)
+}
 </script>
-

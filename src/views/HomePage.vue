@@ -55,7 +55,6 @@ function handleSearch() {
   router.push({ path: '/rooms', query })
 }
 
-// ── Click a location card → go to /rooms pre-filtered ─────
 function searchByDistrict(name) {
   const district = districtStore.districts.find(
     (d) => d.name?.toLowerCase() === name.toLowerCase()

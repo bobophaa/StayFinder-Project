@@ -319,7 +319,7 @@
 
 .main-gallery-img {
   width: 100%;
-  height: 500px;
+  height: 700px;
   object-fit: cover;
 }
 .promo-tag {

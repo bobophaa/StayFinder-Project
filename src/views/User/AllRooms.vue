@@ -246,7 +246,7 @@
 
               <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start mb-1">
-                  <div class="room-price">${{ room.price }}<small class="text-muted fw-normal">/mo</small></div>
+                  <div class="room-price">${{ room.price }}<small class="text-muted fw-normal">/months</small></div>
                   <span v-if="room.district" class="badge district-badge">
                     <i class="bi bi-geo-alt-fill me-1"></i>{{ room.district.name }}
                   </span>

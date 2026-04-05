@@ -37,7 +37,7 @@ const handleGetStarted = () => {
       <div class="row g-4">
         <aside class="col-lg-4">
           <div class="sticky-top" style="top: 100px">
-            <div class="glass-card p-4 rounded-4 shadow-sm border-0 mb-4">
+            <div class="glass-card p-4 rounded-4  border-0 mb-4">
               <h5 class="fw-bold text-navy mb-4">
                 <i class="bi bi-grid-fill text-orange me-2"></i> Categories
               </h5>
@@ -67,7 +67,7 @@ const handleGetStarted = () => {
         </aside>
 
         <main class="col-lg-8">
-          <div class="faq-content-card glass-card p-3 rounded-4 shadow-sm">
+          <div class="faq-content-card glass-card p-3 rounded-4 ">
             <div id="tenants" class="section-padding">
               <h4 class="fw-bold text-navy mb-4 px-3">
                 <i class="bi bi-person-check-fill text-orange me-2"></i> For Tenants
@@ -263,6 +263,7 @@ const handleGetStarted = () => {
 }
 
 .glass-card {
+  box-shadow: 4px 4px 4px rgba(3, 33, 66, 0.397);
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -325,6 +326,7 @@ const handleGetStarted = () => {
   z-index: 3;
 }
 .mt-n5 {
-  margin-top: -60px !important;
+
+  /* margin-top: -100px !important; */
 }
 </style>
