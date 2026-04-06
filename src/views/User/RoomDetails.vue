@@ -1,17 +1,28 @@
 <template>
   <div class="room-detail-page bg-light min-vh-100 pb-5">
-    <div v-if="roomStore.loading" class="text-center py-5">
-      <div class="spinner-border text-orange" role="status"></div>
+    <!-- Loading skeleton -->
+    <div v-if="roomStore.loading" class="container py-4">
+      <div class="skel-line mb-3" style="width: 50%; height: 32px; border-radius: 8px"></div>
+      <div class="skel-line mb-5" style="width: 30%; height: 16px; border-radius: 6px"></div>
+      <div class="skel-img mb-5 rounded-4"></div>
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="skel-line mb-3" style="height: 200px; border-radius: 16px"></div>
+        </div>
+        <div class="col-lg-4">
+          <div class="skel-line" style="height: 300px; border-radius: 16px"></div>
+        </div>
+      </div>
     </div>
 
     <div v-else-if="roomStore.room" class="container py-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
         <div>
           <h2 class="fw-bold text-navy mb-1">{{ roomStore.room.title }}</h2>
           <div class="small text-muted">
-            <i class="bi bi-star-fill text-warning me-1"></i> 4.8 (New)
+            <i class="bi bi-star-fill text-warning me-1"></i>4.8 (New)
             <span class="mx-2">•</span>
-            <i class="bi bi-geo-alt me-1"></i> {{ roomStore.room.district?.name }}, Phnom Penh
+            <i class="bi bi-geo-alt me-1"></i>{{ roomStore.room.district?.name }}, Phnom Penh
           </div>
         </div>
       </div>
@@ -23,12 +34,10 @@
             class="img-fluid rounded-4 main-gallery-img"
             alt="Room"
           />
-
           <div
             @click.stop.prevent="handleToggle"
-            class="heart-container position-absolute top-0 end-0 m-3 d-flex align-items-center justify-content-center shadow-sm p-2 rounded-circle"
+            class="heart-container position-absolute top-0 end-0 m-3"
             :class="{ 'is-active': wishlistStore.isWishlisted(roomStore.room.id) }"
-            style="background: white; cursor: pointer"
           >
             <i
               :class="
@@ -38,7 +47,6 @@
               "
             ></i>
           </div>
-
           <div class="promo-tag" v-if="roomStore.room.percent_promotion > 0">
             -{{ roomStore.room.percent_promotion }}% Off
           </div>
@@ -63,11 +71,10 @@
                 }}</span>
               </div>
             </div>
-
             <div class="row text-center border-top border-bottom py-3 g-0 mb-4">
               <div class="col-4 border-end">
                 <i class="bi bi-door-open d-block text-navy fs-5"></i>
-                <span class="small text-muted">1 Bed</span>
+                <span class="small text-muted">{{ roomStore.room.bed || 1 }} Bed</span>
               </div>
               <div class="col-4 border-end">
                 <i class="bi bi-droplet d-block text-navy fs-5"></i>
@@ -78,11 +85,10 @@
                 <span class="small text-muted">{{ roomStore.room.size_room }}</span>
               </div>
             </div>
-
-            <p class="text-secondary lh-lg mb-0">
-              {{ roomStore.room.description }}
-            </p>
+            <p class="text-secondary lh-lg mb-0">{{ roomStore.room.description }}</p>
           </div>
+
+          <!-- Amenities -->
           <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
             <h5 class="fw-bold text-navy mb-4">Amenities & Features</h5>
             <div class="row g-4">
@@ -120,6 +126,7 @@
             </div>
           </div>
 
+          <!-- Location -->
           <div class="card border-0 shadow-sm rounded-4 p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h5 class="fw-bold text-navy mb-0">Location</h5>
@@ -127,7 +134,6 @@
                 {{ roomStore.room.district?.name }}
               </span>
             </div>
-
             <div class="map-container rounded-4 overflow-hidden mb-3 shadow-inner">
               <iframe
                 width="100%"
@@ -140,7 +146,6 @@
               >
               </iframe>
             </div>
-
             <div class="d-flex align-items-start gap-2">
               <i class="bi bi-geo-alt-fill text-orange mt-1"></i>
               <div>
@@ -158,6 +163,7 @@
           </div>
         </div>
 
+        <!-- ── Right column: Booking card ── -->
         <div class="col-lg-4">
           <div class="card border-0 shadow-lg rounded-4 p-4 sticky-top" style="top: 100px">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -165,124 +171,464 @@
                 <span class="h3 fw-bold text-orange">${{ roomStore.room.price }}</span>
                 <span class="text-navy"> /month</span>
               </div>
+              <span
+                v-if="roomStore.room.percent_promotion > 0"
+                class="badge bg-orange-light text-orange px-3 py-2 fw-bold"
+              >
+                -{{ roomStore.room.percent_promotion }}% OFF
+              </span>
             </div>
 
-            <div class="price-breakdown mb-4 bg-light rounded-3 p-3">
-              <div class="d-flex justify-content-between mb-2 small">
-                <span>Electric</span>
-                <span class="fw-bold text-success">${{ roomStore.room.pay_electric }}</span>
+            <!-- Bills breakdown -->
+            <div
+              class="price-breakdown mb-4 rounded-3 p-3"
+              style="background: #f8f9fa; border: 1.5px solid #eee"
+            >
+              <p class="fw-bold text-navy small mb-2">
+                <i class="bi bi-receipt me-2 text-orange"></i>Monthly Bills
+              </p>
+              <div class="d-flex justify-content-between mb-1 small">
+                <span class="text-muted"
+                  ><i class="bi bi-lightning-fill text-warning me-1"></i>Electric</span
+                >
+                <span class="fw-bold text-navy">${{ roomStore.room.pay_electric || 0 }}</span>
               </div>
-              <div class="d-flex justify-content-between mb-2 small">
-                <span>Water</span>
-                <span class="fw-bold text-success">${{ roomStore.room.pay_water }}</span>
+              <div class="d-flex justify-content-between mb-1 small">
+                <span class="text-muted"
+                  ><i class="bi bi-droplet-fill text-info me-1"></i>Water</span
+                >
+                <span class="fw-bold text-navy">${{ roomStore.room.pay_water || 0 }}</span>
               </div>
-              <div class="d-flex justify-content-between mb-2 small">
-                <span>Trash</span>
-                <span class="fw-bold text-success">${{ roomStore.room.pay_trash }}</span>
+              <div class="d-flex justify-content-between mb-1 small">
+                <span class="text-muted"
+                  ><i class="bi bi-trash3-fill text-success me-1"></i>Trash</span
+                >
+                <span class="fw-bold text-navy">${{ roomStore.room.pay_trash || 0 }}</span>
+              </div>
+              <div class="d-flex justify-content-between small" v-if="roomStore.room.pay_parking">
+                <span class="text-muted"
+                  ><i class="bi bi-car-front-fill text-secondary me-1"></i>Parking</span
+                >
+                <span class="fw-bold text-navy">${{ roomStore.room.pay_parking }}</span>
               </div>
             </div>
 
             <button
-              class="open-btn btn btn-orange w-100 py-3 fw-bold rounded-3 mb-3 shadow-sm text-decoration-none"
-              @click="showModal = true"
+              class="btn btn-orange w-100 py-3 fw-bold rounded-3 mb-3 shadow-sm"
+              @click="openBookingModal"
             >
-              Request Booking
+              <i class="bi bi-calendar-check-fill me-2"></i>Request Booking
             </button>
 
-            <router-link
-              to="/"
-              class="btn btn-outline-secondary w-100 py-3 fw-bold rounded-3 text-decoration-none text-navy"
+            <button class="btn btn-navy w-100 py-3 fw-bold rounded-3" @click="openRentModal">
+              <i class="bi bi-house-check-fill me-2"></i>Rent Now
+            </button>
+
+            <p class="text-muted text-center small mt-3 mb-0">
+              <i class="bi bi-shield-check me-1 text-success"></i>
+              Secure & verified listing
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       BOOKING MODAL
+  ══════════════════════════════════════ -->
+  <transition name="modal-fade">
+    <div v-if="showBookingModal" class="bj-modal-overlay" @click.self="showBookingModal = false">
+      <div class="bj-modal">
+        <div class="bj-modal-header">
+          <div>
+            <h5 class="fw-bold mb-0 text-white">
+              <i class="bi bi-calendar-check-fill me-2"></i>Request Booking
+            </h5>
+            <small class="opacity-75">{{ roomStore.room?.title }}</small>
+          </div>
+          <button class="bj-modal-close" @click="showBookingModal = false">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="bj-modal-body">
+          <div class="room-summary-strip mb-4">
+            <div class="d-flex align-items-center gap-3">
+              <div class="room-thumb">
+                <img v-if="roomStore.room?.image" :src="roomStore.room.image" alt="room" />
+                <i v-else class="bi bi-building text-muted"></i>
+              </div>
+              <div class="flex-fill">
+                <div class="fw-bold text-navy small text-truncate">{{ roomStore.room?.title }}</div>
+                <div class="text-muted" style="font-size: 0.75rem">
+                  <i class="bi bi-geo-alt me-1 text-orange"></i
+                  >{{ roomStore.room?.district?.name }}, Phnom Penh
+                </div>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold text-orange">${{ roomStore.room?.price }}</div>
+                <div class="text-muted" style="font-size: 0.72rem">/month</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Success / Error alert -->
+          <transition name="alert-fade">
+            <div v-if="bookingStatus" class="bj-alert mb-3" :class="bookingStatus">
+              <i
+                class="bi me-2"
+                :class="bookingStatus === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"
+              ></i>
+              {{ bookingMessage }}
+            </div>
+          </transition>
+
+          <!-- Check-in date -->
+          <div class="bj-field mb-3">
+            <label class="bj-label">Check-in Date & Time</label>
+            <div class="bj-input-wrap" :class="{ 'bj-input-err': fieldErrors.checkin }">
+              <i class="bi bi-calendar-event bj-input-icon"></i>
+              <input type="datetime-local" v-model="checkin_date" />
+            </div>
+            <div v-if="fieldErrors.checkin" class="bj-err-msg">{{ fieldErrors.checkin }}</div>
+          </div>
+
+          <!-- Payment proof -->
+          <div class="bj-field mb-1">
+            <label class="bj-label">Payment Proof</label>
+            <label
+              class="bj-upload"
+              :class="{ 'bj-upload-filled': !!fileName, 'bj-upload-err': fieldErrors.file }"
             >
-              Rent Now
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========== AddBooking ============= -->
-  <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
-    <div class="page">
-      <div class="booking-card">
-        <!-- Close -->
-        <button class="close-btn" @click="showModal = false">✕</button>
-
-        <div class="booking-head">
-          <img src="@/assets/images/image.png" class="img-logo" alt="Room Icon" />
-          <h3>Book Your Room</h3>
-          <p>Secure your stay quickly and easily</p>
-        </div>
-
-        <div class="booking-body">
-          <div v-if="status" :class="['alert', status]">
-            {{ message }}
-          </div>
-
-          <div class="field">
-            <label>Room ID</label>
-            <input class="placeholer-opacity" type="number" v-model="room_id" />
-          </div>
-
-          <div class="field">
-            <label>Check-in Date</label>
-            <input type="datetime-local" v-model="checkin_date" />
-          </div>
-
-          <div class="field">
-            <label>Payment Proof</label>
-            <label class="upload-zone" :class="{ filled: !!fileName }">
-              <span>{{ fileName ?? 'Click to upload image or PDF' }}</span>
-              <input type="file" @change="handleFileChange" hidden />
+              <div class="bj-upload-inner">
+                <i
+                  class="bi"
+                  :class="
+                    fileName
+                      ? 'bi-file-earmark-check-fill text-success'
+                      : 'bi-cloud-arrow-up-fill text-orange'
+                  "
+                ></i>
+                <span>{{ fileName || 'Click to upload payment screenshot' }}</span>
+                <small v-if="!fileName" class="text-muted"
+                  >ABA, Wing, or any transfer receipt</small
+                >
+              </div>
+              <input
+                type="file"
+                @change="handleFileChange"
+                hidden
+                accept="image/*,application/pdf"
+              />
             </label>
+            <div v-if="fieldErrors.file" class="bj-err-msg">{{ fieldErrors.file }}</div>
           </div>
         </div>
 
-        <div class="booking-footer">
-          <button class="btn-reset" @click="reset">Reset</button>
-          <button class="btn-submit" @click="handleBooking">Confirm Booking</button>
+        <div class="bj-modal-footer">
+          <button class="btn-bj-reset" @click="resetBooking">
+            <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+          </button>
+          <button class="btn-bj-submit" @click="handleBooking" :disabled="bookingLoading">
+            <span v-if="bookingLoading" class="spinner-border spinner-border-sm me-2"></span>
+            <i v-else class="bi bi-check-circle-fill me-2"></i>
+            {{ bookingLoading ? 'Submitting...' : 'Confirm Booking' }}
+          </button>
         </div>
       </div>
     </div>
-  </div>
+  </transition>
+
+  <transition name="modal-fade">
+    <div v-if="showRentModal" class="bj-modal-overlay" @click.self="showRentModal = false">
+      <div class="bj-modal">
+        <div class="bj-modal-header">
+          <div>
+            <h5 class="fw-bold mb-0 text-white">
+              <i class="bi bi-house-check-fill me-2"></i>Rent This Room
+            </h5>
+            <small class="opacity-75">{{ roomStore.room?.title }}</small>
+          </div>
+          <button class="bj-modal-close" @click="showRentModal = false">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+
+        <div class="bj-modal-body">
+          <!-- Room summary -->
+          <div class="room-summary-strip mb-4">
+            <div class="d-flex align-items-center gap-3">
+              <div class="room-thumb">
+                <img v-if="roomStore.room?.image" :src="roomStore.room.image" alt="room" />
+                <i v-else class="bi bi-building text-muted"></i>
+              </div>
+              <div class="flex-fill">
+                <div class="fw-bold text-navy small text-truncate">{{ roomStore.room?.title }}</div>
+                <div class="text-muted" style="font-size: 0.75rem">
+                  <i class="bi bi-geo-alt me-1 text-orange"></i
+                  >{{ roomStore.room?.district?.name }}, Phnom Penh
+                </div>
+              </div>
+              <div class="text-end">
+                <div class="fw-bold text-orange">${{ roomStore.room?.price }}</div>
+                <div class="text-muted" style="font-size: 0.72rem">/month</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rent-info-box mb-4">
+            <i class="bi bi-info-circle-fill me-2 text-orange"></i>
+            By clicking <strong>Confirm Rent</strong>, your request will be sent to the property
+            owner for approval. Upload your payment receipt as proof.
+          </div>
+
+          <!-- Success / Error -->
+          <transition name="alert-fade">
+            <div v-if="rentStatus" class="bj-alert mb-3" :class="rentStatus">
+              <i
+                class="bi me-2"
+                :class="rentStatus === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"
+              ></i>
+              {{ rentMessage }}
+            </div>
+          </transition>
+
+          <div class="bj-field mb-1">
+            <label class="bj-label">Payment Proof</label>
+            <label
+              class="bj-upload"
+              :class="{ 'bj-upload-filled': !!rentFileName, 'bj-upload-err': rentFieldErrors.file }"
+            >
+              <div class="bj-upload-inner">
+                <i
+                  class="bi"
+                  :class="
+                    rentFileName
+                      ? 'bi-file-earmark-check-fill text-success'
+                      : 'bi-cloud-arrow-up-fill text-orange'
+                  "
+                ></i>
+                <span>{{ rentFileName || 'Click to upload payment screenshot' }}</span>
+                <small v-if="!rentFileName" class="text-muted"
+                  >ABA, Wing, or any transfer receipt</small
+                >
+              </div>
+              <input
+                type="file"
+                @change="handleRentFileChange"
+                hidden
+                accept="image/*,application/pdf"
+              />
+            </label>
+            <div v-if="rentFieldErrors.file" class="bj-err-msg">{{ rentFieldErrors.file }}</div>
+          </div>
+        </div>
+
+        <div class="bj-modal-footer">
+          <button class="btn-bj-reset" @click="resetRent">
+            <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+          </button>
+          <button class="btn-bj-submit" @click="handleRent" :disabled="rentLoading">
+            <span v-if="rentLoading" class="spinner-border spinner-border-sm me-2"></span>
+            <i v-else class="bi bi-house-check-fill me-2"></i>
+            {{ rentLoading ? 'Submitting...' : 'Confirm Rent' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 
-<style scoped>
-.room-detail-page {
-  margin-top: 100px;
+<script setup>
+import { ref, reactive, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useRoomStore } from '@/stores/RoomStore'
+import { useWishlistStore } from '@/stores/WishlistStore'
+import api from '@/api/http'
 
+const route = useRoute()
+const roomStore = useRoomStore()
+const wishlistStore = useWishlistStore()
+
+function handleToggle() {
+  wishlistStore.toggleWishlist(roomStore.room)
 }
 
+const showBookingModal = ref(false)
+const showRentModal = ref(false)
+
+const openBookingModal = () => {
+  resetBooking()
+  showBookingModal.value = true
+}
+const openRentModal = () => {
+  resetRent()
+  showRentModal.value = true
+}
+
+const checkin_date = ref('')
+const file = ref(null)
+const fileName = ref(null)
+const bookingStatus = ref(null)
+const bookingMessage = ref('')
+const bookingLoading = ref(false)
+const fieldErrors = reactive({ checkin: '', file: '' })
+
+const handleFileChange = (e) => {
+  const f = e.target.files[0]
+  file.value = f
+  fileName.value = f?.name ?? null
+  fieldErrors.file = ''
+}
+
+const validateBooking = () => {
+  fieldErrors.checkin = ''
+  fieldErrors.file = ''
+  let ok = true
+  if (!checkin_date.value) {
+    fieldErrors.checkin = 'Please select a check-in date.'
+    ok = false
+  }
+  if (!file.value) {
+    fieldErrors.file = 'Please upload your payment receipt.'
+    ok = false
+  }
+  return ok
+}
+
+const handleBooking = async () => {
+  if (!validateBooking()) return
+  bookingLoading.value = true
+  bookingStatus.value = null
+  try {
+    const fd = new FormData()
+    fd.append('room_id', roomStore.room.id)
+    fd.append('checkin_date', checkin_date.value.replace('T', ' ') + ':00')
+    fd.append('transaction_file', file.value)
+    const res = await api.post('/books', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+    bookingStatus.value = 'success'
+    bookingMessage.value = res.data?.message ?? 'Booking submitted successfully!'
+  } catch (err) {
+    bookingStatus.value = 'error'
+    bookingMessage.value = err?.response?.data?.message ?? 'Booking failed. Please try again.'
+  } finally {
+    bookingLoading.value = false
+  }
+}
+
+const resetBooking = () => {
+  checkin_date.value = ''
+  file.value = null
+  fileName.value = null
+  bookingStatus.value = null
+  bookingMessage.value = ''
+  fieldErrors.checkin = ''
+  fieldErrors.file = ''
+}
+
+// ── Rent state ─────────────────────────────────────────────
+const rentFile = ref(null)
+const rentFileName = ref(null)
+const rentStatus = ref(null)
+const rentMessage = ref('')
+const rentLoading = ref(false)
+const rentFieldErrors = reactive({ file: '' })
+
+const handleRentFileChange = (e) => {
+  const f = e.target.files[0]
+  rentFile.value = f
+  rentFileName.value = f?.name ?? null
+  rentFieldErrors.file = ''
+}
+
+const handleRent = async () => {
+  rentFieldErrors.file = ''
+  if (!rentFile.value) {
+    rentFieldErrors.file = 'Please upload your payment receipt.'
+    return
+  }
+  rentLoading.value = true
+  rentStatus.value = null
+  try {
+    const fd = new FormData()
+    fd.append('room_id', roomStore.room.id)
+    fd.append('transaction_file', rentFile.value)
+    const res = await api.post('/rents', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+    rentStatus.value = 'success'
+    rentMessage.value = res.data?.message ?? 'Rent request submitted successfully!'
+  } catch (err) {
+    rentStatus.value = 'error'
+    rentMessage.value = err?.response?.data?.message ?? 'Rent request failed. Please try again.'
+  } finally {
+    rentLoading.value = false
+  }
+}
+
+const resetRent = () => {
+  rentFile.value = null
+  rentFileName.value = null
+  rentStatus.value = null
+  rentMessage.value = ''
+  rentFieldErrors.file = ''
+}
+
+onMounted(async () => {
+  await roomStore.fetchRoomById(route.params.id)
+})
+</script>
+
+<style scoped>
+/* ── Base ── */
+.room-detail-page {
+  margin-top: 100px;
+}
 .text-navy {
   color: #032142;
 }
 .text-orange {
-  color: #ff6600;
+  color: #ff5f00;
 }
+.bg-orange-light {
+  background: rgba(255, 95, 0, 0.1);
+}
+
+/* ── Buttons ── */
 .btn-orange {
-  background-color: #ff6600;
+  background-color: #ff5f00;
   color: white;
   border: none;
   transition: 0.3s;
 }
 .btn-orange:hover {
-  background-color: #e65c00;
+  background-color: #e65600;
   transform: translateY(-2px);
   color: white;
 }
+
+.btn-navy {
+  background-color: #031c36;
+  color: white;
+  border: none;
+  transition: 0.3s;
+}
+.btn-navy:hover {
+  background-color: #0d3a6e;
+  transform: translateY(-2px);
+  color: white;
+}
+
 .btn-outline-navy {
   border: 2px solid #032142;
   color: #032142;
   font-weight: 600;
 }
-.btn-orange,
-.btn-outline-secondary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+.btn-outline-navy:hover {
+  background: #032142;
+  color: #fff;
 }
 
+/* ── Gallery ── */
 .main-gallery-img {
   width: 100%;
   height: 700px;
@@ -292,255 +638,12 @@
   position: absolute;
   top: 20px;
   left: 20px;
-  background: #ff6600;
+  background: #ff5f00;
   color: white;
   padding: 5px 15px;
   border-radius: 5px;
   font-weight: bold;
 }
-
-.map-placeholder {
-  background-color: #f0f2f5;
-  height: 250px;
-  border: 1px dashed #ced4da;
-}
-
-.card {
-  transition: box-shadow 0.3s ease;
-}
-.rounded-4 {
-  border-radius: 16px !important;
-}
-.bg-light {
-  background-color: #f8f9fa !important;
-}
-.map-container {
-  height: 300px;
-  background-color: #e9ecef;
-  position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.map-container iframe {
-  filter: grayscale(0.2) contrast(1.1);
-  transition: filter 0.3s ease;
-}
-
-.map-container:hover iframe {
-  filter: grayscale(0);
-}
-
-.shadow-inner {
-  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-.icon-box-rounded {
-  width: 48px;
-  height: 48px;
-  background-color: #ffffff;
-  border: 1px solid #f0f0f0;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  transition: all 0.3s ease;
-}
-
-.amenity-item:hover .icon-box-rounded {
-  border-color: #ff6600;
-  transform: translateY(-3px);
-  background-color: rgba(255, 102, 0, 0.05);
-}
-
-.amenity-item span {
-  font-size: 0.95rem;
-}
-
-.bi-wifi {
-  color: #5dade2;
-}
-.bi-droplet {
-  color: #3498db;
-}
-.bi-snow {
-  color: #aed6f1;
-}
-.bi-egg-fried {
-  color: #58d68d;
-}
-
-/* 
-Booking Style
- */
-
-.open-btn:hover {
-  opacity: 0.9;
-}
-
-/* Modal overlay */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-/* Close button */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: transparent;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-/* Center page */
-.page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Card */
-.booking-card {
-  position: relative;
-  width: 420px;
-  background: rgba(255, 255, 255, 0.911);
-
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  font-family: 'DM Sans', sans-serif;
-  animation: fadeIn 0.3s ease;
-  z-index: 99;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.booking-head {
-  padding: 20px;
-  text-align: center;
-  border-bottom: 1px solid #eee;
-}
-
-.booking-head h2 {
-  margin: 0;
-  font-size: 20px;
-}
-
-.booking-head p {
-  font-size: 13px;
-  color: #64748b;
-}
-
-.booking-body {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-input {
-  height: 42px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  padding: 0 12px;
-  font-size: 14px;
-}
-
-input:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.upload-zone {
-  border: 2px dashed #cbd5e1;
-  padding: 14px;
-  text-align: center;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.upload-zone:hover {
-  border-color: #2563eb;
-}
-
-.upload-zone.filled {
-  background: #ecfdf5;
-  border-color: #10b981;
-  color: #065f46;
-}
-
-.booking-footer {
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.btn-submit {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.btn-submit:hover {
-  opacity: 0.9;
-}
-
-.btn-reset {
-  border: 1px solid #e2e8f0;
-  background: white;
-  padding: 10px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.alert {
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 13px;
-}
-
-.alert.success {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.alert.error {
-  background: #fee2e2;
-  color: #991b1b;
-}
-.img-logo {
-  width: 80px;
-  height: 50px;}
 .heart-container {
   position: absolute;
   top: 15px;
@@ -554,84 +657,361 @@ input:focus {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
+  cursor: pointer;
   transition: 0.2s;
   z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .heart-container:hover {
   transform: scale(1.1);
-  transition: 0.2s;
 }
-.is-active i {
-  color: #ff0000;
+
+/* ── Amenities ── */
+.icon-box-rounded {
+  width: 48px;
+  height: 48px;
+  background-color: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  transition: all 0.3s;
+}
+.amenity-item:hover .icon-box-rounded {
+  border-color: #ff5f00;
+  transform: translateY(-3px);
+  background-color: rgba(255, 95, 0, 0.05);
+}
+
+/* ── Map ── */
+.map-container {
+  height: 300px;
+  background-color: #e9ecef;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.map-container iframe {
+  filter: grayscale(0.2) contrast(1.1);
+  transition: filter 0.3s;
+}
+.map-container:hover iframe {
+  filter: grayscale(0);
+}
+.shadow-inner {
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ── Skeleton ── */
+.skel-img {
+  height: 500px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+.skel-line {
+  display: block;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ══════════════════════════════════════
+   BOOKING / RENT MODAL
+══════════════════════════════════════ */
+.bj-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 28, 54, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+}
+
+.bj-modal {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(3, 28, 54, 0.3);
+  animation: modalPop 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Modal header */
+.bj-modal-header {
+  background: #031c36;
+  border-bottom: 3px solid #ff5f00;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bj-modal-close {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+.bj-modal-close:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Modal body */
+.bj-modal-body {
+  padding: 24px;
+}
+
+/* Room summary strip */
+.room-summary-strip {
+  background: #f8f9fa;
+  border: 1.5px solid #eef0f2;
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+.room-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.room-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Rent info box */
+.rent-info-box {
+  background: rgba(255, 95, 0, 0.06);
+  border: 1px solid rgba(255, 95, 0, 0.2);
+  border-left: 4px solid #ff5f00;
+  border-radius: 0 10px 10px 0;
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  color: #7a3500;
+}
+
+/* Field label */
+.bj-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #999;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Input wrap */
+.bj-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #eef0f2;
+  border-radius: 10px;
+  background: #fafbfc;
+  overflow: hidden;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.bj-input-wrap:focus-within {
+  border-color: #ff5f00;
+  box-shadow: 0 0 0 3px rgba(255, 95, 0, 0.1);
+  background: #fff;
+}
+.bj-input-wrap.bj-input-err {
+  border-color: #dc3545;
+  background: #fff8f8;
+}
+.bj-input-wrap:focus-within .bj-input-icon {
+  color: #ff5f00;
+}
+
+.bj-input-icon {
+  padding: 0 12px;
+  color: #bbb;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+.bj-input-wrap input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 11px 14px 11px 0;
+  font-size: 0.88rem;
+  color: #031c36;
+  outline: none;
+}
+
+/* Upload zone */
+.bj-upload {
+  display: block;
+  cursor: pointer;
+  border: 2px dashed #d9dde2;
+  border-radius: 12px;
+  padding: 20px 16px;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+}
+.bj-upload:hover {
+  border-color: #ff5f00;
+  background: rgba(255, 95, 0, 0.03);
+}
+.bj-upload-filled {
+  border-color: #198754;
+  background: #f0fff4;
+  border-style: solid;
+}
+.bj-upload-err {
+  border-color: #dc3545;
+}
+.bj-upload-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+.bj-upload-inner i {
+  font-size: 1.6rem;
+}
+.bj-upload-inner span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #031c36;
+}
+.bj-upload-inner small {
+  font-size: 0.74rem;
+}
+
+/* Alert */
+.bj-alert {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.bj-alert.success {
+  background: #e9faf1;
+  color: #198754;
+}
+.bj-alert.error {
+  background: #ffebee;
+  color: #dc3545;
+}
+
+/* Error msg */
+.bj-err-msg {
+  color: #dc3545;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+/* Modal footer */
+.bj-modal-footer {
+  padding: 16px 24px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f0f0f0;
+  background: #fafbfc;
+}
+
+.btn-bj-reset {
+  background: transparent;
+  color: #666;
+  border: 1.5px solid #e9ecef;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-bj-reset:hover {
+  background: #f0f0f0;
+}
+
+.btn-bj-submit {
+  background: #ff5f00;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    transform 0.15s;
+}
+.btn-bj-submit:hover:not(:disabled) {
+  background: #e65600;
+  transform: translateY(-1px);
+}
+.btn-bj-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Modal transitions */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.2s;
+}
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+.alert-fade-enter-active,
+.alert-fade-leave-active {
+  transition: all 0.25s;
+}
+.alert-fade-enter-from,
+.alert-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
 }
 </style>
-<script setup>
-import { ref } from 'vue'
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useRoomStore } from '@/stores/RoomStore'
-import api from '@/api/http'
-import { useWishlistStore } from '@/stores/WishlistStore'
-
-const wishlistStore = useWishlistStore()
-
-function handleToggle() {
-  wishlistStore.toggleWishlist(roomStore.room)
-}
-
-const route = useRoute()
-const roomStore = useRoomStore()
-const room_id = ref(0)
-const checkin_date = ref('2025-01-01T15:00')
-const file = ref(null)
-const fileName = ref(null)
-const status = ref(null)
-const message = ref('')
-
-// control modal
-const showModal = ref(false)
-
-const handleFileChange = (e) => {
-  const selected = e.target.files[0]
-  file.value = selected
-  fileName.value = selected?.name ?? null
-}
-
-const formatDate = (val) => val.replace('T', ' ') + ':00'
-
-const handleBooking = async () => {
-  if (!room_id.value || !checkin_date.value || !file.value) {
-    status.value = 'error'
-    message.value = 'All fields are required.'
-    return
-  }
-  try {
-    const formData = new FormData()
-    formData.append('room_id', room_id.value)
-    formData.append('checkin_date', formatDate(checkin_date.value))
-    formData.append('transaction_file', file.value)
-
-    const res = await api.post('books', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-
-    status.value = 'success'
-    message.value = res.data?.message ?? 'Booking room successfully.'
-  } catch (error) {
-    status.value = 'error'
-    message.value = error?.response?.data?.message ?? 'Booking failed.'
-  }
-}
-
-const reset = () => {
-  room_id.value = 0
-  checkin_date.value = '2025-01-01T15:00'
-  file.value = null
-  fileName.value = null
-  status.value = null
-}
-onMounted(async () => {
-  await roomStore.fetchRoomById(route.params.id)
-  room_id.value = roomStore.room.id
-})
-</script>

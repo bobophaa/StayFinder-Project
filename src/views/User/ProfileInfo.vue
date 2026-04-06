@@ -53,7 +53,7 @@
             <div class="pb-3">
               <div class="d-flex align-items-center gap-2 mb-1">
                 <h3 class="fw-bold text-white mb-0">{{ user.name }}</h3>
-                <i class="bi bi-patch-check-fill text-orange fs-5"></i>
+                <!-- <i class="bi bi-patch-check-fill text-orange fs-5"></i> -->
               </div>
               <span class="user-role-badge">{{ user.current_job || 'StayFinder Member' }}</span>
             </div>
