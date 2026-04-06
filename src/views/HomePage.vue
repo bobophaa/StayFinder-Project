@@ -27,7 +27,7 @@ const promoRooms = computed(() => {
 })
 
 const featuredRooms = computed(() => {
-  return roomStore.rooms ? roomStore.rooms.slice(4, 10) : []
+  return roomStore.rooms ? roomStore.rooms.slice(8, 14) : []
 })
 
 onMounted(async () => {

@@ -121,12 +121,10 @@ const handleToggle = () => {
 }
 .description-text {
   display: -webkit-box;
-
+  -webkit-line-clamp: 2; 
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  min-height: 3em;
-  margin-bottom: 1rem;
-  color: #6c757d;
 }
+
+
 </style>
