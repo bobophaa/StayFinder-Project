@@ -17,8 +17,6 @@ import MyRented from '@/views/User/MyRented.vue'
 import FAQView from '@/views/User/FAQView.vue'
 import InformationPage from '@/views/User/InformationPage.vue'
 import AboutUs from '@/views/User/AboutUs.vue'
-
-// Create router
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

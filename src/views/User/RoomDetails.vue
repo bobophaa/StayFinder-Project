@@ -182,12 +182,12 @@
               </div>
             </div>
 
-            <router-link
-              to="/"
-              class="btn btn-orange w-100 py-3 fw-bold rounded-3 mb-3 shadow-sm text-decoration-none"
+            <button
+              class="open-btn btn btn-orange w-100 py-3 fw-bold rounded-3 mb-3 shadow-sm text-decoration-none"
+              @click="showModal = true"
             >
               Request Booking
-            </router-link>
+            </button>
 
             <router-link
               to="/"
@@ -196,6 +196,51 @@
               Rent Now
             </router-link>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== AddBooking ============= -->
+  <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+    <div class="page">
+      <div class="booking-card">
+        <!-- Close -->
+        <button class="close-btn" @click="showModal = false">✕</button>
+
+        <div class="booking-head">
+          <img src="@/assets/images/image.png" class="img-logo" alt="Room Icon" />
+          <h3>Book Your Room</h3>
+          <p>Secure your stay quickly and easily</p>
+        </div>
+
+        <div class="booking-body">
+          <div v-if="status" :class="['alert', status]">
+            {{ message }}
+          </div>
+
+          <div class="field">
+            <label>Room ID</label>
+            <input class="placeholer-opacity" type="number" v-model="room_id" />
+          </div>
+
+          <div class="field">
+            <label>Check-in Date</label>
+            <input type="datetime-local" v-model="checkin_date" />
+          </div>
+
+          <div class="field">
+            <label>Payment Proof</label>
+            <label class="upload-zone" :class="{ filled: !!fileName }">
+              <span>{{ fileName ?? 'Click to upload image or PDF' }}</span>
+              <input type="file" @change="handleFileChange" hidden />
+            </label>
+          </div>
+        </div>
+
+        <div class="booking-footer">
+          <button class="btn-reset" @click="reset">Reset</button>
+          <button class="btn-submit" @click="handleBooking">Confirm Booking</button>
         </div>
       </div>
     </div>
@@ -347,6 +392,7 @@
 }
 </style>
 <script setup>
+import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRoomStore } from '@/stores/RoomStore'
@@ -360,8 +406,57 @@ function handleToggle() {
 
 const route = useRoute()
 const roomStore = useRoomStore()
+const room_id = ref(0)
+const checkin_date = ref('2025-01-01T15:00')
+const file = ref(null)
+const fileName = ref(null)
+const status = ref(null)
+const message = ref('')
 
-onMounted(() => {
-  roomStore.fetchRoomById(route.params.id)
+// control modal
+const showModal = ref(false)
+
+const handleFileChange = (e) => {
+  const selected = e.target.files[0]
+  file.value = selected
+  fileName.value = selected?.name ?? null
+}
+
+const formatDate = (val) => val.replace('T', ' ') + ':00'
+
+const handleBooking = async () => {
+  if (!room_id.value || !checkin_date.value || !file.value) {
+    status.value = 'error'
+    message.value = 'All fields are required.'
+    return
+  }
+  try {
+    const formData = new FormData()
+    formData.append('room_id', room_id.value)
+    formData.append('checkin_date', formatDate(checkin_date.value))
+    formData.append('transaction_file', file.value)
+
+    const res = await api.post('books', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+
+    status.value = 'success'
+    message.value = res.data?.message ?? 'Booking room successfully.'
+  } catch (error) {
+    status.value = 'error'
+    message.value = error?.response?.data?.message ?? 'Booking failed.'
+  }
+}
+
+const reset = () => {
+  room_id.value = 0
+  checkin_date.value = '2025-01-01T15:00'
+  file.value = null
+  fileName.value = null
+  status.value = null
+}
+onMounted(async () => {
+  await roomStore.fetchRoomById(route.params.id)
+  room_id.value = roomStore.room.id
 })
 </script>

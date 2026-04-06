@@ -25,12 +25,10 @@
                 </div>
               </div>
 
-              <!-- Camera button — @click.stop prevents document listener from closing immediately -->
               <div class="avatar-cam" @click.stop="toggleMenu" title="Change photo">
                 <i class="bi bi-camera-fill"></i>
               </div>
 
-              <!-- Dropdown menu — @click.stop keeps menu open when clicking inside -->
               <transition name="menu-fade">
                 <div v-if="showActionsMenu" class="avatar-menu shadow" @click.stop>
                   <button class="avatar-menu-item" @click="triggerUpload">
@@ -260,7 +258,7 @@ const tabLinks = [
   { name: 'Profile',        path: '/profile',                icon: 'bi-person-fill'         },
   { name: 'Bookings',       path: '/my-bookings',            icon: 'bi-calendar-check-fill'  },
   { name: 'Checklist',      path: '/profile/checklist',      icon: 'bi-list-check'           },
-  { name: 'Rented Rooms',   path: '/profile/rented-rooms',   icon: 'bi-house-check-fill'     },
+  { name: 'Rented Rooms',   path: '/my-rented',   icon: 'bi-house-check-fill'     },
   { name: 'Rent Checklist', path: '/profile/rent-checklist', icon: 'bi-ui-checks-grid'       },
 ]
 
@@ -272,7 +270,6 @@ const showToast = (msg, type = 'success') => {
   setTimeout(() => (toast.show = false), 3200)
 }
 
-// ── Fetch user ─────────────────────────────────────────────
 const fetchUserData = async () => {
   try {
     const res  = await api.get('/me')
@@ -290,7 +287,6 @@ const fetchUserData = async () => {
 }
 
 // ── Avatar menu ────────────────────────────────────────────
-// toggleMenu uses @click.stop in template so document listener doesn't close it immediately
 const toggleMenu = () => {
   showActionsMenu.value = !showActionsMenu.value
 }
@@ -397,10 +393,8 @@ const confirmUpdateProfile = async () => {
   }
 }
 
-// ── Lifecycle ──────────────────────────────────────────────
 onMounted(() => {
   fetchUserData()
-  // Close avatar menu when clicking anywhere on the document
   document.addEventListener('click', handleOutsideClick)
 })
 
