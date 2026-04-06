@@ -773,6 +773,7 @@ const handleRent = async () => {
 
     rentStatus.value = 'success'
     rentMessage.value = res.data?.message || 'Rent request sent successfully.'
+    console.log(res.data)
 
     // Close modal on success
     showModal2.value = false
