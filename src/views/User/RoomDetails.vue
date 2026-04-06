@@ -16,6 +16,7 @@
     </div>
 
     <div v-else-if="roomStore.room" class="container py-4">
+      <!-- ── Title row ── -->
       <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
         <div>
           <h2 class="fw-bold text-navy mb-1">{{ roomStore.room.title }}</h2>
@@ -27,6 +28,7 @@
         </div>
       </div>
 
+      <!-- ── Gallery ── -->
       <div class="gallery-container mb-5">
         <div class="main-image-wrapper shadow-sm position-relative">
           <img
@@ -54,7 +56,9 @@
       </div>
 
       <div class="row g-4">
+        <!-- ── Left column ── -->
         <div class="col-lg-8">
+          <!-- Host card -->
           <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
             <div class="d-flex align-items-center mb-4">
               <img
@@ -240,6 +244,7 @@
   <transition name="modal-fade">
     <div v-if="showBookingModal" class="bj-modal-overlay" @click.self="showBookingModal = false">
       <div class="bj-modal">
+        <!-- Header -->
         <div class="bj-modal-header">
           <div>
             <h5 class="fw-bold mb-0 text-white">
@@ -252,7 +257,9 @@
           </button>
         </div>
 
+        <!-- Body -->
         <div class="bj-modal-body">
+          <!-- Room summary strip -->
           <div class="room-summary-strip mb-4">
             <div class="d-flex align-items-center gap-3">
               <div class="room-thumb">
@@ -326,6 +333,7 @@
           </div>
         </div>
 
+        <!-- Footer -->
         <div class="bj-modal-footer">
           <button class="btn-bj-reset" @click="resetBooking">
             <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
@@ -340,6 +348,9 @@
     </div>
   </transition>
 
+  <!-- ══════════════════════════════════════
+       RENT MODAL
+  ══════════════════════════════════════ -->
   <transition name="modal-fade">
     <div v-if="showRentModal" class="bj-modal-overlay" @click.self="showRentModal = false">
       <div class="bj-modal">
@@ -377,6 +388,7 @@
             </div>
           </div>
 
+          <!-- Info box -->
           <div class="rent-info-box mb-4">
             <i class="bi bi-info-circle-fill me-2 text-orange"></i>
             By clicking <strong>Confirm Rent</strong>, your request will be sent to the property
@@ -394,6 +406,7 @@
             </div>
           </transition>
 
+          <!-- Payment proof -->
           <div class="bj-field mb-1">
             <label class="bj-label">Payment Proof</label>
             <label
@@ -455,6 +468,7 @@ function handleToggle() {
   wishlistStore.toggleWishlist(roomStore.room)
 }
 
+// ── Modal visibility ───────────────────────────────────────
 const showBookingModal = ref(false)
 const showRentModal = ref(false)
 
@@ -467,6 +481,7 @@ const openRentModal = () => {
   showRentModal.value = true
 }
 
+// ── Booking state ──────────────────────────────────────────
 const checkin_date = ref('')
 const file = ref(null)
 const fileName = ref(null)
