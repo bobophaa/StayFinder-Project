@@ -17,7 +17,10 @@ import MyRented from '@/views/User/MyRented.vue'
 import FAQView from '@/views/User/FAQView.vue'
 import InformationPage from '@/views/User/InformationPage.vue'
 import AboutUs from '@/views/User/AboutUs.vue'
+<<<<<<< HEAD
 
+=======
+>>>>>>> fea440a824b84a4f2f2238add03213681d392707
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -28,6 +31,10 @@ const router = createRouter({
     { path: '/faq', name: 'faq', component: FAQView },
     { path: '/about', name: 'about', component: AboutUs },
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> fea440a824b84a4f2f2238add03213681d392707
     { path: '/login', name: 'login', component: LoginView, meta: { hideNavbar: true } },
     { path: '/register', name: 'register', component: RegisterView, meta: { hideNavbar: true } },
     {
@@ -63,12 +70,16 @@ const router = createRouter({
     },
 
     // --- 404 Not Found ---
+<<<<<<< HEAD
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/views/NotFoundView.vue'),
       meta: { hideNavbar: true } 
     },
+=======
+    { path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import('@/views/NotFoundView.vue') },
+>>>>>>> fea440a824b84a4f2f2238add03213681d392707
   ],
 })
 
