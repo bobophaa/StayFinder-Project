@@ -1,6 +1,7 @@
 <template>
   <div class="profile-page">
-    <div v-if="!user" class="loading-container">
+<div v-if="!user || !user.name" class="loading-container">
+
       <div class="spinner-modern"></div>
       <p class="mt-3 fw-bold text-navy">Tailoring your experience...</p>
     </div>

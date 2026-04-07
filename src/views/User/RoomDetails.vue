@@ -16,6 +16,7 @@
     </div>
 
     <div v-else-if="roomStore.room" class="container py-4">
+      <!-- ── Title row ── -->
       <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
         <div>
           <h2 class="fw-bold text-navy mb-1">{{ roomStore.room.title }}</h2>
@@ -27,6 +28,7 @@
         </div>
       </div>
 
+      <!-- ── Gallery ── -->
       <div class="gallery-container mb-5">
         <div class="main-image-wrapper shadow-sm position-relative">
           <img
@@ -54,7 +56,9 @@
       </div>
 
       <div class="row g-4">
+        <!-- ── Left column ── -->
         <div class="col-lg-8">
+          <!-- Host card -->
           <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
             <div class="d-flex align-items-center mb-4">
               <img
@@ -240,6 +244,7 @@
   <transition name="modal-fade">
     <div v-if="showBookingModal" class="bj-modal-overlay" @click.self="showBookingModal = false">
       <div class="bj-modal">
+        <!-- Header -->
         <div class="bj-modal-header">
           <div>
             <h5 class="fw-bold mb-0 text-white">
@@ -252,7 +257,9 @@
           </button>
         </div>
 
+        <!-- Body -->
         <div class="bj-modal-body">
+          <!-- Room summary strip -->
           <div class="room-summary-strip mb-4">
             <div class="d-flex align-items-center gap-3">
               <div class="room-thumb">
@@ -326,6 +333,7 @@
           </div>
         </div>
 
+        <!-- Footer -->
         <div class="bj-modal-footer">
           <button class="btn-bj-reset" @click="resetBooking">
             <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
@@ -340,6 +348,9 @@
     </div>
   </transition>
 
+  <!-- ══════════════════════════════════════
+       RENT MODAL
+  ══════════════════════════════════════ -->
   <transition name="modal-fade">
     <div v-if="showRentModal" class="bj-modal-overlay" @click.self="showRentModal = false">
       <div class="bj-modal">
@@ -377,6 +388,7 @@
             </div>
           </div>
 
+          <!-- Info box -->
           <div class="rent-info-box mb-4">
             <i class="bi bi-info-circle-fill me-2 text-orange"></i>
             By clicking <strong>Confirm Rent</strong>, your request will be sent to the property
@@ -394,6 +406,7 @@
             </div>
           </transition>
 
+          <!-- Payment proof -->
           <div class="bj-field mb-1">
             <label class="bj-label">Payment Proof</label>
             <label
@@ -446,27 +459,51 @@ import { useRoute } from 'vue-router'
 import { useRoomStore } from '@/stores/RoomStore'
 import { useWishlistStore } from '@/stores/WishlistStore'
 import api from '@/api/http'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const isLoggedIn = () => {
+  const user = localStorage.getItem('user')
+  return !!user
+}
 
 const route = useRoute()
 const roomStore = useRoomStore()
 const wishlistStore = useWishlistStore()
 
 function handleToggle() {
+  if (!isLoggedIn()) {
+    router.push('/login')
+    return
+  }
+
   wishlistStore.toggleWishlist(roomStore.room)
 }
-
+// ── Modal visibility ───────────────────────────────────────
 const showBookingModal = ref(false)
 const showRentModal = ref(false)
 
 const openBookingModal = () => {
+  if (!isLoggedIn()) {
+    router.push('/login')
+    return
+  }
+
   resetBooking()
   showBookingModal.value = true
 }
 const openRentModal = () => {
+  if (!isLoggedIn()) {
+    router.push('/login')
+    return
+  }
+
   resetRent()
   showRentModal.value = true
 }
 
+// ── Booking state ──────────────────────────────────────────
 const checkin_date = ref('')
 const file = ref(null)
 const fileName = ref(null)
@@ -509,6 +546,10 @@ const handleBooking = async () => {
     const res = await api.post('/books', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
     bookingStatus.value = 'success'
     bookingMessage.value = res.data?.message ?? 'Booking submitted successfully!'
+
+    setTimeout(() => {
+      showBookingModal.value = false
+    }, 1500)
   } catch (err) {
     bookingStatus.value = 'error'
     bookingMessage.value = err?.response?.data?.message ?? 'Booking failed. Please try again.'
@@ -555,6 +596,9 @@ const handleRent = async () => {
     fd.append('room_id', roomStore.room.id)
     fd.append('transaction_file', rentFile.value)
     const res = await api.post('/rents', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+
+    console.log(res.data)
+
     rentStatus.value = 'success'
     rentMessage.value = res.data?.message ?? 'Rent request submitted successfully!'
   } catch (err) {
@@ -1013,65 +1057,5 @@ onMounted(async () => {
 .alert-fade-leave-to {
   opacity: 0;
   transform: translateY(-6px);
-}
-
-/* Modal overlay for showModal2 */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-/* Modal card for showModal2 */
-.modal-card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  width: 400px;
-  max-width: 90%;
-  animation: fadeIn 0.3s ease;
-}
-
-/* Fade-in animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Buttons inside modal */
-.modal-card .btn {
-  padding: 10px 20px;
-  border-radius: 5px;
-  font-size: 14px;
-}
-.modal-card .btn-primary {
-  background-color: #2563eb;
-  color: #fff;
-  border: none;
-}
-.modal-card .btn-primary:hover {
-  background-color: #1d4ed8;
-}
-.modal-card .btn-secondary {
-  background-color: #e2e8f0;
-  color: #333;
-  border: none;
-}
-.modal-card .btn-secondary:hover {
-  background-color: #cbd5e1;
 }
 </style>

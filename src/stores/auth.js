@@ -224,5 +224,25 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
     },
+
+    async restoreSession() {
+  const token = localStorage.getItem('token')
+  if (token && !this.user) {
+    this.token = token
+    await this.fetchMe() 
+  }
+},
+async fetchMe() {
+  try {
+    const res = await api.get('/me')
+    this.user = res.data?.data || res.data
+    localStorage.setItem('user', JSON.stringify(this.user))
+  } catch {
+    this.user  = null
+    this.token = null
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+  }
+},
   },
 })
