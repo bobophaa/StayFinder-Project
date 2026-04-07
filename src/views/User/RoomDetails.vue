@@ -459,24 +459,46 @@ import { useRoute } from 'vue-router'
 import { useRoomStore } from '@/stores/RoomStore'
 import { useWishlistStore } from '@/stores/WishlistStore'
 import api from '@/api/http'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const isLoggedIn = () => {
+  const user = localStorage.getItem('user')
+  return !!user
+}
 
 const route = useRoute()
 const roomStore = useRoomStore()
 const wishlistStore = useWishlistStore()
 
 function handleToggle() {
+  if (!isLoggedIn()) {
+    router.push('/login')
+    return
+  }
+
   wishlistStore.toggleWishlist(roomStore.room)
 }
-
 // ── Modal visibility ───────────────────────────────────────
 const showBookingModal = ref(false)
 const showRentModal = ref(false)
 
 const openBookingModal = () => {
+  if (!isLoggedIn()) {
+    router.push('/login')
+    return
+  }
+
   resetBooking()
   showBookingModal.value = true
 }
 const openRentModal = () => {
+  if (!isLoggedIn()) {
+    router.push('/login')
+    return
+  }
+
   resetRent()
   showRentModal.value = true
 }
@@ -524,6 +546,10 @@ const handleBooking = async () => {
     const res = await api.post('/books', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
     bookingStatus.value = 'success'
     bookingMessage.value = res.data?.message ?? 'Booking submitted successfully!'
+
+    setTimeout(() => {
+      showBookingModal.value = false
+    }, 1500)
   } catch (err) {
     bookingStatus.value = 'error'
     bookingMessage.value = err?.response?.data?.message ?? 'Booking failed. Please try again.'
@@ -570,6 +596,9 @@ const handleRent = async () => {
     fd.append('room_id', roomStore.room.id)
     fd.append('transaction_file', rentFile.value)
     const res = await api.post('/rents', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+
+    console.log(res.data)
+
     rentStatus.value = 'success'
     rentMessage.value = res.data?.message ?? 'Rent request submitted successfully!'
   } catch (err) {

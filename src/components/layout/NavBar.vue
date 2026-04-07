@@ -24,7 +24,7 @@
 
       <!-- Menu -->
       <div class="collapse navbar-collapse" id="navbarNav">
-        <!-- Center links -->
+
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
             <router-link to="/" class="nav-link px-3" active-class="active-link">Home</router-link>
@@ -47,7 +47,7 @@
         </ul>
 
         <div class="d-flex align-items-center gap-3">
-          <!-- if user not  -->
+          <!-- if user not login -->
           <template v-if="!authStore.isLoggedIn">
             <router-link to="/login" class="btn-outline-main text-white text-decoration-none">
               Log In
@@ -66,12 +66,11 @@
                 {{ wishlistStore.items.length }}
               </span>
             </router-link>
-
-            <!-- Avatar — shows user photo or default -->
             <router-link to="/profile" class="profile-circle shadow-sm">
               <img
-                :src="authStore.user?.avatar || defaultAvatar"
-                :key="authStore.user?.avatar"
+                v-if="authStore.user"
+                :src="avatarUrl"
+                :key="authStore.user.avatar"
                 alt="avatar"
                 @error="onAvatarError"
               />
@@ -103,22 +102,35 @@ const route = useRoute()
 const router = useRouter()
 
 const isScrolled = ref(false)
-const defaultAvatar = 'https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg'
+const defaultAvatar =
+  'https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg'
 
-// Detect homepage for transparent navbar
+// Detect homepage
 const isHeroPage = computed(() => route.name === 'home' || route.path === '/')
 
-// Fallback if avatar URL is broken
+// ✅ FINAL FIXED avatar
+const avatarUrl = computed(() => {
+  if (!authStore.user?.avatar) return defaultAvatar
+
+  const url = authStore.user.avatar.startsWith('http')
+    ? authStore.user.avatar
+    : `http://127.0.0.1:8000/${authStore.user.avatar}`
+
+  // 🔥 force refresh image (NO CACHE)
+  return url + '?t=' + Date.now()
+})
+
+// fallback
 const onAvatarError = (e: Event) => {
   ;(e.target as HTMLImageElement).src = defaultAvatar
 }
 
-// Scroll handler
+// scroll
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
 }
 
-// Logout
+// logout
 const handleLogout = async () => {
   const confirmed = await confirmDelete('Log out?')
   if (confirmed) {
@@ -137,7 +149,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   transition: all 0.4s ease-in-out;
 }
 .navbar {
-  z-index: 1000;
+  z-index: 10000;
 }
 .bg-navy {
   background-color: #031c36 !important;

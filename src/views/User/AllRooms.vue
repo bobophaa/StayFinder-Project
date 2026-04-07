@@ -24,8 +24,8 @@
 
       <!-- ── Filter Sidebar ── -->
       <div class="col-lg-3" :class="{ 'd-none d-lg-block': !showMobileFilter }">
-        <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 80px;">
-          <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center">
+        <div class="card border-0 shadow-sm rounded-4 sticky-top " style="top: 80px;">
+          <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center rounded-4">
             <span class="fw-bold text-white">
               <i class="bi bi-funnel-fill me-2"></i>Filters
             </span>
@@ -82,12 +82,12 @@
                 <option value="title">Title (A–Z)</option>
               </select>
               <div class="d-flex gap-2 mt-2">
-                <button class="btn btn-sm flex-fill"
+                <button class="btn btn-sm flex-fill rounded-2"
                   :class="filters.sort_dir === 'asc' ? 'btn-orange' : 'btn-outline-secondary'"
                   @click="filters.sort_dir = 'asc'; applyFilters()">
                   <i class="bi bi-sort-up me-1"></i>Asc
                 </button>
-                <button class="btn btn-sm flex-fill"
+                <button class="btn btn-sm flex-fill rounded-2"
                   :class="filters.sort_dir === 'desc' ? 'btn-orange' : 'btn-outline-secondary'"
                   @click="filters.sort_dir = 'desc'; applyFilters()">
                   <i class="bi bi-sort-down me-1"></i>Desc
@@ -166,9 +166,7 @@
           </span>
         </div>
 
-        <!-- ════════════════════════════════
-             SKELETON LOADING (replaces spinner)
-        ════════════════════════════════ -->
+      
         <div v-if="roomStore.loading" class="row g-3">
           <div v-for="i in 9" :key="i" class="col-md-6 col-xl-4">
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
@@ -238,10 +236,16 @@
                   class="badge bg-orange position-absolute top-0 start-0 m-2 px-2 py-1">
                   <i class="bi bi-tag-fill me-1"></i>-{{ room.percent_promotion }}%
                 </span>
-                <button class="wishlist-btn position-absolute top-0 end-0 m-2"
-                  @click.stop="$emit('wishlist', room)" title="Save to wishlist">
-                  <i class="bi bi-heart"></i>
-                </button>
+              <button
+  class="wishlist-btn position-absolute top-0 end-0 m-2"
+  @click.stop="handleToggle(room)"
+  :class="{ 'active': wishlistStore.isWishlisted(room.id) }"
+>
+  <i :class="wishlistStore.isWishlisted(room.id) ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+</button>
+
+
+
               </div>
 
               <div class="card-body p-3">
@@ -320,10 +324,31 @@ const showMobileFilter = ref(false)
 const currentPage      = ref(1)
 const perPage          = 12
 
+
+
+import { useWishlistStore } from '@/stores/WishlistStore'
+import { useRouter } from 'vue-router'
+
+const wishlistStore = useWishlistStore()
+const router = useRouter()
+const handleToggle = (room) => {
+  const token = localStorage.getItem('token')
+
+  if (!token) {
+    router.push('/login')
+    return
+  }
+
+  wishlistStore.toggleWishlist(room)
+}
+
 const filters = reactive({
   search: '', district: '', price_start: '', price_end: '',
   sort_col: 'id', sort_dir: 'desc', bed: '', size: '', options: [],
 })
+
+
+
 
 const priceRanges = [
   { label: '<$50',    min: 0,   max: 50  },
@@ -451,6 +476,9 @@ defineEmits(['wishlist'])
 .container-fluid { margin-top: 100px; }
 .card-header-navy { background: #031c36; border-bottom: 4px solid #ff5f00; }
 .text-navy { color: #031c36; }
+.wishlist-btn.active {
+  color: #dc3545;
+}
 
 /* ── Skeleton ─────────────────────────────────────────── */
 .skel-img {
