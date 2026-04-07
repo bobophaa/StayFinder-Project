@@ -466,7 +466,10 @@ onUnmounted(() => {
 .profile-page {
   background: #f4f6f9;
   min-height: 100vh;
-  margin-top: 80px;
+
+  padding-top: 80px;
+
+
 }
 .text-navy {
   color: #031c36;
