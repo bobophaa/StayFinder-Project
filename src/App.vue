@@ -16,12 +16,9 @@ const authStore = useAuthStore()
 
 const isHeroPage = computed(() => route.path === '/')
 
-<<<<<<< HEAD
 onMounted(async () => {
   await authStore.restoreSession()
 })
-=======
->>>>>>> fea440a824b84a4f2f2238add03213681d392707
 </script>
 
 <style>
