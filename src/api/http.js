@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
- baseURL: import.meta.env.VITE_API_URL + '/api'
+  baseURL: 'https://bontubjoul2.csm.linkpc.net/api', 
 });
 
 api.interceptors.request.use(
