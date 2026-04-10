@@ -8,7 +8,7 @@
   >
     <div class="container">
       <!-- Logo -->
-      <router-link  class="navbar-brand d-flex align-items-center" to="/">
+      <router-link class="navbar-brand d-flex align-items-center" to="/">
         <img src="@/assets/images/image.png" height="60" class="me-2" />
       </router-link>
 
@@ -24,7 +24,6 @@
 
       <!-- Menu -->
       <div class="collapse navbar-collapse" id="navbarNav">
-
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
             <router-link to="/" class="nav-link px-3" active-class="active-link">Home</router-link>
@@ -102,13 +101,9 @@ const route = useRoute()
 const router = useRouter()
 
 const isScrolled = ref(false)
-const defaultAvatar =
-  'https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg'
-
-// Detect homepage
+const defaultAvatar = 'https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg'
 const isHeroPage = computed(() => route.name === 'home' || route.path === '/')
 
-// ✅ FINAL FIXED avatar
 const avatarUrl = computed(() => {
   if (!authStore.user?.avatar) return defaultAvatar
 
@@ -116,21 +111,17 @@ const avatarUrl = computed(() => {
     ? authStore.user.avatar
     : `http://127.0.0.1:8000/${authStore.user.avatar}`
 
-  // 🔥 force refresh image (NO CACHE)
   return url + '?t=' + Date.now()
 })
 
-// fallback
 const onAvatarError = (e: Event) => {
   ;(e.target as HTMLImageElement).src = defaultAvatar
 }
 
-// scroll
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
 }
 
-// logout
 const handleLogout = async () => {
   const confirmed = await confirmDelete('Log out?')
   if (confirmed) {

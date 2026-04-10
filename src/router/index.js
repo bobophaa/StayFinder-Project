@@ -45,7 +45,6 @@ const router = createRouter({
 
     // --- User Protected Routes ---
     { path: '/profile', name: 'profile', component: ProfileInfo, meta: { requiresAuth: true } },
-    { path: '/about', name: 'about', component: AboutUs, meta: { requiresAuth: true } },
     { path: '/wishlist', name: 'wishlist', component: Wishlist, meta: { requiresAuth: true } },
     {
       path: '/my-bookings',
@@ -66,7 +65,7 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/views/NotFoundView.vue'),
-      meta: { hideNavbar: true } 
+      meta: { hideNavbar: true },
     },
   ],
 })
@@ -80,7 +79,6 @@ router.beforeEach((to, from, next) => {
     return next({ name: 'login' }) // redirect to login if not logged in
   }
 
-  
   if ((to.name === 'login' || to.name === 'register') && token) {
     return next({ name: 'home' })
   }
