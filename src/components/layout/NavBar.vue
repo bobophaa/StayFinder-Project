@@ -8,7 +8,7 @@
   >
     <div class="container">
       <!-- Logo -->
-      <router-link class="navbar-brand d-flex align-items-center" to="/">
+      <router-link  class="navbar-brand d-flex align-items-center" to="/">
         <img src="@/assets/images/image.png" height="60" class="me-2" />
       </router-link>
 
