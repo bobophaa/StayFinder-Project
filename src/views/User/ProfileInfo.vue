@@ -307,11 +307,9 @@ const form = reactive({ name: '', email: '', phone: '', gender: 1, current_job: 
 const errors = reactive({ name: '', email: '', phone: '' })
 
 const tabLinks = [
-  { name: 'Profile', path: '/profile', icon: 'bi-person-fill' },
-  { name: 'Bookings', path: '/my-bookings', icon: 'bi-calendar-check-fill' },
-  { name: 'Checklist', path: '/profile/checklist', icon: 'bi-list-check' },
-  { name: 'Rented Rooms', path: '/profile/rented-rooms', icon: 'bi-house-check-fill' },
-  { name: 'Rent Checklist', path: '/profile/rent-checklist', icon: 'bi-ui-checks-grid' },
+  { name: 'Profile',        path: '/profile',                icon: 'bi-person-fill'         },
+  { name: 'Bookings',       path: '/my-bookings',            icon: 'bi-calendar-check-fill'  },
+  { name: 'Rented Rooms',   path: '/my-rented',   icon: 'bi-house-check-fill'     },
 ]
 
 const toast = reactive({ show: false, message: '', type: 'success' })
