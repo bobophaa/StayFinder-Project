@@ -240,7 +240,7 @@ const team = [
   {
     name: 'Tha Siei',
     role: 'SETEC',
-    bio: 'Leads the team and Handles booking and renting workflow of the platform. He ensures users can easily request bookings or rent rooms',
+    bio: 'Leads the team and Handles booking and renting workflow of the platform. He ensures users can easily request bookings or rent rooms.',
     // skills: ['Vue 3', 'Node.js', 'Project Management'],
     bg: 'linear-gradient(135deg, #031c36, #0d3a6e)',
     github: '#',
@@ -260,7 +260,7 @@ const team = [
   {
     name: 'Leav Phichsang',
     role: 'Norton',
-    bio: 'responsible for building the authentication system of StayFinder and ensuring secure user access and data protection',
+    bio: 'responsible for building the authentication system of StayFinder and ensuring secure user access and data protection.',
     // skills: ['Figma', 'CSS', 'Design Systems'],
     bg: 'linear-gradient(135deg, #198754, #2dc08c)',
     github: '#',
@@ -270,7 +270,7 @@ const team = [
   {
     name: 'Meng Minea',
     role: 'RUPP',
-    bio: 'Responsible for user profiles and activity tracking and ensures users can view and manage their booking history, reviews, and account settings with ease.',
+    bio: 'Responsible for user profiles and activity tracking and ensures users can view and manage their booking history, reviews.',
     // skills: ['Vue 3', 'Laravel', 'Docker'],
     bg: 'linear-gradient(135deg, #6f42c1, #9d6fe8)',
     github: '#',
