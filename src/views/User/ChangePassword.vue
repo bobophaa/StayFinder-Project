@@ -1,305 +1,338 @@
 <template>
   <div class="profile-page">
-    <div v-if="!user" class="text-center mt-5 pt-5">
-      <div class="spinner-border text-orange"></div>
-      <p class="mt-2 text-muted">Loading profile...</p>
+
+    <div v-if="!user" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
+      <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
+      <p class="text-muted fw-semibold">Loading security settings...</p>
     </div>
 
     <div v-else>
-      <div class="header-banner"></div>
-      <div class="container">
-        <div class="profile-card shadow-sm">
-          <div class="profile-main-content d-flex align-items-center">
-            <div class="avatar-wrapper position-relative" v-click-outside="closeMenu">
-              <div class="avatar-box">
-                <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="Profile" />
-                <span v-else>{{ user.name?.charAt(0) || 'U' }}</span>
+      <div class="hero-banner position-relative">
+        <div class="container position-relative" style="z-index:2">
+          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top:48px">
+
+            <div class="avatar-wrapper">
+              <div class="avatar-ring">
+                <div class="avatar-box">
+                  <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="avatar" />
+                  <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'U' }}</span>
+
+                  <div v-if="uploadingAvatar" class="avatar-loading">
+                    <div class="spinner-border spinner-border-sm text-white"></div>
+                  </div>
+                </div>
               </div>
 
-              <div class="avatar-overlay d-flex align-items-center justify-content-center" @click="toggleMenu">
-                <i class="bi bi-camera-fill text-white fs-4"></i>
+              <div class="avatar-cam" @click.stop="toggleMenu" title="Change photo">
+                <i class="bi bi-camera-fill"></i>
               </div>
 
-              <div v-if="showActionsMenu" class="avatar-actions-menu shadow-lg">
-                <button class="menu-item" @click="triggerUpload">
-                  <i class="bi bi-cloud-arrow-up me-2"></i> Update image
-                </button>
-                <button v-if="avatarPreview || user.avatar" class="menu-item text-danger" @click="removeImage">
-                  <i class="bi bi-trash3 me-2"></i> Delete image
-                </button>
-              </div>
+              <transition name="menu-fade">
+                <div v-if="showActionsMenu" class="avatar-menu shadow" @click.stop>
+                  <button class="avatar-menu-item" @click="triggerUpload">
+                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>Upload new photo
+                  </button>
+                  <button v-if="user.avatar" class="avatar-menu-item text-danger" @click="removeImage">
+                    <i class="bi bi-trash3-fill me-2"></i>Remove photo
+                  </button>
+                </div>
+              </transition>
+
+              <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
             </div>
 
-            <div class="ms-4">
-              <h3 class="fw-bold mb-0">{{ user.name }}</h3>
+            <div class="pb-3">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <h3 class="fw-bold text-white mb-0">{{ user.name }}</h3>
+                <i class="bi bi-patch-check-fill text-orange fs-5"></i>
+              </div>
+              <span class="user-role-badge">{{ user.current_job || 'StayFinder Member' }}</span>
             </div>
-          </div>
-
-          <div class="tabs-container mt-4">
-            <router-link v-for="tab in tabLinks" :key="tab.path" :to="tab.path" class="tab-link" active-class="active">
-              {{ tab.name }}
-            </router-link>
           </div>
         </div>
       </div>
 
-      <div class="container mt-4 pb-5">
-        <div class="form-card shadow-sm">
-          <h5 class="fw-bold mb-4">Change Password</h5>
-          <p class="text-muted mb-4">Update your password to keep your account secure.</p>
+      <div class="tab-bar-wrap">
+        <div class="container">
+          <div class="tab-bar">
+            <router-link to="/profile" class="tab-item"><i class="bi bi-person-fill me-2"></i>Profile</router-link>
+            <router-link to="/my-bookings" class="tab-item"><i
+                class="bi bi-calendar-check-fill me-2"></i>Bookings</router-link>
+            <router-link to="/my-rented" class="tab-item"><i class="bi bi-house-check-fill me-2"></i>Rented
+              Rooms</router-link>
+            <router-link to="/ChangePassword" class="tab-item tab-active"><i
+                class="bi bi-shield-lock-fill me-2"></i>Security</router-link>
+          </div>
+        </div>
+      </div>
 
-          <form @submit.prevent="updatePassword">
-            <div class="row g-4">
-              <div class="col-12">
-                <label :class="{ 'text-danger': errors.current_password }">Current Password</label>
-                <div class="input-password-wrapper">
-                  <input :type="show.current_password ? 'text' : 'password'" v-model="form.current_password"
-                    class="form-control-custom" :class="{ 'is-invalid-custom': errors.current_password }"
-                    placeholder="••••••••" />
-                  <i class="bi" :class="show.current_password ? 'bi-eye-slash' : 'bi-eye'"
-                    @click="toggleShow('current_password')"></i>
-                </div>
-                <div v-if="errors.current_password" class="error-msg">{{ errors.current_password }}</div>
+      <div class="container py-4 pb-5">
+        <div class="row g-4">
+
+          <div class="col-lg-4">
+            <div class="side-card mb-4">
+              <div class="side-card-header">
+                <i class="bi bi-shield-check me-2"></i>Security Status
               </div>
-
-              <div class="col-md-6">
-                <label :class="{ 'text-danger': errors.new_password }">New Password</label>
-                <div class="input-password-wrapper">
-                  <input :type="show.new_password ? 'text' : 'password'" v-model="form.new_password"
-                    class="form-control-custom" :class="{ 'is-invalid-custom': errors.new_password }"
-                    placeholder="••••••••" />
-                  <i class="bi" :class="show.new_password ? 'bi-eye-slash' : 'bi-eye'"
-                    @click="toggleShow('new_password')"></i>
+              <div class="side-card-body p-4">
+                <div class="d-flex align-items-start gap-3 mb-4">
+                  <div class="status-icon success">
+                    <i class="bi bi-check2-circle"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold text-navy mb-1">Account Protected</h6>
+                    <p class="text-muted small mb-0">Your password helps keep your room bookings and personal data safe.
+                    </p>
+                  </div>
                 </div>
-                <div v-if="errors.new_password" class="error-msg">{{ errors.new_password }}</div>
-              </div>
-
-              <div class="col-md-6">
-                <label :class="{ 'text-danger': errors.confirm_password }">Confirm New Password</label>
-                <div class="input-password-wrapper">
-                  <input :type="show.confirm_password ? 'text' : 'password'" v-model="form.confirm_password"
-                    class="form-control-custom" :class="{ 'is-invalid-custom': errors.confirm_password }"
-                    placeholder="••••••••" />
-                  <i class="bi" :class="show.confirm_password ? 'bi-eye-slash' : 'bi-eye'"
-                    @click="toggleShow('confirm_password')"></i>
+                <div class="p-3 rounded-3 bg-light border">
+                  <p class="small text-muted mb-0"><i class="bi bi-info-circle me-1"></i> Use a unique password to
+                    protect your account.</p>
                 </div>
-                <div v-if="errors.confirm_password" class="error-msg">{{ errors.confirm_password }}</div>
               </div>
             </div>
 
-            <button class="btn-save mt-4" :disabled="loading">
-              <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              Update Password
-            </button>
-          </form>
+            <div class="id-card">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="small opacity-75">Member ID</span>
+                <span class="id-badge">#{{ user.id }}</span>
+              </div>
+              <div class="mt-3 small opacity-60">Verified Secure Profile</div>
+              <div class="id-dots"></div>
+            </div>
+          </div>
+
+          <div class="col-lg-8">
+            <div class="form-card">
+              <div class="mb-4">
+                <h5 class="fw-bold text-navy mb-1">Change Password</h5>
+                <p class="text-muted small">Update your password to keep your account secure.</p>
+              </div>
+
+              <form @submit.prevent="updatePassword">
+                <div class="row g-4">
+                  <div class="col-12">
+                    <label class="field-label" :class="{ 'field-label-err': errors.current_password }">Current
+                      Password</label>
+                    <div class="input-wrap" :class="{ 'input-err': errors.current_password }">
+                      <i class="bi bi-lock input-icon"></i>
+                      <input type="password" v-model="form.current_password" placeholder="Enter current password" />
+                    </div>
+                    <div v-if="errors.current_password" class="err-msg">{{ errors.current_password }}</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="field-label" :class="{ 'field-label-err': errors.new_password }">New Password</label>
+                    <div class="input-wrap" :class="{ 'input-err': errors.new_password }">
+                      <i class="bi bi-key input-icon"></i>
+                      <input type="password" v-model="form.new_password" placeholder="Min. 8 characters" />
+                    </div>
+                    <div v-if="errors.new_password" class="err-msg">{{ errors.new_password }}</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="field-label" :class="{ 'field-label-err': errors.confirm_password }">Confirm
+                      Password</label>
+                    <div class="input-wrap" :class="{ 'input-err': errors.confirm_password }">
+                      <i class="bi bi-key-fill input-icon"></i>
+                      <input type="password" v-model="form.confirm_password" placeholder="Repeat new password" />
+                    </div>
+                    <div v-if="errors.confirm_password" class="err-msg">{{ errors.confirm_password }}</div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-5">
+                  <button type="submit" class="btn btn-save-main" :disabled="loading">
+                    <span v-if="loading && !uploadingAvatar" class="spinner-border spinner-border-sm me-2"></span>
+                    <i v-else class="bi bi-shield-lock me-2"></i>
+                    Update Security
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <transition name="fade">
-      <div v-if="toast.show" class="toast-message" :class="toast.type">{{ toast.message }}</div>
+    <transition name="slide-toast">
+      <div v-if="toast.show" class="toast-pill" :class="toast.type">
+        <i class="bi me-2" :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+        {{ toast.message }}
+      </div>
     </transition>
 
-    <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import api from '@/api/http'
 
-// --- STATE ---
 const user = ref(null)
 const loading = ref(false)
+const uploadingAvatar = ref(false)
+const fileInput = ref(null)
 const avatarPreview = ref(null)
 const showActionsMenu = ref(false)
-const fileInput = ref(null)
 
-// --- TABS ---
-const tabLinks = [
-  { name: 'Profile Information', path: '/profile' },
-  { name: 'Bookings', path: '/profile/bookings' },
-  { name: 'Checklist', path: '/profile/checklist' },
-  { name: 'Rented Rooms', path: '/profile/rented-rooms' },
-  { name: 'Rent Checklist', path: '/profile/rent-checklist' },
-  { name: 'Security', path: '/ChangePassword' }
-]
-
-// --- FORM + VALIDATION ---
 const form = reactive({ current_password: '', new_password: '', confirm_password: '' })
 const errors = reactive({ current_password: '', new_password: '', confirm_password: '' })
-const show = reactive({ current_password: false, new_password: false, confirm_password: false })
-const toggleShow = (field) => (show[field] = !show[field])
-
-// --- TOAST ---
 const toast = reactive({ show: false, message: '', type: 'success' })
+
 const showToast = (msg, type = 'success') => {
   toast.message = msg
   toast.type = type
   toast.show = true
-  setTimeout(() => (toast.show = false), 3000)
+  setTimeout(() => (toast.show = false), 3200)
 }
 
-// --- FETCH USER ---
 const fetchUserData = async () => {
   try {
     const res = await api.get('/me')
     user.value = res.data.data
-  } catch (err) {
-    console.error(err)
-  }
+  } catch (err) { console.error(err) }
 }
 
-// --- VALIDATION (FRONTEND) ---
-const validateForm = () => {
-  let isValid = true
-  errors.current_password = errors.new_password = errors.confirm_password = ''
+// ── AVATAR LOGIC (Same as Profile) ──
+const toggleMenu = () => showActionsMenu.value = !showActionsMenu.value
+const handleOutsideClick = () => showActionsMenu.value = false
 
-  if (!form.current_password) {
-    errors.current_password = 'Current password is required'
-    isValid = false
-  }
-  if (!form.new_password) {
-    errors.new_password = 'New password is required'
-    isValid = false
-  } else if (form.new_password.length < 6) {
-    errors.new_password = 'Password must be at least 6 characters'
-    isValid = false
-  }
-  if (!form.confirm_password) {
-    errors.confirm_password = 'Please confirm new password'
-    isValid = false
-  } else if (form.confirm_password !== form.new_password) {
-    errors.confirm_password = 'Passwords do not match'
-    isValid = false
-  }
-  return isValid
+const triggerUpload = () => {
+  fileInput.value.click()
+  showActionsMenu.value = false
 }
 
-// --- CHANGE PASSWORD (FIXED SECTION) ---
-const updatePassword = async () => {
-  if (!validateForm()) return
-  loading.value = true
+const handleFileUpload = async (e) => {
+  const file = e.target.files[0]
+  if (!file) return
 
+  avatarPreview.value = URL.createObjectURL(file)
+  const fd = new FormData()
+  fd.append('image', file)
+
+  uploadingAvatar.value = true
   try {
-    // ប្តូរ Keys ឱ្យត្រូវជាមួយ Backend (old_pass, new_pass, new_pass_confirmation)
+    await api.post('/profile/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+    await fetchUserData()
+    avatarPreview.value = null
+    showToast('Photo updated!', 'success')
+  } catch (err) {
+    avatarPreview.value = null
+    showToast('Upload failed', 'error')
+  } finally {
+    uploadingAvatar.value = false
+    e.target.value = ''
+  }
+}
+
+const removeImage = async () => {
+  showActionsMenu.value = false
+  if (!confirm('Remove profile photo?')) return
+  try {
+    await api.delete('/profile/image')
+    user.value.avatar = null
+    showToast('Photo removed', 'success')
+  } catch (err) { showToast('Delete failed', 'error') }
+}
+
+const updatePassword = async () => {
+  errors.current_password = errors.new_password = errors.confirm_password = ''
+  let ok = true
+  if (!form.current_password) { errors.current_password = 'Required'; ok = false }
+  if (form.new_password.length < 8) { errors.new_password = 'Min. 8 chars'; ok = false }
+  if (form.new_password !== form.confirm_password) { errors.confirm_password = 'No match'; ok = false }
+
+  if (!ok) return
+  loading.value = true
+  try {
     await api.put('/profile/pass', {
       old_pass: form.current_password,
       new_pass: form.new_password,
       new_pass_confirmation: form.confirm_password
     })
-
-    showToast('Password updated successfully!', 'success')
-    // Reset inputs
+    showToast('Password updated!', 'success')
     form.current_password = form.new_password = form.confirm_password = ''
-    errors.current_password = errors.new_password = errors.confirm_password = ''
   } catch (err) {
-    // ចាប់ error ពី Backend មកដាក់ចូល Reactive errors វិញឱ្យត្រូវ field
-    const backendErrors = err.response?.data?.errors || {}
-    errors.current_password = backendErrors.old_pass?.[0] || ''
-    errors.new_password = backendErrors.new_pass?.[0] || ''
-    errors.confirm_password = backendErrors.new_pass_confirmation?.[0] || ''
-
-    if (err.response?.data?.message) {
-      showToast(err.response.data.message, 'error')
-    } else if (!backendErrors.old_pass && !backendErrors.new_pass && !backendErrors.new_pass_confirmation) {
-      showToast('Failed to change password', 'error')
-    }
-  } finally {
-    loading.value = false
-  }
+    showToast(err.response?.data?.message || 'Update failed', 'error')
+  } finally { loading.value = false }
 }
 
-// --- AVATAR HANDLERS ---
-const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
-const closeMenu = () => (showActionsMenu.value = false)
-const triggerUpload = () => {
-  fileInput.value.click()
-  closeMenu()
-}
-const handleFileUpload = async (e) => {
-  const file = e.target.files[0]
-  if (!file) return
-  avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData()
-  fd.append('image', file)
-  try {
-    await api.post('/profile/image', fd)
-    showToast('Profile image updated!', 'success')
-    await fetchUserData()
-  } catch {
-    showToast('Image upload failed', 'error')
-  }
-}
-const removeImage = async () => {
-  if (!confirm('Delete profile picture?')) return
-  try {
-    await api.delete('/profile/image')
-    avatarPreview.value = null
-    user.value.avatar = null
-    showToast('Profile image deleted', 'success')
-    closeMenu()
-  } catch {
-    showToast('Delete failed', 'error')
-  }
-}
-
-// --- CLICK OUTSIDE DIRECTIVE ---
-const vClickOutside = {
-  mounted(el, binding) {
-    el.clickOutsideEvent = (event) => {
-      if (!(el === event.target || el.contains(event.target))) binding.value()
-    }
-    document.addEventListener('click', el.clickOutsideEvent)
-  },
-  unmounted(el) {
-    document.removeEventListener('click', el.clickOutsideEvent)
-  }
-}
-
-onMounted(fetchUserData)
+onMounted(() => {
+  fetchUserData()
+  document.addEventListener('click', handleOutsideClick)
+})
+onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 </script>
 
 <style scoped>
+
 .profile-page {
-  background: #f9fafb;
+  background: #f4f6f9;
   min-height: 100vh;
+  margin-top: 80px;
 }
 
-.header-banner {
-  height: 140px;
-  background: linear-gradient(to bottom, #ffebd9 0%, #ffffff 100%);
+.text-navy {
+  color: #031c36;
 }
 
-.profile-card {
-  background: white;
-  border-radius: 24px;
-  padding: 0 30px;
-  margin-top: -50px;
+.text-orange {
+  color: #ff5f00;
+}
+
+.hero-banner {
+  background: linear-gradient(135deg, #031c36 0%, #0d3a6e 60%, #1a5fa8 100%);
+  padding-bottom: 60px;
   position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ff5f00' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.user-role-badge {
+  background: rgba(255, 95, 0, .2);
+  color: #ff9a5c;
+  border: 1px solid rgba(255, 95, 0, .3);
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Avatar & Menu */
 .avatar-wrapper {
-  margin-top: -55px;
-  width: 115px;
-  z-index: 5;
+  position: relative;
+  flex-shrink: 0;
+  margin-bottom: -30px;
+  z-index: 10;
+}
+
+.avatar-ring {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, #ff5f00, #ffb347);
 }
 
 .avatar-box {
-  width: 115px;
-  height: 115px;
-  background: #ff5f00;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  border: 5px solid white;
-  color: white;
-  font-size: 45px;
-  font-weight: bold;
+  background: #031c36;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
 }
 
 .avatar-box img {
@@ -308,187 +341,260 @@ onMounted(fetchUserData)
   object-fit: cover;
 }
 
-.avatar-overlay {
+.avatar-loading {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 105px;
-  height: 105px;
-  background: rgba(0, 0, 0, 0.45);
+  inset: 0;
+  background: rgba(0, 0, 0, .5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-cam {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 30px;
+  height: 30px;
+  background: #ff5f00;
+  color: #fff;
   border-radius: 50%;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  z-index: 11;
 }
 
-.avatar-wrapper:hover .avatar-overlay {
-  opacity: 1;
-}
-
-.avatar-actions-menu {
+.avatar-menu {
   position: absolute;
-  top: 115%;
+  top: calc(100% + 10px);
   left: 50%;
   transform: translateX(-50%);
-  background: white;
-  border-radius: 12px;
-  width: 190px;
+  background: #fff;
+  border-radius: 14px;
+  width: 210px;
   padding: 8px 0;
-  z-index: 20;
+  z-index: 999;
   border: 1px solid #eee;
 }
 
-.menu-item {
+.avatar-menu-item {
   width: 100%;
   text-align: left;
   border: none;
   background: none;
-  padding: 10px 18px;
-  font-size: 14px;
-}
-
-.menu-item:hover {
-  background-color: #f8f9fa;
-}
-
-.tabs-container {
-  display: flex;
-  gap: 25px;
-  border-top: 1px solid #f1f1f1;
-  overflow-x: auto;
-}
-
-.tab-link {
-  text-decoration: none;
-  padding: 18px 0;
-  font-weight: 600;
-  color: #888;
-  white-space: nowrap;
-  position: relative;
-}
-
-.tab-link.active {
-  color: #ff5f00;
-}
-
-.tab-link.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: #ff5f00;
-  border-radius: 10px 10px 0 0;
-}
-
-.form-card {
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
-}
-
-.form-control-custom {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid #eef0f2;
-  background-color: #fafafa;
-  transition: 0.2s;
-}
-
-.form-control-custom:focus {
-  outline: none;
-  border-color: #ff5f00;
-  background-color: #fff;
-}
-
-label {
-  font-size: 11px;
-  font-weight: 800;
-  color: #bbb;
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.input-password-wrapper {
-  position: relative;
+  padding: 11px 18px;
+  font-size: .85rem;
   display: flex;
   align-items: center;
 }
 
-.input-password-wrapper input {
-  width: 100%;
-  padding-right: 40px;
+.avatar-menu-item:hover {
+  background: #f8f9fa;
 }
 
-.input-password-wrapper i {
-  position: absolute;
-  right: 12px;
-  cursor: pointer;
-  font-size: 16px;
+/* Tabs */
+.tab-bar-wrap {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+
+.tab-item {
+  padding: 14px 20px;
+  font-size: .85rem;
+  font-weight: 600;
   color: #888;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
 }
 
-.is-invalid-custom {
-  border-color: #dc3545 !important;
-  background-color: #fff8f8 !important;
+.tab-active {
+  color: #ff5f00 !important;
+  border-bottom-color: #ff5f00 !important;
 }
 
-.error-msg {
+/* Layout Cards */
+.side-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+}
+
+.side-card-header {
+  background: #031c36;
+  color: #fff;
+  padding: 14px 20px;
+  font-weight: 700;
+  border-bottom: 3px solid #ff5f00;
+}
+
+.status-icon.success {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(25, 135, 84, 0.1);
+  color: #198754;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.id-card {
+  background: linear-gradient(135deg, #031c36 0%, #0d3a6e 100%);
+  border-radius: 16px;
+  padding: 20px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.id-badge {
+  background: rgba(255, 95, 0, .2);
+  color: #ff9a5c;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: .75rem;
+}
+
+.id-dots {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 20px solid rgba(255, 255, 255, .05);
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #f0f0f0;
+}
+
+.field-label {
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #999;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #eef0f2;
+  border-radius: 12px;
+  background: #fafbfc;
+  transition: 0.2s;
+}
+
+.input-wrap:focus-within {
+  border-color: #ff5f00;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 95, 0, .1);
+}
+
+.input-wrap.input-err {
+  border-color: #dc3545;
+  background: #fff8f8;
+}
+
+.input-icon {
+  padding: 0 12px;
+  color: #bbb;
+}
+
+.input-wrap input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 11px 14px 11px 0;
+  font-size: .88rem;
+  outline: none;
+}
+
+.err-msg {
   color: #dc3545;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: .75rem;
+  font-weight: 600;
   margin-top: 5px;
 }
 
-.btn-save {
+.btn-save-main {
   background: #ff5f00;
-  color: white;
-  padding: 12px 35px;
-  border-radius: 12px;
+  color: #fff;
   border: none;
-  font-weight: 700;
-}
-
-.btn-save:hover:not(:disabled) {
-  background: #e65600;
-  transform: translateY(-1px);
-}
-
-.btn-save:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.toast-message {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 12px 20px;
   border-radius: 12px;
-  color: white;
-  font-weight: 600;
-  z-index: 9999;
+  padding: 12px 32px;
+  font-weight: 700;
+  transition: 0.2s;
 }
 
-.toast-message.success {
-  background-color: #28a745;
+.btn-save-main:hover {
+  background: #e65600;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 95, 0, .3);
 }
 
-.toast-message.error {
-  background-color: #dc3545;
+/* Animations */
+.menu-fade-enter-active,
+.menu-fade-leave-active {
+  transition: opacity .15s, transform .15s;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
+.menu-fade-enter-from,
+.menu-fade-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateX(-50%) translateY(-6px);
+}
+
+.toast-pill {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 50px;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+}
+
+.toast-pill.success {
+  background: #198754;
+}
+
+.toast-pill.error {
+  background: #dc3545;
+}
+
+.slide-toast-enter-active,
+.slide-toast-leave-active {
+  transition: all .35s;
+}
+
+.slide-toast-enter-from,
+.slide-toast-leave-to {
+  opacity: 0;
+  transform: translateX(40px);
 }
 </style>
