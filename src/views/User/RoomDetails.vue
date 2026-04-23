@@ -293,10 +293,10 @@
 
           <!-- Check-in date -->
           <div class="bj-field mb-3">
-            <label class="bj-label">Check-in Date & Time</label>
+            <label class="bj-label">Check-in Date</label>
             <div class="bj-input-wrap" :class="{ 'bj-input-err': fieldErrors.checkin }">
               <i class="bi bi-calendar-event bj-input-icon"></i>
-              <input type="datetime-local" v-model="checkin_date" />
+              <input type="date" v-model="checkin_date" />
             </div>
             <div v-if="fieldErrors.checkin" class="bj-err-msg">{{ fieldErrors.checkin }}</div>
           </div>
@@ -541,7 +541,7 @@ const handleBooking = async () => {
   try {
     const fd = new FormData()
     fd.append('room_id', roomStore.room.id)
-    fd.append('checkin_date', checkin_date.value.replace('T', ' ') + ':00')
+    fd.append('checkin_date', checkin_date.value + ' 00:00:00')
     fd.append('transaction_file', file.value)
     const res = await api.post('/books', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
     bookingStatus.value = 'success'
