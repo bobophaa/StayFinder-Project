@@ -100,7 +100,7 @@ const handleForgotPassword = async () => {
 .auth-page-wrapper {
   min-height: 100vh;
   position: relative;
-  background: linear-gradient(120deg, #6a7cff, #8fd3f4, #fbc2eb);
+  background: linear-gradient(120deg, var(--bs-main), rgba(var(--bs-main-rgb),0.6), var(--bs-sub-main));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -117,8 +117,8 @@ const handleForgotPassword = async () => {
   z-index: 0;
   pointer-events: none;
 }
-.auth-page-wrapper::before { width: 350px; height: 350px; background: #6a7cff; top: 5%; left: 10%; }
-.auth-page-wrapper::after { width: 350px; height: 350px; background: #ff9a9e; bottom: 5%; right: 10%; }
+.auth-page-wrapper::before { width: 350px; height: 350px; background: var(--bs-main); top: 5%; left: 10%; }
+.auth-page-wrapper::after { width: 350px; height: 350px; background: var(--bs-sub-main); bottom: 5%; right: 10%; }
 
 .login-split-card {
   position: relative;
@@ -127,7 +127,7 @@ const handleForgotPassword = async () => {
   max-width: 950px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-radius: 30px;
+  border-radius: var(--border-radius-main);
   overflow: hidden;
   background: rgba(255,255,255,0.2);
   backdrop-filter: blur(25px);
@@ -141,21 +141,24 @@ const handleForgotPassword = async () => {
   .login-split-card { grid-template-columns: 1fr; max-width: 500px; }
 }
 
-.form-container { background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); }
+.form-container {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+}
 
 .logo-badge {
   display: inline-flex;
   align-items: center;
-  background: linear-gradient(135deg, #6a7cff, #ff5f00);
-  color: white;
+  background: linear-gradient(135deg, var(--bs-main), var(--bs-sub-main));
+  color: var(--bs-color-light);
   padding: 7px 18px;
   border-radius: 50px;
   font-size: 0.82rem;
   font-weight: 700;
-  box-shadow: 0 4px 15px rgba(106,124,255,0.3);
+  box-shadow: 0 4px 15px rgba(var(--bs-main-rgb),0.3);
 }
 
-.text-navy { color: #031c36; }
+.text-navy { color: var(--bs-main); }
 
 .custom-group {
   border-radius: 14px;
@@ -163,34 +166,49 @@ const handleForgotPassword = async () => {
   border: 1.5px solid rgba(255,255,255,0.5);
   background: rgba(255,255,255,0.6);
   backdrop-filter: blur(10px);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
-.custom-group:focus-within { border-color: #6a7cff; box-shadow: 0 0 0 3px rgba(106,124,255,0.15); }
-.group-invalid { border-color: #dc3545 !important; }
+.custom-group:focus-within { border-color: var(--bs-main); box-shadow: 0 0 0 3px rgba(var(--bs-main-rgb),0.15); }
+.group-invalid { border-color: var(--bs-bor-danger) !important; }
 
-.input-group-text { background: transparent; border: none; color: #6a7cff; }
-.stay-input { height: 55px; border: none; background: transparent; color: #031c36; }
+.input-group-text { background: transparent; border: none; color: var(--bs-sub-main); }
+.stay-input { height: 55px; border: none; background: transparent; color: var(--bs-color-dark); }
 .stay-input::placeholder { color: #aaa; }
 .stay-input:focus { outline: none; box-shadow: none; background: transparent; }
 
 .btn-main {
-  background: linear-gradient(135deg, #6a7cff, #7b61ff);
+  background-color: var(--bs-sub-main) !important;
   border: none;
-  color: white;
-  box-shadow: 0 10px 25px rgba(106,124,255,0.45);
-  transition: all 0.3s;
+  color: var(--bs-color-light);
+  border-radius: 50px;
+  box-shadow: 0 10px 25px rgba(var(--bs-sub-main-rgb),0.45);
+  transition: all var(--transition-fast);
 }
-.btn-main:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(106,124,255,0.55); }
+.btn-main:hover:not(:disabled) {
+  background-color: var(--bs-sub-main-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(var(--bs-sub-main-rgb),0.55);
+}
+.btn-main:active {
+  transform: translateY(0);
+  background-color: var(--bs-sub-main-active);
+}
 
 .alert-soft-orange {
-  background: rgba(255,95,0,0.1); color: #cc4400;
-  border: 1px solid rgba(255,95,0,0.25); border-radius: 12px;
-  font-size: 0.875rem; backdrop-filter: blur(10px);
+  background: var(--bs-cus-danger);
+  color: var(--bs-bor-danger);
+  border: 1px solid rgba(var(--bs-sub-main-rgb),0.25);
+  border-radius: var(--border-radius-main);
+  font-size: 0.875rem;
+  backdrop-filter: blur(10px);
 }
 .alert-soft-green {
-  background: rgba(25,135,84,0.1); color: #0f6848;
-  border: 1px solid rgba(25,135,84,0.25); border-radius: 12px;
-  font-size: 0.875rem; backdrop-filter: blur(10px);
+  background: var(--bs-cus-success);
+  color: var(--bs-bor-success);
+  border: 1px solid rgba(var(--bs-bor-success),0.25);
+  border-radius: var(--border-radius-main);
+  font-size: 0.875rem;
+  backdrop-filter: blur(10px);
 }
 
 .brand-visual {
@@ -198,14 +216,14 @@ const handleForgotPassword = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, rgba(106,124,255,0.5), rgba(255,95,0,0.2));
+  background: linear-gradient(145deg, rgba(var(--bs-main-rgb),0.5), rgba(var(--bs-sub-main-rgb),0.2));
   overflow: hidden;
 }
 
 .orange-glow {
   position: absolute;
   width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(255,95,0,0.5), transparent);
+  background: radial-gradient(circle, rgba(var(--bs-sub-main-rgb),0.5), transparent);
   filter: blur(80px); opacity: 0.6;
 }
 
@@ -219,13 +237,13 @@ const handleForgotPassword = async () => {
 
 .floating-badge {
   display: inline-block;
-  background: rgba(255,255,255,0.85);
+  background: var(--bs-color-light);
   backdrop-filter: blur(10px);
   padding: 8px 16px;
   border-radius: 50px;
   font-size: 0.78rem;
   font-weight: 700;
-  color: #031c36;
+  color: var(--bs-main);
   margin-top: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
@@ -235,4 +253,5 @@ const handleForgotPassword = async () => {
 
 .alert-fade-enter-active, .alert-fade-leave-active { transition: opacity 0.3s; }
 .alert-fade-enter-from, .alert-fade-leave-to { opacity: 0; }
+
 </style>

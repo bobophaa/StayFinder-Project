@@ -1,6 +1,16 @@
 <template>
   <div class="promo-card-v3 position-relative shadow-lg overflow-hidden">
     <div class="gold-shine"></div>
+
+    <div
+      @click.stop.prevent="handleToggle"
+      class="promo-wishlist position-absolute"
+      :class="{ active: wishlistStore.isWishlisted(item.id) }"
+      style="top:15px;right:15px;z-index:10"
+    >
+      <i :class="wishlistStore.isWishlisted(item.id) ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+    </div>
+
     <router-link :to="'/rooms/' + item.id" class="stretched-link text-decoration-none">
       <div class="image-container position-relative">
         <img :src="item.image" class="promo-img w-100" :alt="item.title" />
@@ -14,16 +24,6 @@
       <div class="card-body-v3 p-4 bg-navy text-white">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="fw-bold mb-1">{{ item.title }}</h5>
-
-          <div
-            @click.stop.prevent="handleToggle"
-            class="promo-wishlist"
-            :class="{ active: wishlistStore.isWishlisted(item.id) }"
-          >
-            <i
-              :class="wishlistStore.isWishlisted(item.id) ? 'bi bi-heart-fill' : 'bi bi-heart'"
-            ></i>
-          </div>
         </div>
 
         <p class="small opacity-75 mb-3">
@@ -38,13 +38,38 @@
           <span class="text-white-50 small mb-2">/month</span>
         </div>
 
-        <router-link :to="'/rooms/' + item.id" class="btn btn-grab shadow-sm w-100 py-2 fw-bold">
-          BOOK NOW
-        </router-link>
+        <div class="btn btn-grab shadow-sm w-100 py-2 fw-bold">BOOK NOW</div>
       </div>
     </router-link>
   </div>
 </template>
+
+<script setup>
+import { computed } from 'vue'
+import { useWishlistStore } from '@/stores/WishlistStore'
+import { useRouter } from 'vue-router'
+
+const props = defineProps({
+  item: { type: Object, required: true },
+})
+
+const wishlistStore = useWishlistStore()
+const router = useRouter()
+
+const discountedPrice = computed(() => {
+  const discount = (props.item.price * props.item.percent_promotion) / 100
+  return (props.item.price - discount).toFixed(2)
+})
+
+const handleToggle = () => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    router.push('/login')
+    return
+  }
+  wishlistStore.toggleWishlist(props.item)
+}
+</script>
 
 <style scoped>
 .promo-card-v3 {
@@ -84,26 +109,22 @@
   box-shadow: 0 5px 15px rgba(255, 95, 0, 0.4);
 }
 
-.exclusive-badge {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(3, 28, 54, 0.8);
-  backdrop-filter: blur(5px);
-  color: #ffc107;
-  padding: 4px 12px;
-  border-radius: 50px;
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 1px;
+.promo-wishlist {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  color: #555;
 }
-
-.limited-tag {
-  color: #ff5f00;
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
+.promo-wishlist:hover { transform: scale(1.1); background: #fffafa; }
+.promo-wishlist.active { color: #dc3545; }
 
 .btn-grab {
   background: linear-gradient(45deg, #ff5f00, #ff8c00);
@@ -112,52 +133,10 @@
   border-radius: 15px;
   transition: 0.3s;
 }
-
 .btn-grab:hover {
   background: white;
   color: #ff5f00;
 }
 
-.promo-wishlist {
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.promo-wishlist.active {
-  color: #dc3545;
-}
+.text-orange { color: #ff5f00 !important; }
 </style>
-<script setup>
-import { computed } from 'vue'
-
-import { useWishlistStore } from '@/stores/WishlistStore'
-
-import { RouterLink, useRouter } from 'vue-router'
-
-const props = defineProps({
-  item: { type: Object, required: true },
-})
-
-const wishlistStore = useWishlistStore()
-
-const router = useRouter()
-
-const discountedPrice = computed(() => {
-  const discount = (props.item.price * props.item.percent_promotion) / 100
-
-  return (props.item.price - discount).toFixed(2)
-})
-
-const handleToggle = () => {
-  const token = localStorage.getItem('token')
-
-  if (!token) {
-    router.push('/login')
-
-    return
-  }
-
-  wishlistStore.toggleWishlist(props.item)
-}
-</script>

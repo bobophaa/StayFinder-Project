@@ -219,7 +219,9 @@ function searchByDistrict(name) {
         <p class="promo-subtitle">Rooms featured by top guests — grab them before they're gone!</p>
 
         <!-- LEFT BUTTON -->
-        <button class="scroll-btn left" @click="scrollLeft">‹</button>
+        <button class="scroll-btn left" @click="scrollLeft">
+          <i class="bi bi-chevron-left"></i>
+        </button>
 
         <!-- SCROLL AREA -->
         <div ref="scrollContainer" class="promo-scroll d-flex flex-nowrap gap-3 py-3">
@@ -229,7 +231,9 @@ function searchByDistrict(name) {
         </div>
 
         <!-- RIGHT BUTTON -->
-        <button class="scroll-btn right" @click="scrollRight">›</button>
+        <button class="scroll-btn right" @click="scrollRight">
+          <i class="bi bi-chevron-right"></i>
+        </button>
       </div>
     </section>
 

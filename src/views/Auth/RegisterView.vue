@@ -89,24 +89,26 @@
 
         </form>
       </div>
+<!-- VISUAL SIDE -->
+<div class="brand-visual d-none d-lg-flex">
+  <div class="purple-glow"></div>
+  <div class="visual-content text-center">
+    <div class="illustration-shapes">
+      <div class="shape circle"></div>
+      <div class="shape square"></div>
+      <div class="shape dot"></div>
+      <div class="shape ring"></div>
+    </div>
+    <h2 class="text-white fw-bold mt-3">Start Your Adventure</h2>
+    <p class="text-white-50 px-4">
+      Sign up and get access to thousands of rooms &amp; exclusive offers
+    </p>
+    <div class="floating-badge">
+      <i class="bi bi-people-fill me-1" style="color:#7b61ff"></i> 10,000+ Users
+    </div>
+  </div>
+</div>
 
-      <!-- VISUAL SIDE -->
-      <div class="brand-visual d-none d-lg-flex">
-        <div class="purple-glow"></div>
-        <div class="visual-content text-center">
-          <div class="illustration-shapes">
-            <div class="shape circle"></div>
-            <div class="shape square"></div>
-            <div class="shape dot"></div>
-            <div class="shape ring"></div>
-          </div>
-          <h2 class="text-white fw-bold mt-3">Start Your Adventure</h2>
-          <p class="text-white-50 px-4">Sign up and get access to thousands of rooms &amp; exclusive offers</p>
-          <div class="floating-badge">
-            <i class="bi bi-people-fill me-1" style="color:#7b61ff"></i> 10,000+ Users
-          </div>
-        </div>
-      </div>
 
     </div>
   </div>
@@ -151,22 +153,23 @@ const handleRegister = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(120deg, #6a11cb, #2575fc, #8fd3f4);
+  background: linear-gradient(
+    120deg,
+    var(--bs-main),
+    #052d5a,
+    #0a3d62
+  );
   padding: 60px 20px;
   overflow: hidden;
   position: relative;
 }
 
+/* REMOVE PURPLE GLOW */
 .auth-page-wrapper::before {
-  content: '';
-  position: absolute;
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(106,17,203,0.4), transparent);
-  top: -80px; right: -80px;
-  border-radius: 50%;
-  filter: blur(80px);
+  display: none;
 }
 
+/* CARD */
 .register-card {
   position: relative;
   z-index: 1;
@@ -178,75 +181,137 @@ const handleRegister = async () => {
   overflow: hidden;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255,255,255,0.3);
   box-shadow: 0 25px 60px rgba(0,0,0,0.25);
-  animation: fadeUp 0.6s ease;
 }
 
 @media (max-width: 992px) {
   .register-card { grid-template-columns: 1fr; max-width: 500px; }
 }
 
-.form-container { background: rgba(255,255,255,0.88); backdrop-filter: blur(10px); }
+/* FORM */
+.form-container {
+  background: rgba(255,255,255,0.9);
+}
 
+/* LOGO */
 .logo-badge {
   display: inline-flex;
   align-items: center;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: var(--bs-sub-main);
   color: white;
   padding: 7px 18px;
   border-radius: 50px;
   font-size: 0.82rem;
   font-weight: 700;
-  box-shadow: 0 4px 15px rgba(106,17,203,0.3);
+  box-shadow: 0 4px 15px rgba(255,95,0,0.3);
 }
 
-.text-purple { color: #6a11cb; }
+/* TEXT */
+.text-purple {
+  color: var(--bs-main); /* navy instead of purple */
+}
 
+/* INPUT */
 .custom-group {
   border-radius: 14px;
   overflow: hidden;
-  border: 1.5px solid rgba(255,255,255,0.5);
-  background: rgba(255,255,255,0.6);
-  backdrop-filter: blur(10px);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  border: 1.5px solid #e5e7eb;
+  background: #f9fafb;
 }
+
 .custom-group:focus-within {
-  border-color: #6a11cb;
-  box-shadow: 0 0 0 3px rgba(106,17,203,0.12);
+  border-color: var(--bs-sub-main);
+  box-shadow: 0 0 0 3px rgba(var(--bs-sub-main-rgb), 0.2);
 }
-.group-invalid { border-color: #dc3545 !important; }
 
-.input-group-text { background: transparent; border: none; color: #6a11cb; }
-.toggle-eye { cursor: pointer; color: #999 !important; }
-.toggle-eye:hover { color: #6a11cb !important; }
+.group-invalid {
+  border-color: var(--bs-bor-danger) !important;
+}
 
-.stay-input { height: 50px; border: none; background: transparent; color: #1a1f36; }
-.stay-input::placeholder { color: #aaa; }
-.stay-input:focus { outline: none; box-shadow: none; background: transparent; }
+.input-group-text {
+  background: transparent;
+  border: none;
+  color: var(--bs-main);
+}
 
+.toggle-eye {
+  cursor: pointer;
+  color: #888 !important;
+}
+
+.toggle-eye:hover {
+  color: var(--bs-sub-main) !important;
+}
+
+.stay-input {
+  height: 50px;
+  border: none;
+  background: transparent;
+  color: var(--bs-color-dark);
+}
+
+.stay-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* BUTTON */
 .btn-gradient {
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  background: var(--bs-sub-main);
   border: none;
   color: white;
-  box-shadow: 0 10px 25px rgba(106,17,203,0.35);
-  transition: all 0.3s;
+  border-radius: 50px;
+  box-shadow: 0 8px 20px rgba(255,95,0,0.4);
+  transition: 0.3s;
 }
+
 .btn-gradient:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(106,17,203,0.5);
+  background: var(--bs-sub-main-hover);
+  transform: translateY(-2px);
 }
 
+/* ALERT */
 .alert-soft-purple {
-  background: rgba(106,17,203,0.08);
-  color: #5a0ab0;
-  border: 1px solid rgba(106,17,203,0.2);
+  background: var(--bs-cus-danger);
+  color: var(--bs-bor-danger);
   border-radius: 12px;
-  font-size: 0.875rem;
 }
 
-/* VISUAL SIDE */
+/* RIGHT SIDE */
+.brand-visual {
+  background: linear-gradient(
+    145deg,
+    var(--bs-main),
+    #052d5a
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+
+.purple-glow {
+  display: none;
+}
+
+
+.shape {
+  background: rgba(255,255,255,0.15);
+}
+
+.floating-badge {
+  background: rgba(255,255,255,0.9);
+  color: var(--bs-main);
+}
+
+
+.floating-badge i {
+  color: var(--bs-sub-main) !important;
+}
+
+
 .brand-visual {
   background: linear-gradient(145deg, #6a11cb, #2575fc);
   display: flex;
@@ -262,24 +327,31 @@ const handleRegister = async () => {
   background: radial-gradient(circle, rgba(255,255,255,0.15), transparent);
   border-radius: 50%;
 }
-
-.visual-content { position: relative; z-index: 1; }
-
-.illustration-shapes {
+.brand-visual {
+  background: var(--bs-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: relative;
-  width: 200px; height: 200px;
-  margin: 0 auto 10px;
+  overflow: hidden;
+}
+
+.purple-glow {
+  position: absolute;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15), transparent);
+  border-radius: 50%;
 }
 
 .shape {
   position: absolute;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 95, 0, 0.2);
 }
 
 .circle { width: 60px; height: 60px; border-radius: 50%; top: 5%; left: 15%; animation: floatShape 6s ease-in-out infinite; }
 .square { width: 45px; height: 45px; border-radius: 10px; top: 45%; left: 60%; animation: floatShape 7s ease-in-out infinite reverse; }
 .dot { width: 20px; height: 20px; border-radius: 50%; top: 70%; left: 15%; animation: floatShape 5s ease-in-out infinite; }
-.ring { width: 50px; height: 50px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.3); background: transparent; top: 10%; left: 65%; animation: floatShape 8s ease-in-out infinite reverse; }
+.ring { width: 50px; height: 50px; border-radius: 50%; border: 4px solid rgba(255,95,0,0.3); background: transparent; top: 10%; left: 65%; animation: floatShape 8s ease-in-out infinite reverse; }
 
 .floating-badge {
   display: inline-block;
@@ -289,11 +361,10 @@ const handleRegister = async () => {
   border-radius: 50px;
   font-size: 0.78rem;
   font-weight: 700;
-  color: #1a1f36;
+  color: var(--bs-main);
   margin-top: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
-
 @keyframes floatShape { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-16px) rotate(8deg); } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(35px); } to { opacity: 1; transform: translateY(0); } }
 

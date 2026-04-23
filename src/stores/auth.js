@@ -54,9 +54,8 @@ export const useAuthStore = defineStore('auth', {
           return false
         }
         this.token = token
-        this.user = user
         localStorage.setItem('token', token)
-        localStorage.setItem('user', JSON.stringify(user))
+        await this.fetchMe()
         return true
       } catch (err) {
         this.error = err.response?.data?.message || 'Invalid email or password.'
@@ -226,23 +225,23 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async restoreSession() {
-  const token = localStorage.getItem('token')
-  if (token && !this.user) {
-    this.token = token
-    await this.fetchMe() 
-  }
-},
-async fetchMe() {
-  try {
-    const res = await api.get('/me')
-    this.user = res.data?.data || res.data
-    localStorage.setItem('user', JSON.stringify(this.user))
-  } catch {
-    this.user  = null
-    this.token = null
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-  }
-},
+      const token = localStorage.getItem('token')
+      if (token && !this.user) {
+        this.token = token
+        await this.fetchMe()
+      }
+    },
+    async fetchMe() {
+      try {
+        const res = await api.get('/me')
+        this.user = res.data?.data || res.data
+        localStorage.setItem('user', JSON.stringify(this.user))
+      } catch {
+        this.user = null
+        this.token = null
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+      }
+    },
   },
 })
