@@ -260,7 +260,7 @@ const team = [
   {
     name: 'Leav Phichsang',
     role: 'Norton',
-    bio: 'responsible for building the authentication system of StayFinder and ensuring secure user access and data protection.',
+    bio: 'responsible for building the authentication system of StayFinder and ensuring secure user access management.',
     // skills: ['Figma', 'CSS', 'Design Systems'],
     bg: 'linear-gradient(135deg, #198754, #2dc08c)',
     github: '#',
