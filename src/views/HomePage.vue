@@ -398,7 +398,7 @@ function searchByDistrict(name) {
             <div class="col-lg-5 p-0 d-none d-lg-block">
               <img
                 src="https://agentplus-s3.s3.eu-west-2.amazonaws.com/bluestoneproperties/articles/2024/11/18/eef9f9bc-3889-44c2-919f-ccc71a656444.jpg"
-                class="img-fluid h-100"
+                class="img-fluid h-100 ms-4"
                 style="object-fit: cover; min-height: 500px"
               />
             </div>
