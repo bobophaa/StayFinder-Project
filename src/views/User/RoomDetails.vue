@@ -597,10 +597,13 @@ const handleRent = async () => {
     fd.append('transaction_file', rentFile.value)
     const res = await api.post('/rents', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
 
-    console.log(1);
-    
+    console.log(1)
+
     rentStatus.value = 'success'
     rentMessage.value = res.data?.message ?? 'Rent request submitted successfully!'
+    setTimeout(() => {
+      showRentModal.value = false
+    }, 1500)
   } catch (err) {
     rentStatus.value = 'error'
     rentMessage.value = err?.response?.data?.message ?? 'Rent request failed. Please try again.'
