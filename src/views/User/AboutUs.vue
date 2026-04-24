@@ -1,6 +1,5 @@
 <template>
   <div class="about-page">
-   
     <section class="hero-section">
       <div class="hero-overlay"></div>
       <div class="container position-relative" style="z-index: 2">
@@ -17,7 +16,6 @@
       </div>
     </section>
 
-
     <section class="stats-bar py-4">
       <div class="container">
         <div class="row g-0 text-center">
@@ -29,7 +27,6 @@
       </div>
     </section>
 
-  
     <section class="py-5 my-2">
       <div class="container">
         <div class="row align-items-center g-5">
@@ -104,7 +101,6 @@
         <div class="row g-4 justify-content-center">
           <div class="col-sm-6 col-lg-3" v-for="member in team" :key="member.name">
             <div class="team-card">
-           
               <div class="team-avatar-wrap">
                 <div class="team-avatar" :style="{ background: member.bg }">
                   <span class="avatar-initial">{{ member.name.charAt(0) }}</span>
@@ -112,20 +108,17 @@
                 <div class="team-avatar-ring"></div>
               </div>
 
-           
               <div class="team-info p-4 text-center">
                 <h5 class="fw-bold text-navy mb-1">{{ member.name }}</h5>
                 <span class="team-role-badge mb-3 d-inline-block">{{ member.role }}</span>
-                <p class="text-muted small mb-3" style="line-height: 1.6">{{ member.bio }}</p>
+                <p class="text-muted small mb-3 bio-text">{{ member.bio }}</p>
 
-               
                 <div class="d-flex flex-wrap gap-1 justify-content-center mb-3">
                   <span class="skill-tag" v-for="skill in member.skills" :key="skill">{{
                     skill
                   }}</span>
                 </div>
 
-           
                 <div class="d-flex justify-content-center gap-3">
                   <a
                     v-if="member.github"
@@ -365,7 +358,14 @@ const reasons = [
   margin: 0 auto;
 }
 
-
+.bio-text {
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .stats-bar {
   background: #031c36;
 }
@@ -429,7 +429,6 @@ const reasons = [
   text-align: center;
 }
 
-
 .value-pill {
   background: rgba(255, 95, 0, 0.08);
   border: 1px solid rgba(255, 95, 0, 0.2);
@@ -441,7 +440,6 @@ const reasons = [
   display: inline-flex;
   align-items: center;
 }
-
 
 .how-section {
   background: #fff;
@@ -487,7 +485,6 @@ const reasons = [
   color: #ff5f00;
   margin: 0 auto;
 }
-
 
 .team-card {
   background: #fff;
@@ -583,7 +580,6 @@ const reasons = [
   transform: scale(1.1);
 }
 
-
 .why-section {
   background: #fff;
 }
@@ -610,7 +606,6 @@ const reasons = [
   font-size: 1.3rem;
   color: #ff5f00;
 }
-
 
 .cta-card {
   background: linear-gradient(135deg, #031c36 0%, #0d3a6e 100%);
