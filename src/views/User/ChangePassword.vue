@@ -21,10 +21,11 @@
               </div>
 
               <div v-if="showActionsMenu" class="avatar-actions-menu shadow-lg">
-                <button class="menu-item" @click="triggerUpload">
+                <button type="button" class="menu-item" @click="triggerUpload">
                   <i class="bi bi-cloud-arrow-up me-2"></i> Update image
                 </button>
-                <button v-if="avatarPreview || user.avatar" class="menu-item text-danger" @click="removeImage">
+                <button type="button" v-if="avatarPreview || user.avatar" class="menu-item text-danger"
+                  @click="removeImage">
                   <i class="bi bi-trash3 me-2"></i> Delete image
                 </button>
               </div>
@@ -48,7 +49,7 @@
           <h5 class="fw-bold mb-4">Change Password</h5>
           <p class="text-muted mb-4">Update your password to keep your account secure.</p>
 
-          <form @submit.prevent="updatePassword">
+          <form @submit.prevent="updatePassword" novalidate>
             <div class="row g-4">
               <div class="col-12">
                 <label :class="{ 'text-danger': errors.current_password }">Current Password</label>
@@ -87,9 +88,9 @@
               </div>
             </div>
 
-            <button class="btn-save mt-4" :disabled="loading">
+            <button type="submit" class="btn-save mt-4" :disabled="loading">
               <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              Update Password
+              {{ loading ? 'Updating...' : 'Update Password' }}
             </button>
           </form>
         </div>
@@ -115,7 +116,6 @@ const avatarPreview = ref(null)
 const showActionsMenu = ref(false)
 const fileInput = ref(null)
 
-// --- TABS ---
 const tabLinks = [
   { name: 'Profile Information', path: '/profile' },
   { name: 'Bookings', path: '/profile/bookings' },
@@ -129,6 +129,7 @@ const tabLinks = [
 const form = reactive({ current_password: '', new_password: '', confirm_password: '' })
 const errors = reactive({ current_password: '', new_password: '', confirm_password: '' })
 const show = reactive({ current_password: false, new_password: false, confirm_password: false })
+
 const toggleShow = (field) => (show[field] = !show[field])
 
 // --- TOAST ---
@@ -146,14 +147,17 @@ const fetchUserData = async () => {
     const res = await api.get('/me')
     user.value = res.data.data
   } catch (err) {
-    console.error(err)
+    console.error("Failed to fetch user:", err)
   }
 }
 
 // --- VALIDATION (FRONTEND) ---
 const validateForm = () => {
   let isValid = true
-  errors.current_password = errors.new_password = errors.confirm_password = ''
+  // Reset errors
+  errors.current_password = ''
+  errors.new_password = ''
+  errors.confirm_password = ''
 
   if (!form.current_password) {
     errors.current_password = 'Current password is required'
@@ -176,35 +180,36 @@ const validateForm = () => {
   return isValid
 }
 
-// --- CHANGE PASSWORD (FIXED SECTION) ---
+// --- CHANGE PASSWORD ---
 const updatePassword = async () => {
   if (!validateForm()) return
   loading.value = true
 
   try {
-    // ប្តូរ Keys ឱ្យត្រូវជាមួយ Backend (old_pass, new_pass, new_pass_confirmation)
-    await api.put('/profile/pass', {
+    // Send request to backend
+    const response = await api.put('/profile/pass', {
       old_pass: form.current_password,
       new_pass: form.new_password,
       new_pass_confirmation: form.confirm_password
     })
 
     showToast('Password updated successfully!', 'success')
-    // Reset inputs
-    form.current_password = form.new_password = form.confirm_password = ''
-    errors.current_password = errors.new_password = errors.confirm_password = ''
+
+    // Clear form
+    form.current_password = ''
+    form.new_password = ''
+    form.confirm_password = ''
+
   } catch (err) {
-    // ចាប់ error ពី Backend មកដាក់ចូល Reactive errors វិញឱ្យត្រូវ field
     const backendErrors = err.response?.data?.errors || {}
+    const message = err.response?.data?.message || 'Failed to update password'
+
+    // Map backend error fields to frontend error state
     errors.current_password = backendErrors.old_pass?.[0] || ''
     errors.new_password = backendErrors.new_pass?.[0] || ''
     errors.confirm_password = backendErrors.new_pass_confirmation?.[0] || ''
 
-    if (err.response?.data?.message) {
-      showToast(err.response.data.message, 'error')
-    } else if (!backendErrors.old_pass && !backendErrors.new_pass && !backendErrors.new_pass_confirmation) {
-      showToast('Failed to change password', 'error')
-    }
+    showToast(message, 'error')
   } finally {
     loading.value = false
   }
@@ -217,12 +222,17 @@ const triggerUpload = () => {
   fileInput.value.click()
   closeMenu()
 }
+
 const handleFileUpload = async (e) => {
   const file = e.target.files[0]
   if (!file) return
+
+  // Show local preview immediately
   avatarPreview.value = URL.createObjectURL(file)
+
   const fd = new FormData()
   fd.append('image', file)
+
   try {
     await api.post('/profile/image', fd)
     showToast('Profile image updated!', 'success')
@@ -231,12 +241,13 @@ const handleFileUpload = async (e) => {
     showToast('Image upload failed', 'error')
   }
 }
+
 const removeImage = async () => {
   if (!confirm('Delete profile picture?')) return
   try {
     await api.delete('/profile/image')
     avatarPreview.value = null
-    user.value.avatar = null
+    if (user.value) user.value.avatar = null
     showToast('Profile image deleted', 'success')
     closeMenu()
   } catch {
@@ -248,7 +259,9 @@ const removeImage = async () => {
 const vClickOutside = {
   mounted(el, binding) {
     el.clickOutsideEvent = (event) => {
-      if (!(el === event.target || el.contains(event.target))) binding.value()
+      if (!(el === event.target || el.contains(event.target))) {
+        binding.value()
+      }
     }
     document.addEventListener('click', el.clickOutsideEvent)
   },
@@ -261,6 +274,7 @@ onMounted(fetchUserData)
 </script>
 
 <style scoped>
+/* Keeping your existing styles as they are visually correct */
 .profile-page {
   background: #f9fafb;
   min-height: 100vh;
@@ -416,11 +430,6 @@ label {
   position: relative;
   display: flex;
   align-items: center;
-}
-
-.input-password-wrapper input {
-  width: 100%;
-  padding-right: 40px;
 }
 
 .input-password-wrapper i {

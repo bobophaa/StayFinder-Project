@@ -141,7 +141,6 @@
 import { ref, reactive, onMounted } from 'vue'
 import api from '@/api/http'
 
-// --- STATE ---
 const user = ref(null)
 const loading = ref(false)
 const fileInput = ref(null)
@@ -150,7 +149,6 @@ const showActionsMenu = ref(false)
 const showConfirmModal = ref(false)
 const isEditing = ref(false)
 
-// --- FORM DATA ---
 const form = reactive({
   name: '',
   email: '',
@@ -160,7 +158,6 @@ const form = reactive({
 })
 const errors = reactive({ name: '', email: '', phone: '' })
 
-// --- TABS ---
 const tabLinks = [
   { name: 'Profile Information', path: '/profile' },
   { name: 'Bookings', path: '/my-bookings' },
@@ -169,7 +166,6 @@ const tabLinks = [
   { name: 'Rent Checklist', path: '/profile/rent-checklist' }
 ]
 
-// --- TOAST ---
 const toast = reactive({ show: false, message: '', type: 'success' })
 const showToast = (msg, type = 'success') => {
   toast.message = msg
@@ -178,7 +174,6 @@ const showToast = (msg, type = 'success') => {
   setTimeout(() => (toast.show = false), 3000)
 }
 
-// --- FETCH USER ---
 const fetchUserData = async () => {
   try {
     const res = await api.get('/me')
@@ -195,7 +190,6 @@ const fetchUserData = async () => {
   }
 }
 
-// --- VALIDATION ---
 const validateForm = () => {
   let isValid = true
   errors.name = errors.email = errors.phone = ''
@@ -206,7 +200,6 @@ const validateForm = () => {
   return isValid
 }
 
-// --- PROFILE UPDATE ---
 const enableEdit = () => { isEditing.value = true }
 const updateProfile = () => { if (!validateForm()) return; showConfirmModal.value = true }
 const confirmUpdateProfile = async () => {
@@ -306,7 +299,6 @@ onMounted(fetchUserData)
   border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-/* ===== AVATAR ===== */
 .avatar-wrapper {
   margin-top: -55px;
   width: 115px;
