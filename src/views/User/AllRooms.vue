@@ -314,41 +314,32 @@ import { useRoomStore } from '@/stores/RoomStore'
 import { useDistrictStore } from '@/stores/DistrictStore'
 import { useRoomOptionStore } from '@/stores/RoomOptionStore'
 import { useRoute } from 'vue-router'
+import { useWishlistStore } from '@/stores/WishlistStore'
+import { useRouter } from 'vue-router'
 
 const roomStore       = useRoomStore()
 const districtStore   = useDistrictStore()
 const roomOptionStore = useRoomOptionStore()
 const route           = useRoute()
+const wishlistStore   = useWishlistStore()
+const router          = useRouter()
 
 const showMobileFilter = ref(false)
 const currentPage      = ref(1)
 const perPage          = 12
 
-
-
-import { useWishlistStore } from '@/stores/WishlistStore'
-import { useRouter } from 'vue-router'
-
-const wishlistStore = useWishlistStore()
-const router = useRouter()
+/* ── Wishlist toggle ── */
 const handleToggle = (room) => {
   const token = localStorage.getItem('token')
-
-  if (!token) {
-    router.push('/login')
-    return
-  }
-
+  if (!token) { router.push('/login'); return }
   wishlistStore.toggleWishlist(room)
 }
 
+/* ── Filter state ── */
 const filters = reactive({
   search: '', district: '', price_start: '', price_end: '',
   sort_col: 'id', sort_dir: 'desc', bed: '', size: '', options: [],
 })
-
-
-
 
 const priceRanges = [
   { label: '<$50',    min: 0,   max: 50  },
@@ -359,12 +350,14 @@ const priceRanges = [
 const bedOptions  = ['1', '2', '3', '4', '5+']
 const sizeOptions = ['Small', 'Medium', 'Big', 'Extra Large']
 
+/* ── Debounce helper ── */
 let debounceTimer = null
 const debouncedFetch = () => {
   clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => applyFilters(), 400)
 }
 
+/* ── Active filter count ── */
 const activeFilterCount = computed(() => {
   let c = 0
   if (filters.search) c++
@@ -376,9 +369,11 @@ const activeFilterCount = computed(() => {
   return c
 })
 
+/* ── Helpers ── */
 const districtName = (id) => districtStore.districts.find(d => d.id == id)?.name || id
 const optionName   = (id) => roomOptionStore.options.find(o => o.id === id)?.name || id
 
+/* ── Filter toggle actions ── */
 function toggleAmenity(id) {
   const idx = filters.options.indexOf(id)
   if (idx === -1) filters.options.push(id)
@@ -401,36 +396,68 @@ function clearFilters() {
   applyFilters()
 }
 
+/* ──────────────────────────────────────────────────────────
+   Build query string from ALL server-supported filters
+   and send to the API.  Filters the API does NOT support
+   (search, bed, size) are applied client-side afterwards.
+   ────────────────────────────────────────────────────────── */
 async function applyFilters() {
   currentPage.value = 1
+
   const params = new URLSearchParams()
+  /* We fetch a large page so the client-side post-filters
+     (search / bed / size) still have a complete dataset.   */
   params.set('page', 1)
-  params.set('per_page', 100)
+  params.set('per_page', 200)
+
+  /* Server-supported filters */
   params.set('sort_col', filters.sort_col)
   params.set('sort_dir', filters.sort_dir)
   if (filters.district)       params.set('district', filters.district)
-  if (filters.price_start)    params.set('price_start', filters.price_start)
-  if (filters.price_end)      params.set('price_end', filters.price_end)
-  if (filters.options.length) params.set('options', JSON.stringify(filters.options))
+  if (filters.price_start !== '' && filters.price_start !== null)
+    params.set('price_start', filters.price_start)
+  if (filters.price_end !== '' && filters.price_end !== null)
+    params.set('price_end', filters.price_end)
+  if (filters.options.length)
+    params.set('options', JSON.stringify(filters.options))
+
   await roomStore.fetchRooms(params.toString())
 }
 
+/* ──────────────────────────────────────────────────────────
+   Client-side post-filtering for search / bed / size
+   (the API ignores these params so we handle them here)
+   ────────────────────────────────────────────────────────── */
 const filteredRooms = computed(() => {
   let list = roomStore.rooms || []
+
+  /* Search by title */
   if (filters.search) {
     const q = filters.search.toLowerCase()
     list = list.filter(r => r.title?.toLowerCase().includes(q))
   }
+
+  /* Bed count */
   if (filters.bed) {
-    if (filters.bed === '5+') list = list.filter(r => parseInt(r.bed) >= 5)
-    else list = list.filter(r => String(r.bed) === filters.bed || r.bed?.toString().startsWith(filters.bed))
+    if (filters.bed === '5+') {
+      list = list.filter(r => parseInt(r.bed) >= 5)
+    } else {
+      list = list.filter(r => String(r.bed) === filters.bed)
+    }
   }
-  if (filters.size) list = list.filter(r => r.size_room?.toLowerCase().includes(filters.size.toLowerCase()))
+
+  /* Room size */
+  if (filters.size) {
+    const sz = filters.size.toLowerCase()
+    list = list.filter(r => r.size_room?.toLowerCase().includes(sz))
+  }
+
   return list
 })
 
-const totalRooms  = computed(() => filteredRooms.value.length)
-const totalPages  = computed(() => Math.ceil(totalRooms.value / perPage))
+/* ── Pagination (client-side over the filtered results) ── */
+const totalRooms     = computed(() => filteredRooms.value.length)
+const totalPages     = computed(() => Math.ceil(totalRooms.value / perPage))
 const paginatedRooms = computed(() => {
   const start = (currentPage.value - 1) * perPage
   return filteredRooms.value.slice(start, start + perPage)
@@ -454,12 +481,15 @@ function changePage(p) {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+/* ── Lifecycle ── */
 onMounted(async () => {
   // Pre-fill filters from homepage search query params
   if (route.query.search)      filters.search      = route.query.search
   if (route.query.district)    filters.district    = route.query.district
   if (route.query.price_start) filters.price_start = route.query.price_start
   if (route.query.price_end)   filters.price_end   = route.query.price_end
+  if (route.query.bed)         filters.bed         = route.query.bed
+  if (route.query.size)        filters.size        = route.query.size
 
   await Promise.all([
     districtStore.fetchDistricts(),
@@ -468,6 +498,7 @@ onMounted(async () => {
   await applyFilters()
 })
 
+/* Reset to page 1 whenever the filtered result count changes */
 watch(totalRooms, () => { currentPage.value = 1 })
 defineEmits(['wishlist'])
 </script>
