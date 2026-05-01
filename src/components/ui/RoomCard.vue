@@ -73,6 +73,7 @@ const handleToggle = () => {
 
 .room-card {
   border-radius: 24px;
+  height: 450px;
   transition: transform 0.3s ease;
   border: 1px solid #f0f0f0 !important;
 }
