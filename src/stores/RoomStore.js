@@ -26,10 +26,9 @@ const response = await api.get('/rooms?page=1&per_page=50&sort_col=id&sort_dir=d
     async fetchRoomById(id) {
   this.loading = true;
   this.error = null;
-  this.room = null; // Clear previous room data
+  this.room = null; 
   try {
     const res = await api.get(`/rooms/${id}`);
-    // Your Postman shows data is inside res.data.data
     this.room = res.data.data;
   } catch (err) {
     this.error = "Could not find room details.";
@@ -37,9 +36,7 @@ const response = await api.get('/rooms?page=1&per_page=50&sort_col=id&sort_dir=d
   } finally {
     this.loading = false;
   }
-},// src/stores/RoomStore.js
-// src/stores/RoomStore.js
-// RoomStore.js
+},
 async addRoom(formData) {
   this.loading = true;
   try {
@@ -47,7 +44,6 @@ async addRoom(formData) {
     if (res.data.result === true) {
       return true;
     }
-    // Log detailed error from server if result is false
     console.error("API Error Details:", res.data);
     return false;
   } catch (err) {

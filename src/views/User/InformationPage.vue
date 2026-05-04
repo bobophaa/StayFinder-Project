@@ -105,6 +105,9 @@ import Foooter from '@/components/layout/Foooter.vue'
 </template>
 
 <style scoped>
+.onboarding-page{
+  margin-top: 30px; 
+}
 .bg-navy {
   background: #031c36;
 }

@@ -115,22 +115,29 @@
 import { computed } from 'vue';
 import { useWishlistStore } from '@/stores/WishlistStore';
 import NavBar from '@/components/layout/NavBar.vue';
+import { confirmDelete, showToast } from '@/Utils/alert'
 
 const wishlistStore = useWishlistStore();
 const wishlistItems = computed(() => wishlistStore.items);
 
 
-const removeFromWishlist = (id: number) => {
-  if (confirm("Remove this room from your wishlist?")) {
+const removeFromWishlist = async (id: number) => {
+  const confirmed = await confirmDelete("Remove this room from Favorite?");
+
+  if (confirmed) {
     wishlistStore.removeFromWishlist(id);
+    showToast('success', 'Removed from wishlist');
+  }
+};
+const clearAll = async () => {
+  const confirmed = await confirmDelete("Clear all wishlist?");
+
+  if (confirmed) {
+    wishlistStore.clearWishlist();
+    showToast('success', 'Wishlist cleared');
   }
 };
 
-const clearAll = () => {
-  if (confirm("Are you sure you want to clear your wishlist?")) {
-    wishlistStore.clearWishlist();
-  }
-};
 </script>
 
 <style scoped>

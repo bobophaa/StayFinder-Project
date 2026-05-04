@@ -1,169 +1,239 @@
 <template>
   <div class="profile-page">
-    <!-- LOADING -->
-    <div v-if="!user" class="text-center mt-5 pt-5">
-      <div class="spinner-border text-orange"></div>
-      <p class="mt-2 text-muted">Loading profile...</p>
+    <div v-if="!user" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
+      <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
+      <p class="text-muted fw-semibold">Loading your profile...</p>
     </div>
 
     <div v-else>
-      <div class="header-banner"></div>
-      <div class="container">
-        <div class="profile-card shadow-sm">
-          <div class="profile-main-content d-flex align-items-center">
-            <div class="avatar-wrapper position-relative" v-click-outside="closeMenu">
-              <div class="avatar-box">
-                <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="Profile" />
-                <span v-else>{{ user.name?.charAt(0) || 'U' }}</span>
+      <div class="hero-banner position-relative">
+        <div class="container position-relative" style="z-index:2">
+          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top:48px">
 
-                <div v-if="loading && uploadingAvatar" class="avatar-loading">
-                  <div class="spinner-border text-white"></div>
+            <div class="avatar-wrapper">
+              <div class="avatar-ring">
+                <div class="avatar-box">
+                  <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="avatar" />
+                  <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'U' }}</span>
+                  <div v-if="loading && uploadingAvatar" class="avatar-loading">
+                    <div class="spinner-border spinner-border-sm text-white"></div>
+                  </div>
                 </div>
               </div>
-              <div class="avatar-overlay d-flex align-items-center justify-content-center" @click="toggleMenu">
-                <i class="bi bi-camera-fill text-white fs-4"></i>
+
+              <div class="avatar-cam" @click.stop="toggleMenu" title="Change photo">
+                <i class="bi bi-camera-fill"></i>
               </div>
-              <div v-if="showActionsMenu" class="avatar-actions-menu shadow-lg">
-                <button class="menu-item" @click="triggerUpload">
-                  <i class="bi bi-cloud-arrow-up me-2"></i> Update image
-                </button>
-                <button v-if="avatarPreview || user.avatar" class="menu-item text-danger" @click="removeImage">
-                  <i class="bi bi-trash3 me-2"></i> Delete image
-                </button>
-              </div>
+
+              <transition name="menu-fade">
+                <div v-if="showActionsMenu" class="avatar-menu shadow" @click.stop>
+                  <button class="avatar-menu-item" @click="triggerUpload">
+                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>Upload new photo
+                  </button>
+                  <button v-if="avatarPreview || user.avatar" class="avatar-menu-item text-danger" @click="removeImage">
+                    <i class="bi bi-trash3-fill me-2"></i>Remove photo
+                  </button>
+                </div>
+              </transition>
+
+              <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
             </div>
 
-            <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
-
-            <div class="ms-4">
-              <h3 class="fw-bold mb-0 d-flex align-items-center">
-                {{ user.name }}
-                <i class="bi bi-patch-check-fill text-primary ms-2 fs-4"></i>
-              </h3>
+            <div class="pb-3">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <h3 class="fw-bold text-white mb-0">{{ user.name }}</h3>
+                <i class="bi bi-patch-check-fill text-orange fs-5"></i>
+              </div>
+              <span class="user-role-badge">{{ user.current_job || 'StayFinder Member' }}</span>
             </div>
           </div>
+        </div>
+      </div>
 
-          <!-- TABS -->
-          <div class="tabs-container mt-4">
-            <router-link v-for="tab in tabLinks" :key="tab.path" :to="tab.path" class="tab-link" active-class="active">
-              {{ tab.name }}
+      <div class="tab-bar-wrap">
+        <div class="container">
+          <div class="tab-bar">
+            <router-link v-for="tab in tabLinks" :key="tab.path" :to="tab.path" class="tab-item"
+              active-class="tab-active">
+              <i :class="['bi', tab.icon, 'me-2']"></i>{{ tab.name }}
             </router-link>
           </div>
         </div>
       </div>
 
-      <!-- PROFILE FORM -->
-      <div class="container mt-4 pb-5">
-        <div class="form-card shadow-sm">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <h5 class="fw-bold mb-0">Profile Information</h5>
-              <small class="text-muted">ID: #{{ user.id || '---' }}</small>
+      <div class="container py-4 pb-5">
+        <div class="row g-4">
+          <div class="col-lg-4">
+            <div class="side-card mb-4">
+              <div class="side-card-header">
+                <i class="bi bi-person-lines-fill me-2"></i>Account Info
+              </div>
+              <div class="side-card-body">
+                <div class="info-row">
+                  <span class="info-label"><i class="bi bi-envelope me-2 text-orange"></i>Email</span>
+                  <span class="info-value">{{ user.email || '–' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label"><i class="bi bi-telephone me-2 text-orange"></i>Phone</span>
+                  <span class="info-value">{{ user.phone || 'Not set' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label"><i class="bi bi-gender-ambiguous me-2 text-orange"></i>Gender</span>
+                  <span class="info-value">{{ user.gender == 1 ? 'Male' : user.gender == 2 ? 'Female' : 'Not set'
+                    }}</span>
+                </div>
+                <div class="info-row border-0">
+                  <span class="info-label"><i class="bi bi-briefcase me-2 text-orange"></i>Job</span>
+                  <span class="info-value">{{ user.current_job || 'Not set' }}</span>
+                </div>
+              </div>
             </div>
-            <div class="d-flex gap-2">
-              <button class="btn btn-save" v-if="!isEditing" @click="enableEdit">Update Information</button>
-              <router-link v-if="isEditing" to="/ChangePassword" class="btn btn-security rounded-pill px-3">
-                <i class="bi bi-shield-lock-fill me-2"></i> Security
-              </router-link>
+
+            <div class="id-card">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="small opacity-75">Member ID</span>
+                <span class="id-badge">#{{ user.id }}</span>
+              </div>
+              <div class="mt-3 small opacity-60">StayFinder verified member</div>
+              <div class="id-dots"></div>
             </div>
           </div>
 
-          <form @submit.prevent="updateProfile">
-            <div class="row g-4">
-              <div class="col-md-6">
-                <label :class="{ 'text-danger': errors.name }">FULL NAME</label>
-                <input v-model="form.name" class="form-control-custom" :class="{ 'is-invalid-custom': errors.name }"
-                  placeholder="Enter your full name" :readonly="!isEditing" />
-                <div v-if="errors.name" class="error-msg">{{ errors.name }}</div>
+          <div class="col-lg-8">
+            <div class="form-card">
+              <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                  <h5 class="fw-bold text-navy mb-1">Profile Information</h5>
+                  <small class="text-muted">Keep your details up to date</small>
+                </div>
+                <div class="d-flex gap-2">
+                  <router-link to="/ChangePassword" class="btn btn-security">
+                    <i class="bi bi-shield-lock-fill me-2"></i>Change Password
+                  </router-link>
+                  <button v-if="!isEditing" class="btn btn-edit-toggle" @click="enableEdit">
+                    <i class="bi bi-pencil-fill me-2"></i>Edit Profile
+                  </button>
+                  <button v-else class="btn btn-cancel" @click="cancelEdit">
+                    <i class="bi bi-x-lg me-1"></i>Cancel
+                  </button>
+                </div>
               </div>
 
-              <div class="col-md-6">
-                <label :class="{ 'text-danger': errors.email }">EMAIL</label>
-                <input v-model="form.email" class="form-control-custom" :class="{ 'is-invalid-custom': errors.email }"
-                  placeholder="email@example.com" :readonly="!isEditing" />
-                <div v-if="errors.email" class="error-msg">{{ errors.email }}</div>
+              <div v-if="isEditing" class="edit-banner mb-4">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                You are now editing your profile. Click <strong>Save Changes</strong> when done.
               </div>
 
-              <div class="col-md-6">
-                <label :class="{ 'text-danger': errors.phone }">PHONE</label>
-                <input v-model="form.phone" class="form-control-custom" :class="{ 'is-invalid-custom': errors.phone }"
-                  placeholder="Phone number" :readonly="!isEditing" />
-                <div v-if="errors.phone" class="error-msg">{{ errors.phone }}</div>
-              </div>
+              <form @submit.prevent="updateProfile">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="field-label" :class="{ 'field-label-err': errors.name }">Full Name</label>
+                    <div class="input-wrap" :class="{ 'input-err': errors.name, 'input-readonly': !isEditing }">
+                      <i class="bi bi-person input-icon"></i>
+                      <input v-model="form.name" placeholder="Your full name" :readonly="!isEditing" />
+                    </div>
+                    <div v-if="errors.name" class="err-msg">{{ errors.name }}</div>
+                  </div>
 
-              <div class="col-md-6">
-                <label>GENDER</label>
-                <select v-model="form.gender" class="form-control-custom" :disabled="!isEditing">
-                  <option :value="1">Male</option>
-                  <option :value="2">Female</option>
-                </select>
-              </div>
+                  <div class="col-md-6">
+                    <label class="field-label" :class="{ 'field-label-err': errors.email }">Email</label>
+                    <div class="input-wrap" :class="{ 'input-err': errors.email, 'input-readonly': !isEditing }">
+                      <i class="bi bi-envelope input-icon"></i>
+                      <input v-model="form.email" type="email" placeholder="email@example.com" :readonly="!isEditing" />
+                    </div>
+                    <div v-if="errors.email" class="err-msg">{{ errors.email }}</div>
+                  </div>
 
-              <div class="col-12">
-                <label>CURRENT JOB</label>
-                <input v-model="form.current_job" class="form-control-custom" placeholder="e.g. Web Developer"
-                  :readonly="!isEditing" />
-              </div>
+                  <div class="col-md-6">
+                    <label class="field-label" :class="{ 'field-label-err': errors.phone }">Phone</label>
+                    <div class="input-wrap" :class="{ 'input-err': errors.phone, 'input-readonly': !isEditing }">
+                      <i class="bi bi-telephone input-icon"></i>
+                      <input v-model="form.phone" placeholder="Phone number" :readonly="!isEditing" />
+                    </div>
+                    <div v-if="errors.phone" class="err-msg">{{ errors.phone }}</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="field-label">Gender</label>
+                    <div class="input-wrap" :class="{ 'input-readonly': !isEditing }">
+                      <i class="bi bi-gender-ambiguous input-icon"></i>
+                      <select v-model="form.gender" :disabled="!isEditing">
+                        <option :value="1">Male</option>
+                        <option :value="2">Female</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <label class="field-label">Current Job</label>
+                    <div class="input-wrap" :class="{ 'input-readonly': !isEditing }">
+                      <i class="bi bi-briefcase input-icon"></i>
+                      <input v-model="form.current_job" placeholder="e.g. Web Developer" :readonly="!isEditing" />
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="isEditing" class="d-flex justify-content-end mt-4">
+                  <button type="submit" class="btn btn-save-main" :disabled="loading">
+                    <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
+                    <i v-else class="bi bi-check-circle-fill me-2"></i>
+                    Save Changes
+                  </button>
+                </div>
+              </form>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <button v-if="isEditing" class="btn-save mt-4" :disabled="loading" type="submit">
+      <div v-if="showConfirmModal" class="modal-overlay">
+        <div class="confirm-modal shadow-lg">
+          <div class="confirm-modal-header">
+            <i class="bi bi-person-check-fill me-2"></i>Confirm Update
+          </div>
+          <div class="confirm-modal-body">
+            <p class="text-muted mb-0">Are you sure you want to save these profile changes?</p>
+          </div>
+          <div class="confirm-modal-footer">
+            <button class="btn btn-light rounded-3 px-4" @click="showConfirmModal = false">Cancel</button>
+            <button class="btn btn-save-main px-4" @click="confirmUpdateProfile" :disabled="loading">
               <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              Save Changes
+              <i v-else class="bi bi-check2 me-1"></i>Confirm
             </button>
-          </form>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- CONFIRM MODAL -->
-    <div v-if="showConfirmModal" class="modal-backdrop">
-      <div class="modal-card shadow-lg">
-        <h5 class="fw-bold mb-3">Confirm Update</h5>
-        <p>Are you sure you want to update your profile information?</p>
-        <div class="d-flex justify-content-end gap-2 mt-4">
-          <button class="btn btn-secondary" @click="showConfirmModal = false">Cancel</button>
-          <button class="btn btn-primary" @click="confirmUpdateProfile" :disabled="loading">
-            <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-            Update
-          </button>
+      <transition name="slide-toast">
+        <div v-if="toast.show" class="toast-pill" :class="toast.type">
+          <i class="bi me-2" :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+          {{ toast.message }}
         </div>
-      </div>
+      </transition>
     </div>
-
-    <!-- TOAST -->
-    <transition name="fade">
-      <div v-if="toast.show" class="toast-message" :class="toast.type">{{ toast.message }}</div>
-    </transition>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import api from '@/api/http'
 
 const user = ref(null)
 const loading = ref(false)
+const uploadingAvatar = ref(false)
 const fileInput = ref(null)
 const avatarPreview = ref(null)
 const showActionsMenu = ref(false)
 const showConfirmModal = ref(false)
 const isEditing = ref(false)
 
-const form = reactive({
-  name: '',
-  email: '',
-  phone: '',
-  gender: 1,
-  current_job: ''
-})
+const form = reactive({ name: '', email: '', phone: '', gender: 1, current_job: '' })
 const errors = reactive({ name: '', email: '', phone: '' })
 
 const tabLinks = [
-  { name: 'Profile Information', path: '/profile' },
-  { name: 'Bookings', path: '/my-bookings' },
-  { name: 'Checklist', path: '/profile/checklist' },
-  { name: 'Rented Rooms', path: '/profile/rented-rooms' },
-  { name: 'Rent Checklist', path: '/profile/rent-checklist' }
+  { name: 'Profile', path: '/profile', icon: 'bi-person-fill' },
+  { name: 'Bookings', path: '/my-bookings', icon: 'bi-calendar-check-fill' },
+  { name: 'Rented Rooms', path: '/my-rented', icon: 'bi-house-check-fill' },
 ]
 
 const toast = reactive({ show: false, message: '', type: 'success' })
@@ -171,7 +241,7 @@ const showToast = (msg, type = 'success') => {
   toast.message = msg
   toast.type = type
   toast.show = true
-  setTimeout(() => (toast.show = false), 3000)
+  setTimeout(() => (toast.show = false), 3200)
 }
 
 const fetchUserData = async () => {
@@ -183,25 +253,102 @@ const fetchUserData = async () => {
       email: user.value.email || '',
       phone: user.value.phone || '',
       gender: user.value.gender || 1,
-      current_job: user.value.current_job || ''
+      current_job: user.value.current_job || '',
     })
   } catch (err) {
-    console.error("Fetch user error:", err)
+    console.error('Fetch user error:', err)
+  }
+}
+
+// ── Avatar menu ────────────────────────────────────────────
+const toggleMenu = () => {
+  showActionsMenu.value = !showActionsMenu.value
+}
+
+const handleOutsideClick = () => {
+  showActionsMenu.value = false
+}
+
+const triggerUpload = () => {
+  fileInput.value.click()
+  showActionsMenu.value = false
+}
+
+// ── Upload avatar ──────────────────────────────────────────
+const handleFileUpload = async (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('File too large (max 2MB)', 'error')
+    return
+  }
+
+  avatarPreview.value = URL.createObjectURL(file)
+
+  const fd = new FormData()
+  fd.append('image', file)
+
+  loading.value = true
+  uploadingAvatar.value = true
+  try {
+    await api.post('/profile/image', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    await fetchUserData()
+    avatarPreview.value = null
+    showToast('Profile photo updated!', 'success')
+  } catch (err) {
+    avatarPreview.value = null
+    showToast(err.response?.data?.message || 'Upload failed', 'error')
+  } finally {
+    loading.value = false
+    uploadingAvatar.value = false
+    e.target.value = ''
+  }
+}
+
+const removeImage = async () => {
+  showActionsMenu.value = false
+  if (!confirm('Remove your profile photo?')) return
+  loading.value = true
+  try {
+    await api.delete('/profile/image')
+    user.value.avatar = null
+    avatarPreview.value = null
+    showToast('Profile photo removed', 'success')
+  } catch (err) {
+    showToast(err.response?.data?.message || 'Delete failed', 'error')
+  } finally {
+    loading.value = false
   }
 }
 
 const validateForm = () => {
-  let isValid = true
   errors.name = errors.email = errors.phone = ''
-  if (!form.name?.trim()) { errors.name = 'Full name is required'; isValid = false }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!form.email) { errors.email = 'Email required'; isValid = false }
-  else if (!emailRegex.test(form.email)) { errors.email = 'Invalid email'; isValid = false }
-  return isValid
+  let ok = true
+  if (!form.name?.trim()) { errors.name = 'Full name is required'; ok = false }
+  if (!form.email) { errors.email = 'Email is required'; ok = false }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { errors.email = 'Invalid email format'; ok = false }
+  return ok
 }
 
 const enableEdit = () => { isEditing.value = true }
-const updateProfile = () => { if (!validateForm()) return; showConfirmModal.value = true }
+const cancelEdit = () => {
+  isEditing.value = false
+  Object.assign(form, {
+    name: user.value.name || '',
+    email: user.value.email || '',
+    phone: user.value.phone || '',
+    gender: user.value.gender || 1,
+    current_job: user.value.current_job || '',
+  })
+}
+
+const updateProfile = () => {
+  if (!validateForm()) return
+  showConfirmModal.value = true
+}
+
 const confirmUpdateProfile = async () => {
   showConfirmModal.value = false
   loading.value = true
@@ -212,114 +359,92 @@ const confirmUpdateProfile = async () => {
     isEditing.value = false
   } catch (err) {
     showToast(err.response?.data?.message || 'Update failed', 'error')
-  } finally { loading.value = false }
-}
-
-const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
-const closeMenu = () => (showActionsMenu.value = false)
-const triggerUpload = () => { fileInput.value.click(); closeMenu() }
-const uploadingAvatar = ref(false)
-
-const handleFileUpload = async (e) => {
-  const file = e.target.files[0]
-  if (!file) return
-  if (file.size > 2 * 1024 * 1024) { showToast('File is too large (Max 2MB)', 'error'); return }
-
-  avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData(); fd.append('image', file)
-
-  loading.value = true
-  uploadingAvatar.value = true
-  try {
-    await api.post('/profile/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
-    await fetchUserData()
-    avatarPreview.value = null
-    showToast('Profile image updated successfully!', 'success')
-  } catch (err) {
-    avatarPreview.value = null
-    showToast(err.response?.data?.message || 'Image upload failed', 'error')
   } finally {
     loading.value = false
-    uploadingAvatar.value = false
-    e.target.value = ''
   }
 }
 
-const removeImage = async () => {
-  if (!confirm('Are you sure you want to delete your profile picture?')) return
-  loading.value = true
-  try {
-    await api.delete('/profile/image')
-    user.value.avatar = null
-    avatarPreview.value = null
-    showToast('Profile image deleted successfully!', 'success')
-    closeMenu()
-  } catch (err) {
-    showToast(err.response?.data?.message || 'Delete failed', 'error')
-  } finally { loading.value = false }
-}
+onMounted(() => {
+  fetchUserData()
+  document.addEventListener('click', handleOutsideClick)
+})
 
-const vClickOutside = {
-  mounted(el, binding) {
-    el.clickOutsideEvent = (event) => { if (!(el === event.target || el.contains(event.target))) binding.value() }
-    document.addEventListener('click', el.clickOutsideEvent)
-  },
-  unmounted(el) { document.removeEventListener('click', el.clickOutsideEvent) }
-}
-
-onMounted(fetchUserData)
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick)
+})
 </script>
 
 <style scoped>
+/* ── Base ── */
 .profile-page {
-  background: #f9fafb;
+  background: #f4f6f9;
   min-height: 100vh;
+  margin-top: 80px;
 }
 
-.avatar-loading {
+.text-navy {
+  color: #031c36;
+}
+
+.text-orange {
+  color: #ff5f00;
+}
+
+/* ── Hero ── */
+.hero-banner {
+  z-index: 200;
+  background: linear-gradient(135deg, #031c36 0%, #0d3a6e 60%, #1a5fa8 100%);
+  padding-bottom: 60px;
+  position: relative;
+  overflow: visible;
+}
+
+.hero-banner::before {
+  content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ff5f00' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-.header-banner {
-  height: 140px;
-  background: linear-gradient(to bottom, #ffebd9 0%, #ffffff 100%);
+.user-role-badge {
+  background: rgba(255, 95, 0, .2);
+  color: #ff9a5c;
+  border: 1px solid rgba(255, 95, 0, .3);
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
 }
 
-.profile-card {
-  background: white;
-  border-radius: 24px;
-  padding: 0 30px;
-  margin-top: -50px;
-  border: 1px solid rgba(0, 0, 0, 0.03);
-}
-
+/* ── Avatar ── */
 .avatar-wrapper {
-  margin-top: -55px;
-  width: 115px;
-  z-index: 5;
   position: relative;
+  flex-shrink: 0;
+  margin-bottom: -30px;
+  z-index: 10;
+}
+
+.avatar-ring {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, #ff5f00, #ffb347);
 }
 
 .avatar-box {
-  width: 115px;
-  height: 115px;
-  background: #ff5f00;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  border: 5px solid white;
-  color: white;
-  font-size: 45px;
-  font-weight: bold;
+  background: #031c36;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
 }
 
 .avatar-box img {
@@ -328,221 +453,455 @@ onMounted(fetchUserData)
   object-fit: cover;
 }
 
-.avatar-overlay {
+.avatar-loading {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 105px;
-  height: 105px;
-  background: rgba(0, 0, 0, 0.45);
+  inset: 0;
+  background: rgba(0, 0, 0, .5);
   border-radius: 50%;
-  opacity: 0;
-  transition: opacity 0.3s;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.avatar-wrapper:hover .avatar-overlay {
-  opacity: 1;
+.avatar-cam {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 30px;
+  height: 30px;
+  background: #ff5f00;
+  color: #fff;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+  z-index: 11;
 }
 
-.avatar-actions-menu {
+.avatar-cam:hover {
+  background: #e65600;
+  transform: scale(1.1);
+}
+
+.avatar-menu {
   position: absolute;
-  top: 115%;
+  top: calc(100% + 10px);
   left: 50%;
   transform: translateX(-50%);
-  background: white;
-  border-radius: 12px;
-  width: 190px;
+  background: #fff;
+  border-radius: 14px;
+  width: 210px;
   padding: 8px 0;
-  z-index: 20;
+  z-index: 9999;
   border: 1px solid #eee;
 }
 
-.menu-item {
+.avatar-menu-item {
   width: 100%;
   text-align: left;
   border: none;
   background: none;
-  padding: 10px 18px;
-  font-size: 14px;
+  padding: 11px 18px;
+  font-size: .85rem;
   cursor: pointer;
-}
-
-.menu-item:hover {
-  background-color: #f8f9fa;
-}
-
-/* ===== TABS ===== */
-.tabs-container {
+  transition: background .15s;
   display: flex;
-  gap: 25px;
-  border-top: 1px solid #f1f1f1;
-  overflow-x: auto;
+  align-items: center;
 }
 
-.tab-link {
-  text-decoration: none;
-  padding: 18px 0;
+.avatar-menu-item:hover {
+  background: #f8f9fa;
+}
+
+/* Menu fade transition */
+.menu-fade-enter-active,
+.menu-fade-leave-active {
+  transition: opacity .15s, transform .15s;
+}
+
+.menu-fade-enter-from,
+.menu-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px);
+}
+
+.menu-fade-enter-to,
+.menu-fade-leave-from {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Tab bar ── */
+.tab-bar-wrap {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  padding-top: 10px;
+}
+
+.tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  font-size: .85rem;
   font-weight: 600;
   color: #888;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
   white-space: nowrap;
-  position: relative;
+  transition: color .2s, border-color .2s;
 }
 
-.tab-link.active {
+.tab-item:hover {
   color: #ff5f00;
 }
 
-.tab-link.active::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: #ff5f00;
-  border-radius: 10px 10px 0 0;
+.tab-active {
+  color: #ff5f00 !important;
+  border-bottom-color: #ff5f00 !important;
 }
 
-/* ===== FORM ===== */
-.form-card {
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
+/* ── Side card ── */
+.side-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
 }
 
-.form-control-custom {
-  width: 100%;
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 1px solid #eef0f2;
-  background-color: #fafafa;
-  transition: 0.2s;
+.side-card-header {
+  background: #031c36;
+  color: #fff;
+  padding: 14px 20px;
+  font-weight: 700;
+  font-size: .9rem;
+  border-bottom: 3px solid #ff5f00;
 }
 
-.form-control-custom:focus {
-  outline: none;
-  border-color: #ff5f00;
-  background-color: #fff;
+.side-card-body {
+  padding: 8px 0;
 }
 
-label {
-  font-size: 11px;
-  font-weight: 800;
-  color: #bbb;
+.info-row {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f8f8f8;
+}
+
+.info-label {
+  font-size: .72rem;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: .88rem;
+  font-weight: 600;
+  color: #031c36;
+  word-break: break-word;
+}
+
+/* ── ID card ── */
+.id-card {
+  background: linear-gradient(135deg, #031c36 0%, #0d3a6e 100%);
+  border-radius: 16px;
+  padding: 20px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.id-badge {
+  background: rgba(255, 95, 0, .2);
+  color: #ff9a5c;
+  border: 1px solid rgba(255, 95, 0, .3);
+  font-size: .78rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.id-dots {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 20px solid rgba(255, 255, 255, .05);
+}
+
+/* ── Form card ── */
+.form-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #f0f0f0;
+}
+
+.field-label {
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #999;
   margin-bottom: 8px;
   display: block;
 }
 
-.is-invalid-custom {
-  border-color: #dc3545 !important;
-  background-color: #fff8f8 !important;
+.field-label-err {
+  color: #dc3545 !important;
 }
 
-.error-msg {
-  color: #dc3545;
-  font-size: 12px;
-  font-weight: 500;
-  margin-top: 5px;
-}
-
-/* ===== BUTTONS ===== */
-.btn-save {
-  background: #ff5f00;
-  color: white;
-  padding: 12px 35px;
+.input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #eef0f2;
   border-radius: 12px;
+  background: #fafbfc;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.input-wrap:focus-within {
+  border-color: #ff5f00;
+  box-shadow: 0 0 0 3px rgba(255, 95, 0, .1);
+  background: #fff;
+}
+
+.input-wrap.input-readonly {
+  background: #f8f9fa;
+  border-color: #f0f0f0;
+}
+
+.input-wrap.input-err {
+  border-color: #dc3545;
+  background: #fff8f8;
+}
+
+.input-wrap:focus-within .input-icon {
+  color: #ff5f00;
+}
+
+.input-icon {
+  padding: 0 12px;
+  color: #bbb;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.input-wrap input,
+.input-wrap select {
+  flex: 1;
   border: none;
-  font-weight: 700;
-  transition: all 0.25s ease;
+  background: transparent;
+  padding: 11px 14px 11px 0;
+  font-size: .88rem;
+  color: #031c36;
+  outline: none;
+}
+
+.input-wrap select {
   cursor: pointer;
 }
 
-.btn-save:hover:not(:disabled) {
-  background: #e65600;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 10px 20px rgba(255, 95, 0, 0.3);
+.input-wrap input:read-only {
+  cursor: default;
+  color: #555;
 }
 
-.btn-save:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+.err-msg {
+  color: #dc3545;
+  font-size: .75rem;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.edit-banner {
+  background: rgba(255, 95, 0, .07);
+  border: 1px solid rgba(255, 95, 0, .2);
+  border-left: 4px solid #ff5f00;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: .83rem;
+  color: #c04800;
+  font-weight: 500;
+}
+
+/* ── Buttons ── */
+.btn-edit-toggle {
+  background: #ff5f00;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 18px;
+  font-weight: 700;
+  font-size: .83rem;
+  transition: background .2s, transform .15s;
+}
+
+.btn-edit-toggle:hover {
+  background: #e65600;
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background: #f8f9fa;
+  color: #555;
+  border: 1.5px solid #e9ecef;
+  border-radius: 10px;
+  padding: 9px 18px;
+  font-weight: 600;
+  font-size: .83rem;
+  transition: all .2s;
+}
+
+.btn-cancel:hover {
+  background: #e9ecef;
 }
 
 .btn-security {
-  background: #f8f9fa;
-  border: 1px solid #eee;
-  color: #555;
+  background: transparent;
+  color: #031c36;
+  border: 1.5px solid #e9ecef;
+  border-radius: 10px;
+  padding: 9px 18px;
   font-weight: 600;
+  font-size: .83rem;
   text-decoration: none;
-  transition: all 0.25s ease;
+  transition: all .2s;
+  display: inline-flex;
+  align-items: center;
 }
 
 .btn-security:hover {
+  background: #031c36;
+  color: #fff;
+  border-color: #031c36;
+}
+
+.btn-save-main {
   background: #ff5f00;
   color: #fff;
-  border-color: #ff5f00;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(255, 95, 0, 0.25);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 32px;
+  font-weight: 700;
+  font-size: .9rem;
+  display: inline-flex;
+  align-items: center;
+  transition: background .2s, transform .15s, box-shadow .2s;
 }
 
-.btn-secondary:hover {
-  background-color: #6c757d;
-  color: #fff;
-  transform: translateY(-1px);
+.btn-save-main:hover:not(:disabled) {
+  background: #e65600;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 95, 0, .3);
 }
 
-/* ===== MODAL ===== */
-.modal-backdrop {
+.btn-save-main:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+.spinner-border.text-orange {
+  color: #ff5f00 !important;
+}
+
+/* ── Confirm modal ── */
+.modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, .5);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  justify-content: center;
+  z-index: 9000;
 }
 
-.modal-card {
-  background: white;
-  border-radius: 16px;
-  padding: 25px 30px;
-  max-width: 400px;
+.confirm-modal {
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
   width: 100%;
+  max-width: 420px;
 }
 
-/* ===== TOAST ===== */
-.toast-message {
+.confirm-modal-header {
+  background: #031c36;
+  color: #F4A25A;
+  padding: 18px 24px;
+  font-weight: 700;
+  font-size: 1rem;
+  border-bottom: 3px solid #ff5f00;
+  display: flex;
+  align-items: center;
+}
+
+.confirm-modal-body {
+  padding: 24px;
+}
+
+.confirm-modal-footer {
+  padding: 0 24px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ── Toast ── */
+.toast-pill {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 12px 20px;
-  border-radius: 12px;
-  color: white;
-  font-weight: 600;
+  top: 24px;
+  right: 24px;
   z-index: 9999;
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: .85rem;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
 }
 
-.toast-message.success {
-  background-color: #28a745;
+.toast-pill.success {
+  background: #198754;
 }
 
-.toast-message.error {
-  background-color: #dc3545;
+.toast-pill.error {
+  background: #dc3545;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
+.slide-toast-enter-active,
+.slide-toast-leave-active {
+  transition: all .35s cubic-bezier(.4, 0, .2, 1);
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.slide-toast-enter-from,
+.slide-toast-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateX(40px);
 }
 </style>
