@@ -231,9 +231,9 @@ const form = reactive({ name: '', email: '', phone: '', gender: 1, current_job: 
 const errors = reactive({ name: '', email: '', phone: '' })
 
 const tabLinks = [
-  { name: 'Profile', path: '/profile', icon: 'bi-person-fill' },
-  { name: 'Bookings', path: '/my-bookings', icon: 'bi-calendar-check-fill' },
-  { name: 'Rented Rooms', path: '/my-rented', icon: 'bi-house-check-fill' },
+  { name: 'ប្រវត្តិរូប', path: '/profile', icon: 'bi-person-fill' },
+  { name: 'ការកក់', path: '/my-bookings', icon: 'bi-calendar-check-fill' },
+  { name: 'បន្ទប់ដែលបានជួល', path: '/my-rented', icon: 'bi-house-check-fill' },
 ]
 
 const toast = reactive({ show: false, message: '', type: 'success' })
