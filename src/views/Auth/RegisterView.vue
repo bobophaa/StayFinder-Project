@@ -8,8 +8,8 @@
           <div class="logo-badge mb-3">
             <i class="bi bi-house-heart-fill me-2"></i>StayFinder
           </div>
-          <h1 class="fw-bold text-purple mb-1">Join StayFinder</h1>
-          <p class="text-muted small">Create your account and explore amazing stays worldwide</p>
+          <h1 class="fw-bold text-purple mb-1">ចូលរួមជាមួយ StayFinder</h1>
+          <p class="text-muted small">បង្កើតគណនីរបស់អ្នក និងរក្សាទុកការស្វែងរកបន្ទប់ល្អទាំងអស់នៅលើពិភព</p>
         </div>
 
         <form @submit.prevent="handleRegister">
@@ -22,17 +22,17 @@
 
           <!-- Full Name -->
           <div class="mb-3">
-            <label class="form-label small fw-bold text-purple">Full Name</label>
+            <label class="form-label small fw-bold text-purple">ឈ្មោះពេញ</label>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && !form.name }">
               <span class="input-group-text"><i class="bi bi-person"></i></span>
               <input v-model="form.name" type="text" class="form-control stay-input" placeholder="John Doe" />
             </div>
-            <small v-if="submitted && !form.name" class="text-danger mt-1 d-block">Name is required.</small>
+            <small v-if="submitted && !form.name" class="text-danger mt-1 d-block">ឈ្មោះត្រូវបានទាមទារ។</small>
           </div>
 
           <!-- Current Job -->
           <div class="mb-3">
-            <label class="form-label small fw-bold text-purple">Current Job</label>
+            <label class="form-label small fw-bold text-purple">មុខរបរបស់អ្នក</label>
             <div class="input-group custom-group">
               <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
               <input v-model="form.current_job" type="text" class="form-control stay-input" placeholder="e.g. Web Developer" />
@@ -41,17 +41,17 @@
 
           <!-- Email -->
           <div class="mb-3">
-            <label class="form-label small fw-bold text-purple">Email</label>
+            <label class="form-label small fw-bold text-purple">អ៊ីមែល</label>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && !form.email }">
               <span class="input-group-text"><i class="bi bi-envelope"></i></span>
               <input v-model="form.email" type="email" class="form-control stay-input" placeholder="user@example.com" />
             </div>
-            <small v-if="submitted && !form.email" class="text-danger mt-1 d-block">Email is required.</small>
+            <small v-if="submitted && !form.email" class="text-danger mt-1 d-block">អ៊ីមែលត្រូវបានទាមទារ។</small>
           </div>
 
           <!-- Password -->
           <div class="mb-3">
-            <label class="form-label small fw-bold text-purple">Password</label>
+            <label class="form-label small fw-bold text-purple">ពាក្យសម្ងាត់</label>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && !form.password }">
               <span class="input-group-text"><i class="bi bi-lock"></i></span>
               <input v-model="form.password" :type="showPass ? 'text' : 'password'" class="form-control stay-input" placeholder="••••••••" />
@@ -59,12 +59,12 @@
                 <i :class="showPass ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </span>
             </div>
-            <small v-if="submitted && !form.password" class="text-danger mt-1 d-block">Password is required.</small>
+            <small v-if="submitted && !form.password" class="text-danger mt-1 d-block">ពាក្យសម្ងាត់ត្រូវបានទាមទារ។</small>
           </div>
 
           <!-- Confirm Password -->
           <div class="mb-4">
-            <label class="form-label small fw-bold text-purple">Confirm Password</label>
+            <label class="form-label small fw-bold text-purple">បញ្ជាក់ពាក្យសម្ងាត់</label>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && form.password !== form.password_confirmation }">
               <span class="input-group-text"><i class="bi bi-shield-check"></i></span>
               <input v-model="form.password_confirmation" :type="showConfirm ? 'text' : 'password'" class="form-control stay-input" placeholder="••••••••" />
@@ -72,18 +72,18 @@
                 <i :class="showConfirm ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </span>
             </div>
-            <small v-if="submitted && form.password !== form.password_confirmation" class="text-danger mt-1 d-block">Passwords do not match.</small>
+            <small v-if="submitted && form.password !== form.password_confirmation" class="text-danger mt-1 d-block">ពាក្យសម្ងាត់មិនត្រូវគ្នា</small>
           </div>
 
           <button type="submit" class="btn btn-gradient w-100 py-3 rounded-4 fw-bold mb-3" :disabled="authStore.loading">
             <span v-if="authStore.loading" class="spinner-border spinner-border-sm me-2"></span>
-            {{ authStore.loading ? 'Creating account...' : 'Sign Up' }}
+            {{ authStore.loading ? 'Creating account...' : 'ចូលគណនី' }}
           </button>
 
           <div class="text-center">
             <p class="small text-muted mb-0">
-              Already have an account?
-              <RouterLink to="/login" class="text-purple fw-bold text-decoration-none">Sign in</RouterLink>
+              មានគណនីរួចហើយមែនទេ?
+              <RouterLink to="/login" class="text-purple fw-bold text-decoration-none">ចូលគណនី</RouterLink>
             </p>
           </div>
 
@@ -99,9 +99,9 @@
       <div class="shape dot"></div>
       <div class="shape ring"></div>
     </div>
-    <h2 class="text-white fw-bold mt-3">Start Your Adventure</h2>
+    <h2 class="text-white fw-bold mt-3">ចាប់ផ្តើមបទពិសោធន៍ថ្មីរបស់អ្នក</h2>
     <p class="text-white-50 px-4">
-      Sign up and get access to thousands of rooms &amp; exclusive offers
+     ចុះឈ្មោះ និងស្វែងរកបន្ទប់រាប់ពាន់ និងការផ្តល់ជូនពិសេសៗ
     </p>
     <div class="floating-badge">
       <i class="bi bi-people-fill me-1" style="color:#7b61ff"></i> 10,000+ Users

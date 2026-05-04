@@ -8,8 +8,8 @@
           <div class="logo-badge mb-4">
             <i class="bi bi-house-heart-fill me-2"></i>StayFinder
           </div>
-          <h1 class="fw-bold text-navy mb-1">Welcome Back</h1>
-          <p class="text-muted small">Please sign in to your account</p>
+          <h1 class="fw-bold text-navy mb-1">ស្វាគមន៍ការត្រលប់មកវិញ</h1>
+          <p class="text-muted small">សូមចូលទៅកាន់គណនីរបស់អ្នក</p>
         </div>
 
         <form @submit.prevent="handleLogin">
@@ -22,7 +22,7 @@
 
           <!-- Email -->
           <div class="mb-4">
-            <label class="form-label small fw-bold text-navy">Email or Phone</label>
+            <label class="form-label small fw-bold text-navy">អ៊ីមែល ឬ លេខទូរស័ព្ទ</label>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && !authStore.emailOrPhone }">
               <span class="input-group-text"><i class="bi bi-envelope"></i></span>
               <input
@@ -32,15 +32,15 @@
                 placeholder="user@example.com"
               />
             </div>
-            <small v-if="submitted && !authStore.emailOrPhone" class="text-danger mt-1 d-block">Email is required.</small>
+            <small v-if="submitted && !authStore.emailOrPhone" class="text-danger mt-1 d-block">អ៊ីមែលត្រូវបានទាមទារ។</small>
           </div>
 
           <!-- Password -->
           <div class="mb-4">
             <div class="d-flex justify-content-between">
-              <label class="form-label small fw-bold text-navy">Password</label>
+              <label class="form-label small fw-bold text-navy">ពាក្យសម្ងាត់</label>
               <RouterLink to="/forgot-password" class="text-orange small text-decoration-none fw-semibold">
-                Forgot password?
+                ភ្លេចពាក្យសម្ងាត់?
               </RouterLink>
             </div>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && !authStore.password }">
@@ -55,18 +55,18 @@
                 <i :class="showPass ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </span>
             </div>
-            <small v-if="submitted && !authStore.password" class="text-danger mt-1 d-block">Password is required.</small>
+            <small v-if="submitted && !authStore.password" class="text-danger mt-1 d-block">ពាក្យសម្ងាត់ត្រូវបានទាមទារ។</small>
           </div>
 
           <button type="submit" class="btn btn-main w-100 py-3 rounded-4 fw-bold mb-4" :disabled="authStore.loading">
             <span v-if="authStore.loading" class="spinner-border spinner-border-sm me-2"></span>
-            {{ authStore.loading ? 'Signing in...' : 'Sign In' }}
+            {{ authStore.loading ? 'Signing in...' : 'ចូលគណនី' }}
           </button>
 
           <div class="text-center">
             <p class="fs-6 text-muted mb-0">
-              Don't have an account?
-              <RouterLink to="/register" class="text-orange fw-bold text-decoration-none">Sign up</RouterLink>
+             មិនទាន់មានគណនី? 
+              <RouterLink to="/register" class="text-orange fw-bold text-decoration-none">បង្កើតគណនី</RouterLink>
             </p>
           </div>
 
@@ -78,8 +78,8 @@
         <div class="orange-glow"></div>
         <div class="visual-content text-center">
           <img src="@/assets/images/ho.svg" alt="House" class="house-illustration" />
-          <h2 class="text-white fw-bold mt-3">Find Your Perfect Room</h2>
-          <p class="text-white-50 px-4">Discover the best rooms with trusted landlords and great prices.</p>
+          <h2 class="text-white fw-bold mt-3">ស្វែងរកបន្ទប់សម្រាប់អ្នក</h2>
+          <p class="text-white-50 px-4">ស្វែងរកបន្ទប់ល្អបំផុត ជាមួយម្ចាស់ផ្ទះដែលអាចទុកចិត្តបាន និងតម្លៃល្អៗ</p>
           <div class="floating-badge badge-left">
             <i class="bi bi-geo-alt-fill text-orange me-1"></i> Phnom Penh
           </div>
