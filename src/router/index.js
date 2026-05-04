@@ -48,7 +48,7 @@ const router = createRouter({
     { path: '/profile', name: 'profile', component: ProfileInfo, meta: { requiresAuth: true } },
         { path: '/ChangePassword', name: 'hangePassword', component: ChangePassword, meta: { requiresAuth: true } },
 
-     { path: '/about', name: 'about', component:AboutUs, meta: { requiresAuth: true } },
+     { path: '/about', name: 'about', component:AboutUs,  },
     { path: '/wishlist', name: 'wishlist', component: Wishlist, meta: { requiresAuth: true } },
     {
       path: '/my-bookings',
