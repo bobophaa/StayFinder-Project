@@ -1,64 +1,70 @@
 <template>
   <div class="profile-page">
 
-    <div v-if="loading" class="loading-container">
-      <div class="spinner-modern"></div>
-      <p class="mt-3 fw-bold text-navy">Loading your stays...</p>
+    <div v-if="loading" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
+      <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
+      <p class="text-muted fw-semibold">Loading your stays...</p>
     </div>
 
     <div v-else>
-      <div class="hero-banner">
-        <div class="container hero-content">
-          <div class="d-flex align-items-center gap-4">
+      <div class="hero-banner position-relative">
+        <div class="container position-relative" style="z-index:2">
+          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top:48px">
+
             <div class="avatar-wrapper">
-              <div class="avatar">
-                <img v-if="avatarPreview || user?.avatar" :src="avatarPreview || user.avatar" />
-                <span v-else>{{ user?.name?.charAt(0)?.toUpperCase() || 'U' }}</span>
+              <div class="avatar-ring">
+                <div class="avatar-box">
+                  <img v-if="avatarPreview || user?.avatar" :src="avatarPreview || user.avatar" alt="avatar" />
+                  <span v-else>{{ user?.name?.charAt(0)?.toUpperCase() || 'U' }}</span>
+                </div>
               </div>
 
-              <div class="camera-btn" @click.stop="toggleMenu">
+              <div class="avatar-cam" @click.stop="toggleMenu">
                 <i class="bi bi-camera-fill"></i>
               </div>
 
-              <transition name="fade">
-                <div v-if="showActionsMenu" class="avatar-menu">
-                  <button @click="triggerUpload">
-                    <i class="bi bi-upload me-2 text-orange"></i>
-                    Upload new photo
+              <transition name="menu-fade">
+                <div v-if="showActionsMenu" class="avatar-menu shadow" @click.stop>
+                  <button class="avatar-menu-item" @click="triggerUpload">
+                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>Upload photo
                   </button>
-                  <button class="text-danger" @click="removeImage">
-                    <i class="bi bi-trash me-2"></i>
-                    Remove photo
+                  <button v-if="user?.avatar" class="avatar-menu-item text-danger" @click="removeImage">
+                    <i class="bi bi-trash3-fill me-2"></i>Remove photo
                   </button>
                 </div>
               </transition>
-
-              <input ref="fileInput" type="file" hidden @change="handleFileUpload" accept="image/*" />
+              <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
             </div>
 
-            <div>
-              <div class="d-flex align-items-center gap-2">
-                <h2 class="user-name text-white">{{ user?.name }}</h2>
-                <i class="bi bi-patch-check-fill verify-icon"></i>
+            <div class="pb-3 text-white">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <h3 class="fw-bold mb-0">{{ user?.name }}</h3>
+                <i class="bi bi-patch-check-fill text-orange fs-5"></i>
               </div>
-              <span class="role-badge">{{ user?.current_job || 'Verified Tenant' }}</span>
+              <span class="user-role-badge">{{ user?.current_job || 'StayFinder Member' }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="tab-container">
+      <div class="tab-bar-wrap">
         <div class="container">
-          <div class="tabs">
-            <router-link v-for="tab in tabLinks" :key="tab.path" :to="tab.path" class="tab" active-class="active">
-              <i :class="['bi', tab.icon]"></i>
-              {{ tab.name }}
+          <div class="tab-bar">
+            <router-link to="/profile" class="tab-item">
+              <i class="bi bi-person-fill me-2"></i>Profile
             </router-link>
+            <router-link to="/my-bookings" class="tab-item">
+              <i class="bi bi-calendar-check-fill me-2"></i>Bookings
+            </router-link>
+            <router-link to="/my-rented" class="tab-item tab-active">
+              <i class="bi bi-house-check-fill me-2"></i>Rented
+            </router-link>
+         
           </div>
         </div>
       </div>
 
-      <div class="container py-5">
+      <div class="container py-4 pb-5">
         <header class="d-flex justify-content-between align-items-center mb-5">
           <div>
             <h2 class="fw-bold text-navy">My Rented Rooms</h2>
@@ -72,31 +78,23 @@
               <div class="image-area">
                 <img :src="item.room?.image" class="room-img" />
                 <div class="price-pill">${{ item.room?.price }}<span>/mo</span></div>
-                <div class="status-glass active-stay">
+                <div class="status-glass approved">
                   <span class="status-dot"></span> Active Stay
                 </div>
               </div>
 
               <div class="content-area">
-                <div class="location-tag">
-                  <i class="bi bi-geo-alt-fill"></i> {{ item.room?.district?.name }}
-                </div>
-                <h5 class="room-title-card">{{ item.room?.title }}</h5>
+                <div class="location-tag"><i class="bi bi-geo-alt-fill"></i> {{ item.room?.district?.name }}</div>
+                <h5 class="room-title-card text-truncate">{{ item.room?.title }}</h5>
 
                 <div class="amenities-summary">
-                  <div class="amenity">
-                    <i class="bi bi-calendar3"></i> In: {{ formatDate(item.checkin_date) }}
-                  </div>
-                  <div class="amenity">
-                    <i class="bi bi-arrows-fullscreen"></i> {{ item.room?.size_room }}m²
-                  </div>
+                  <div class="amenity"><i class="bi bi-calendar3"></i> In: {{ formatDate(item.checkin_date) }}</div>
+                  <div class="amenity"><i class="bi bi-arrows-fullscreen"></i> {{ item.room?.size_room }}m²</div>
                 </div>
 
                 <div class="card-footer-action">
                   <span>View Rental Details</span>
-                  <div class="arrow-circle">
-                    <i class="bi bi-arrow-right"></i>
-                  </div>
+                  <div class="arrow-circle"><i class="bi bi-arrow-right"></i></div>
                 </div>
               </div>
             </div>
@@ -104,102 +102,115 @@
         </div>
 
         <div v-else class="text-center py-5">
+          <i class="bi bi-house-x text-muted mb-3" style="font-size: 3rem;"></i>
           <h4 class="text-muted">No active rentals found.</h4>
         </div>
       </div>
-    </div>
 
-    <div class="modal fade" id="rentalDetailModal" tabindex="-1" ref="modalRef">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content modern-detail-modal border-0">
-          <div class="modal-body p-0" v-if="selectedItem">
+      <div class="modal fade" id="rentalDetailModal" tabindex="-1" ref="modalRef">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+          <div class="modal-content border-0 overflow-hidden shadow-lg" style="border-radius: 30px;">
+            <div class="modal-body p-0 bg-light">
+              <div class="row g-0">
 
-            <div class="p-4 p-md-5 pb-4">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <span class="status-pill-lg approved">
-                  <i class="bi bi-check-circle-fill me-2"></i> Currently Active
-                </span>
-                <button @click="closeModal" class="btn-close-modern">
-                  <i class="bi bi-x"></i>
-                </button>
-              </div>
-              <h2 class="modal-title-main">{{ selectedItem.room?.title }}</h2>
-              <p class="text-muted mb-0">
-                <i class="bi bi-geo-alt-fill text-orange me-1"></i>
-                {{ selectedItem.room?.district?.name }}, Phnom Penh
-              </p>
-            </div>
-
-            <div class="info-ribbon">
-              <div class="ribbon-item">
-                <span class="label">RENTAL ID</span>
-                <span class="value">#RN-{{ selectedItem.id }}</span>
-              </div>
-              <div class="ribbon-item">
-                <span class="label">CHECK-IN</span>
-                <span class="value">{{ formatDate(selectedItem.checkin_date) }}</span>
-              </div>
-              <div class="ribbon-item">
-                <span class="label">ROOM SIZE</span>
-                <span class="value">{{ selectedItem.room?.size_room }} m²</span>
-              </div>
-              <div class="ribbon-item">
-                <span class="label">BEDS</span>
-                <span class="value">{{ selectedItem.room?.bed }} Beds</span>
-              </div>
-            </div>
-
-            <div class="p-4 p-md-5 pt-4">
-              <div class="row g-4">
-                <div class="col-md-7">
-                  <h6 class="detail-subtitle">Billing Summary</h6>
-                  <div class="pricing-card-modern">
-                    <div class="main-rent">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <span class="fw-bold"><i class="bi bi-cash-stack me-2"></i> Monthly Rent</span>
-                        <span class="price-big">${{ selectedItem.room?.price }}</span>
+                <div class="col-lg-5 position-relative d-none d-lg-block">
+                  <img :src="selectedItem?.room?.image" class="h-100 w-100 object-fit-cover" />
+                  <div class="modal-image-overlay"></div>
+                  <div class="position-absolute top-0 start-0 w-100 h-100 p-5 d-flex flex-column">
+                    <div class="mb-auto">
+                      <div class="glass-tag mb-3">
+                        <span class="status-dot-lg approved"></span> Active Stay
                       </div>
+                      <h1 class="display-6 fw-bold text-white mb-2">{{ selectedItem?.room?.title }}</h1>
+                      <p class="text-white-50"><i class="bi bi-geo-alt me-2"></i>{{ selectedItem?.room?.district?.name
+                        }}</p>
                     </div>
-                    <div class="extra-fees">
-                      <div class="fee-row">
-                        <span><i class="bi bi-droplet me-2"></i> Water Utility</span>
-                        <span>$12.00</span>
-                      </div>
-                      <div class="fee-row">
-                        <span><i class="bi bi-lightning-charge me-2"></i> Electricity</span>
-                        <span>$12.00</span>
-                      </div>
-                    </div>
+                    <div class="id-pill-white">REF ID: #RN-{{ selectedItem?.id }}</div>
                   </div>
                 </div>
 
-                <div class="col-md-5">
-                  <h6 class="detail-subtitle">Support Contact</h6>
-                  <div class="user-contact-card mb-3">
-                    <div class="contact-icon landlord"><i class="bi bi-shield-check"></i></div>
-                    <div class="contact-info">
-                      <span class="role">Property Owner</span>
-                      <span class="name">{{ selectedItem.seller?.name || 'Owner' }}</span>
+                <div class="col-lg-7 bg-white p-4 p-md-5">
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                      <h4 class="fw-bold text-navy mb-0">Rental Overview</h4>
+                      <div class="title-underline"></div>
+                    </div>
+                    <button type="button" class="btn-close-custom" @click="closeModal"><i class="bi bi-x"></i></button>
+                  </div>
+
+                  <div class="row g-3 mb-4">
+                    <div class="col-sm-6">
+                      <div class="bento-item">
+                        <div class="bento-icon"><i class="bi bi-calendar-check-fill"></i></div>
+                        <div><small>Check-in Date</small>
+                          <h6>{{ formatDate(selectedItem?.checkin_date) }}</h6>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="bento-item">
+                        <div class="bento-icon"><i class="bi bi-rulers"></i></div>
+                        <div><small>Room Size</small>
+                          <h6>{{ selectedItem?.room?.size_room }}m² Total</h6>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <a v-if="selectedItem.room?.map_url" :href="selectedItem.room.map_url" target="_blank"
-                    class="btn-modern-map">
-                    <i class="bi bi-geo-alt me-2"></i> Direction
-                  </a>
+
+                  <div class="row g-4 mb-4">
+                    <div class="col-md-7">
+                      <p class="section-label">MONTHLY BILLING</p>
+                      <div class="payment-card-premium">
+                        <div class="d-flex justify-content-between mb-2">
+                          <span class="text-muted small">Base Rent</span>
+                          <span class="fw-bold text-navy">${{ selectedItem?.room?.price }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 small">
+                          <span class="text-muted">Est. Utilities</span>
+                          <span class="text-navy fw-semibold">$24.00</span>
+                        </div>
+                        <div class="total-box mt-3">
+                          <span class="text-white-50 small fw-bold">TOTAL TO PAY</span>
+                          <h3 class="text-white mb-0">${{ (parseFloat(selectedItem?.room?.price || 0) + 24).toFixed(2)
+                            }}</h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-5">
+                      <p class="section-label">CONTACT SUPPORT</p>
+                      <div class="owner-card-mini">
+                        <div class="landlord-avatar-lg">{{ selectedItem?.seller?.name?.charAt(0) || 'O' }}</div>
+                        <h6 class="fw-bold text-navy mb-1">{{ selectedItem?.seller?.name || 'Owner' }}</h6>
+                        <span
+                          class="badge bg-success-subtle text-success rounded-pill px-3 py-2 border border-success-subtle">
+                          <i class="bi bi-shield-check me-1"></i>Owner
+                        </span>
+                        <a v-if="selectedItem?.room?.map_url" :href="selectedItem.room.map_url" target="_blank"
+                          class="btn btn-map-link mt-3">
+                          <i class="bi bi-geo-fill me-2"></i>Map View
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="d-grid">
+                    <button class="btn btn-navy-action py-3 rounded-4 fw-bold shadow-sm" @click="closeModal">
+                      Close Overview
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import api from '@/api/http'
 import bootstrap from 'bootstrap/dist/js/bootstrap.bundle'
 
@@ -213,12 +224,6 @@ const modalRef = ref(null)
 const fileInput = ref(null)
 const avatarPreview = ref(null)
 const showActionsMenu = ref(false)
-
-const tabLinks = [
-  { name: 'Profile', path: '/profile', icon: 'bi-person-fill' },
-  { name: 'Bookings', path: '/my-bookings', icon: 'bi-calendar-check-fill' },
-  { name: 'Rented', path: '/my-rented', icon: 'bi-house-heart-fill' }
-]
 
 const fetchData = async () => {
   loading.value = true
@@ -239,6 +244,7 @@ const fetchData = async () => {
 
 const toggleMenu = () => { showActionsMenu.value = !showActionsMenu.value }
 const triggerUpload = () => { fileInput.value.click(); showActionsMenu.value = false; }
+const handleOutsideClick = () => showActionsMenu.value = false
 
 const handleFileUpload = async (e) => {
   const file = e.target.files[0]; if (!file) return
@@ -247,16 +253,16 @@ const handleFileUpload = async (e) => {
   try {
     await api.post('/profile/image', fd)
     await fetchData()
-  } catch (err) { console.error(err) }
+  } finally { avatarPreview.value = null }
 }
 
 const removeImage = async () => {
+  if (!confirm('Remove photo?')) return
   try {
     await api.delete('/profile/image')
     if (user.value) user.value.avatar = null
-    avatarPreview.value = null
     showActionsMenu.value = false
-  } catch (err) { console.error(err) }
+  } catch (e) { }
 }
 
 const formatDate = (d) => d ? new Date(d).toLocaleDateString() : '-'
@@ -272,21 +278,32 @@ const closeModal = () => {
   if (modal) modal.hide()
 }
 
-onMounted(fetchData)
+onMounted(() => {
+  fetchData()
+  document.addEventListener('click', handleOutsideClick)
+})
+onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 </script>
 
 <style scoped>
 .profile-page {
   background: #f4f6f9;
   min-height: 100vh;
-  margin-top: 70px;
+  margin-top: 80px;
   font-family: 'Inter', sans-serif;
 }
 
-/* HEADER */
+.text-navy {
+  color: #031c36;
+}
+
+.text-orange {
+  color: #ff5f00 !important;
+}
+
 .hero-banner {
-  background: linear-gradient(135deg, #031c36, #1a5fa8);
-  padding: 60px 0 80px;
+  background: linear-gradient(135deg, #031c36 0%, #0d3a6e 60%, #1a5fa8 100%);
+  padding-bottom: 60px;
   position: relative;
 }
 
@@ -294,129 +311,130 @@ onMounted(fetchData)
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 25px 25px;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ff5f00' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-.hero-content {
-  position: relative;
-  z-index: 2;
+.user-role-badge {
+  background: rgba(255, 95, 0, .2);
+  color: #ff9a5c;
+  border: 1px solid rgba(255, 95, 0, .3);
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
 }
 
+/* --- AVATAR SYNC --- */
 .avatar-wrapper {
   position: relative;
-  width: fit-content;
+  flex-shrink: 0;
+  margin-bottom: -30px;
+  z-index: 10;
 }
 
-.avatar {
+.avatar-ring {
   width: 110px;
   height: 110px;
   border-radius: 50%;
-  border: 5px solid #ff5f00;
-  overflow: hidden;
+  padding: 4px;
+  background: linear-gradient(135deg, #ff5f00, #ffb347);
+}
+
+.avatar-box {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #031c36;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #031c36;
-  color: white;
-  font-size: 2rem;
+  overflow: hidden;
+  position: relative;
 }
 
-.avatar img {
+.avatar-box img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.camera-btn {
+.avatar-cam {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 32px;
-  height: 32px;
+  bottom: 2px;
+  right: 2px;
+  width: 30px;
+  height: 30px;
   background: #ff5f00;
+  color: #fff;
   border-radius: 50%;
+  border: 2px solid #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  border: 3px solid white;
   cursor: pointer;
-  z-index: 5;
 }
 
 .avatar-menu {
   position: absolute;
-  top: 115%;
+  top: calc(100% + 10px);
   left: 0;
-  width: 200px;
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 14px;
+  width: 210px;
+  padding: 8px 0;
+  z-index: 999;
+  border: 1px solid #eee;
+}
+
+.avatar-menu-item {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 11px 18px;
+  font-size: .85rem;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.avatar-menu-item:hover {
+  background: #f8f9fa;
+}
+
+/* --- TAB BAR --- */
+.tab-bar-wrap {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
   z-index: 100;
 }
 
-.avatar-menu button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: none;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: 8px;
-}
-
-.avatar-menu button:hover {
-  background: #f8fafc;
-}
-
-.user-name {
-  font-weight: 700;
-  margin: 0;
-}
-
-.verify-icon {
-  color: #ff5f00;
-}
-
-.role-badge {
-  background: rgba(255, 95, 0, .2);
-  color: #ff9a5c;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-}
-
-/* TABS */
-.tab-container {
-  background: #ffffff;
-  border-bottom: 1px solid #ddd;
-}
-
-.tabs {
+.tab-bar {
   display: flex;
-  gap: 30px;
+  gap: 0;
+  overflow-x: auto;
 }
 
-.tab {
-  color: #777;
+.tab-item {
+  padding: 14px 20px;
+  font-size: .85rem;
   font-weight: 600;
+  color: #888;
   text-decoration: none;
-  padding: 20px 0;
   border-bottom: 3px solid transparent;
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  white-space: nowrap;
 }
 
-.tab.active {
-  color: #ff5f00;
-  border-bottom: 3px solid #ff5f00;
+.tab-active {
+  color: #ff5f00 !important;
+  border-bottom-color: #ff5f00 !important;
 }
 
-/* CARDS */
 .modern-booking-card {
   background: white;
   border-radius: 24px;
@@ -424,22 +442,19 @@ onMounted(fetchData)
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: 0.3s;
   cursor: pointer;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .modern-booking-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
 .image-area {
   position: relative;
   height: 210px;
   margin: 10px;
-  border-radius: 18px;
   overflow: hidden;
+  border-radius: 18px;
 }
 
 .room-img {
@@ -474,7 +489,7 @@ onMounted(fetchData)
   gap: 5px;
 }
 
-.active-stay {
+.status-glass.approved {
   color: #10b981;
 }
 
@@ -487,9 +502,6 @@ onMounted(fetchData)
 
 .content-area {
   padding: 8px 20px 20px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 .location-tag {
@@ -510,7 +522,6 @@ onMounted(fetchData)
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
 }
 
 .amenity {
@@ -531,7 +542,6 @@ onMounted(fetchData)
   color: #031c36;
   font-weight: 800;
   font-size: 0.85rem;
-  margin-top: auto;
 }
 
 .arrow-circle {
@@ -542,139 +552,183 @@ onMounted(fetchData)
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s;
 }
 
-.modern-booking-card:hover .arrow-circle {
-  background: #ff5f00;
+.modal-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(3, 28, 54, 0.95), transparent);
+}
+
+.glass-tag {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 20px;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
   color: white;
-}
-
-/* MODAL */
-.modern-detail-modal {
-  border-radius: 32px;
-  overflow: hidden;
-}
-
-.status-pill-lg {
-  padding: 8px 16px;
-  border-radius: 100px;
-  font-size: 0.8rem;
-  font-weight: 800;
+  font-weight: 700;
+  font-size: 0.75rem;
   text-transform: uppercase;
 }
 
-.status-pill-lg.approved {
-  background: #f0fdf4;
-  color: #10b981;
+.status-dot-lg {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
-.btn-close-modern {
-  background: #f8fafc;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+.status-dot-lg.approved {
+  background: #00ca72;
+  box-shadow: 0 0 10px #00ca72;
+}
+
+.id-pill-white {
+  background: white;
+  padding: 6px 16px;
+  border-radius: 10px;
+  color: #031c36;
+  font-weight: 800;
+  font-size: 0.8rem;
+  display: inline-block;
+}
+
+.title-underline {
+  width: 40px;
+  height: 4px;
+  background: #ff5f00;
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #adb5bd;
+  letter-spacing: 1.5px;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.bento-item {
+  background: #f8fafd;
+  border: 1px solid #e9ecef;
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.bento-icon {
+  width: 45px;
+  height: 45px;
+  background: white;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #ff5f00;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-.modal-title-main {
-  font-weight: 800;
-  color: #031c36;
-  font-size: 1.75rem;
-}
-
-.info-ribbon {
-  background: #f8fafc;
-  border-top: 1px solid #f1f5f9;
-  border-bottom: 1px solid #f1f5f9;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 20px 40px;
-}
-
-.ribbon-item .label {
-  display: block;
-  font-size: 0.65rem;
-  color: #94a3b8;
-  font-weight: 800;
-}
-
-.ribbon-item .value {
+.bento-item h6 {
+  margin: 0;
   font-weight: 700;
   color: #031c36;
 }
 
-.pricing-card-modern {
-  background: #f8fafc;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid #f1f5f9;
-}
-
-.main-rent {
+.payment-card-premium {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 24px;
   padding: 20px;
-  background: white;
-  border-bottom: 1px solid #f1f5f9;
 }
 
-.price-big {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #ff5f00;
+.total-box {
+  background: #031c36;
+  border-radius: 18px;
+  padding: 20px;
 }
 
-.user-contact-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: white;
-  border: 1px solid #f1f5f9;
-  border-radius: 16px;
-}
-
-.contact-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fef2f2;
-  color: #ef4444;
-}
-
-.btn-modern-map {
-  display: block;
-  width: 100%;
+.owner-card-mini {
+  background: #f8fafd;
+  border: 1px solid #e9ecef;
+  border-radius: 24px;
+  padding: 20px;
   text-align: center;
+}
+
+.landlord-avatar-lg {
+  width: 60px;
+  height: 60px;
   background: #031c36;
   color: white;
-  padding: 12px;
+  border-radius: 20px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.btn-map-link {
+  background: #ff5f00;
+  color: white;
+  width: 100%;
   border-radius: 12px;
-  text-decoration: none;
   font-weight: 700;
-  margin-top: 10px;
+  padding: 10px;
+  transition: 0.3s;
+  text-decoration: none;
+  display: block;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
+.btn-close-custom {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f3f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: 0.2s;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.btn-close-custom:hover {
+  background: #ff5f00;
+  color: white;
+  transform: rotate(90deg);
+}
+
+.btn-navy-action {
+  background: #031c36;
+  color: white;
+  transition: 0.3s;
+  border: none;
+}
+
+.btn-navy-action:hover {
+  background: #0d3a6e;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(3, 28, 54, 0.3);
+}
+
+.menu-fade-enter-active,
+.menu-fade-leave-active {
+  transition: opacity .15s, transform .15s;
+}
+
+.menu-fade-enter-from,
+.menu-fade-leave-to {
   opacity: 0;
-}
-
-@media (max-width: 768px) {
-  .info-ribbon {
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 20px;
-  }
+  transform: translateY(-6px);
 }
 </style>

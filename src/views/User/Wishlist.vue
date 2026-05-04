@@ -122,7 +122,7 @@ const wishlistItems = computed(() => wishlistStore.items);
 
 
 const removeFromWishlist = async (id: number) => {
-  const confirmed = await confirmDelete("Remove this room?");
+  const confirmed = await confirmDelete("Remove this room from Favorite?");
 
   if (confirmed) {
     wishlistStore.removeFromWishlist(id);

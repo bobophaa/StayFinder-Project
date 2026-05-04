@@ -17,6 +17,7 @@ import MyRented from '@/views/User/MyRented.vue'
 import FAQView from '@/views/User/FAQView.vue'
 import InformationPage from '@/views/User/InformationPage.vue'
 import AboutUs from '@/views/User/AboutUs.vue'
+import ChangePassword from '@/views/User/ChangePassword.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -45,6 +46,9 @@ const router = createRouter({
 
     // --- User Protected Routes ---
     { path: '/profile', name: 'profile', component: ProfileInfo, meta: { requiresAuth: true } },
+        { path: '/ChangePassword', name: 'hangePassword', component: ChangePassword, meta: { requiresAuth: true } },
+
+     { path: '/about', name: 'about', component:AboutUs, meta: { requiresAuth: true } },
     { path: '/wishlist', name: 'wishlist', component: Wishlist, meta: { requiresAuth: true } },
     {
       path: '/my-bookings',

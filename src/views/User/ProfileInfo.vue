@@ -40,11 +40,7 @@
                   <button class="avatar-menu-item" @click="triggerUpload">
                     <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>Upload new photo
                   </button>
-                  <button
-                    v-if="avatarPreview || user.avatar"
-                    class="avatar-menu-item text-danger"
-                    @click="removeImage"
-                  >
+                  <button v-if="avatarPreview || user.avatar" class="avatar-menu-item text-danger" @click="removeImage">
                     <i class="bi bi-trash3-fill me-2"></i>Remove photo
                   </button>
                 </div>
@@ -73,13 +69,8 @@
       <div class="tab-bar-wrap">
         <div class="container">
           <div class="tab-bar">
-            <router-link
-              v-for="tab in tabLinks"
-              :key="tab.path"
-              :to="tab.path"
-              class="tab-item"
-              active-class="tab-active"
-            >
+            <router-link v-for="tab in tabLinks" :key="tab.path" :to="tab.path" class="tab-item"
+              active-class="tab-active">
               <i :class="['bi', tab.icon, 'me-2']"></i>{{ tab.name }}
             </router-link>
           </div>
@@ -107,12 +98,9 @@
                   <span class="info-value">{{ user.phone || 'Not set' }}</span>
                 </div>
                 <div class="info-row">
-                  <span class="info-label"
-                    ><i class="bi bi-gender-ambiguous me-2 text-orange"></i>Gender</span
-                  >
-                  <span class="info-value">{{
-                    user.gender == 1 ? 'Male' : user.gender == 2 ? 'Female' : 'Not set'
-                  }}</span>
+                  <span class="info-label"><i class="bi bi-gender-ambiguous me-2 text-orange"></i>Gender</span>
+                  <span class="info-value">{{ user.gender == 1 ? 'Male' : user.gender == 2 ? 'Female' : 'Not set'
+                    }}</span>
                 </div>
                 <div class="info-row border-0">
                   <span class="info-label"
@@ -292,9 +280,7 @@ import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
 import api from '@/api/http'
 import { useAuthStore } from '@/stores/auth'
 
-const authStore = useAuthStore()
-
-const user = computed(() => authStore.user)
+const user = ref(null)
 const loading = ref(false)
 const uploadingAvatar = ref(false)
 const fileInput = ref(null)
@@ -307,9 +293,9 @@ const form = reactive({ name: '', email: '', phone: '', gender: 1, current_job: 
 const errors = reactive({ name: '', email: '', phone: '' })
 
 const tabLinks = [
-  { name: 'Profile',        path: '/profile',                icon: 'bi-person-fill'         },
-  { name: 'Bookings',       path: '/my-bookings',            icon: 'bi-calendar-check-fill'  },
-  { name: 'Rented Rooms',   path: '/my-rented',   icon: 'bi-house-check-fill'     },
+  { name: 'Profile', path: '/profile', icon: 'bi-person-fill' },
+  { name: 'Bookings', path: '/my-bookings', icon: 'bi-calendar-check-fill' },
+  { name: 'Rented Rooms', path: '/my-rented', icon: 'bi-house-check-fill' },
 ]
 
 const toast = reactive({ show: false, message: '', type: 'success' })
@@ -332,7 +318,8 @@ const avatarUrl = computed(() => {
 
 const fetchUserData = async () => {
   try {
-    await authStore.fetchMe()
+    const res = await api.get('/me')
+    user.value = res.data.data
     Object.assign(form, {
       name: user.value.name || '',
       email: user.value.email || '',
@@ -345,9 +332,15 @@ const fetchUserData = async () => {
   }
 }
 
-// ── Avatar menu ──
-const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
-const handleOutsideClick = () => (showActionsMenu.value = false)
+// ── Avatar menu ────────────────────────────────────────────
+const toggleMenu = () => {
+  showActionsMenu.value = !showActionsMenu.value
+}
+
+const handleOutsideClick = () => {
+  showActionsMenu.value = false
+}
+
 const triggerUpload = () => {
   fileInput.value.click()
   showActionsMenu.value = false
@@ -383,14 +376,13 @@ const handleFileUpload = async (e) => {
   }
 }
 
-// ── Remove avatar ──
 const removeImage = async () => {
   showActionsMenu.value = false
   if (!confirm('Remove your profile photo?')) return
   loading.value = true
   try {
     await api.delete('/profile/image')
-    await authStore.fetchMe()
+    user.value.avatar = null
     avatarPreview.value = null
     showToast('Profile photo removed', 'success')
   } catch (err) {
@@ -400,25 +392,16 @@ const removeImage = async () => {
   }
 }
 
-// ── Profile update ──
 const validateForm = () => {
   errors.name = errors.email = errors.phone = ''
   let ok = true
-  if (!form.name?.trim()) {
-    errors.name = 'Full name is required'
-    ok = false
-  }
-  if (!form.email) {
-    errors.email = 'Email is required'
-    ok = false
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'Invalid email format'
-    ok = false
-  }
+  if (!form.name?.trim()) { errors.name = 'Full name is required'; ok = false }
+  if (!form.email) { errors.email = 'Email is required'; ok = false }
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { errors.email = 'Invalid email format'; ok = false }
   return ok
 }
 
-const enableEdit = () => (isEditing.value = true)
+const enableEdit = () => { isEditing.value = true }
 const cancelEdit = () => {
   isEditing.value = false
   Object.assign(form, {
@@ -464,14 +447,13 @@ onUnmounted(() => {
 .profile-page {
   background: #f4f6f9;
   min-height: 100vh;
-
-  padding-top: 80px;
-
-
+  margin-top: 80px;
 }
+
 .text-navy {
   color: #031c36;
 }
+
 .text-orange {
   color: #ff5f00;
 }
@@ -484,6 +466,7 @@ onUnmounted(() => {
   position: relative;
   overflow: visible;
 }
+
 .hero-banner::before {
   content: '';
   position: absolute;
@@ -492,10 +475,10 @@ onUnmounted(() => {
 }
 
 .user-role-badge {
-  background: rgba(255, 95, 0, 0.2);
+  background: rgba(255, 95, 0, .2);
   color: #ff9a5c;
-  border: 1px solid rgba(255, 95, 0, 0.3);
-  font-size: 0.75rem;
+  border: 1px solid rgba(255, 95, 0, .3);
+  font-size: .75rem;
   font-weight: 700;
   padding: 4px 12px;
   border-radius: 20px;
@@ -508,6 +491,7 @@ onUnmounted(() => {
   margin-bottom: -30px;
   z-index: 10;
 }
+
 .avatar-ring {
   width: 110px;
   height: 110px;
@@ -515,6 +499,7 @@ onUnmounted(() => {
   padding: 4px;
   background: linear-gradient(135deg, #ff5f00, #ffb347);
 }
+
 .avatar-box {
   width: 100%;
   height: 100%;
@@ -534,10 +519,11 @@ onUnmounted(() => {
   height: 100%;
   object-fit: cover;
 }
+
 .avatar-loading {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, .5);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -557,13 +543,12 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: .8rem;
   cursor: pointer;
-  transition:
-    background 0.2s,
-    transform 0.2s;
+  transition: background .2s, transform .2s;
   z-index: 11;
 }
+
 .avatar-cam:hover {
   background: #e65600;
   transform: scale(1.1);
@@ -581,18 +566,20 @@ onUnmounted(() => {
   z-index: 9999;
   border: 1px solid #eee;
 }
+
 .avatar-menu-item {
   width: 100%;
   text-align: left;
   border: none;
   background: none;
   padding: 11px 18px;
-  font-size: 0.85rem;
+  font-size: .85rem;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background .15s;
   display: flex;
   align-items: center;
 }
+
 .avatar-menu-item:hover {
   background: #f8f9fa;
 }
@@ -600,10 +587,9 @@ onUnmounted(() => {
 /* Menu fade transition */
 .menu-fade-enter-active,
 .menu-fade-leave-active {
-  transition:
-    opacity 0.15s,
-    transform 0.15s;
+  transition: opacity .15s, transform .15s;
 }
+
 .menu-fade-enter-from,
 .menu-fade-leave-to {
   opacity: 0;
@@ -615,29 +601,31 @@ onUnmounted(() => {
   transform: translateX(-50%) translateY(0);
 }
 
-
 .tab-bar-wrap {
   background: #fff;
   border-bottom: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
   position: sticky;
   top: 0;
   z-index: 100;
 }
+
 .tab-bar {
   display: flex;
   gap: 0;
   overflow-x: auto;
   padding-top: 10px;
 }
+
 .tab-bar::-webkit-scrollbar {
   display: none;
 }
+
 .tab-item {
   display: flex;
   align-items: center;
   padding: 14px 20px;
-  font-size: 0.85rem;
+  font-size: .85rem;
   font-weight: 600;
   color: #888;
   text-decoration: none;
@@ -655,6 +643,15 @@ onUnmounted(() => {
   border-bottom-color: #ff5f00 !important;
 }
 
+.tab-item:hover {
+  color: #ff5f00;
+}
+
+.tab-active {
+  color: #ff5f00 !important;
+  border-bottom-color: #ff5f00 !important;
+}
+
 /* ── Side card ── */
 .side-card {
   background: #fff;
@@ -667,34 +664,37 @@ onUnmounted(() => {
   color: #fff;
   padding: 14px 20px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: .9rem;
   border-bottom: 3px solid #ff5f00;
 }
+
 .side-card-body {
   padding: 8px 0;
 }
+
 .info-row {
   display: flex;
   flex-direction: column;
   padding: 12px 20px;
   border-bottom: 1px solid #f8f8f8;
 }
+
 .info-label {
-  font-size: 0.72rem;
+  font-size: .72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: .05em;
   color: #999;
   margin-bottom: 4px;
 }
+
 .info-value {
-  font-size: 0.88rem;
+  font-size: .88rem;
   font-weight: 600;
   color: #031c36;
   word-break: break-word;
 }
 
-/* ── ID card ── */
 .id-card {
   background: linear-gradient(135deg, #031c36 0%, #0d3a6e 100%);
   border-radius: 16px;
@@ -703,11 +703,12 @@ onUnmounted(() => {
   position: relative;
   overflow: hidden;
 }
+
 .id-badge {
-  background: rgba(255, 95, 0, 0.2);
+  background: rgba(255, 95, 0, .2);
   color: #ff9a5c;
-  border: 1px solid rgba(255, 95, 0, 0.3);
-  font-size: 0.78rem;
+  border: 1px solid rgba(255, 95, 0, .3);
+  font-size: .78rem;
   font-weight: 800;
   padding: 3px 10px;
   border-radius: 20px;
@@ -719,7 +720,7 @@ onUnmounted(() => {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 20px solid rgba(255, 255, 255, 0.05);
+  border: 20px solid rgba(255, 255, 255, .05);
 }
 
 /* ── Form card ── */
@@ -731,10 +732,10 @@ onUnmounted(() => {
 }
 
 .field-label {
-  font-size: 0.72rem;
+  font-size: .72rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: .06em;
   color: #999;
   margin-bottom: 8px;
   display: block;
@@ -750,23 +751,25 @@ onUnmounted(() => {
   border-radius: 12px;
   background: #fafbfc;
   overflow: hidden;
-  transition:
-    border-color 0.2s,
-    box-shadow 0.2s;
+  transition: border-color .2s, box-shadow .2s;
 }
+
 .input-wrap:focus-within {
   border-color: #ff5f00;
-  box-shadow: 0 0 0 3px rgba(255, 95, 0, 0.1);
+  box-shadow: 0 0 0 3px rgba(255, 95, 0, .1);
   background: #fff;
 }
+
 .input-wrap.input-readonly {
   background: #f8f9fa;
   border-color: #f0f0f0;
 }
+
 .input-wrap.input-err {
   border-color: #dc3545;
   background: #fff8f8;
 }
+
 .input-wrap:focus-within .input-icon {
   color: #ff5f00;
 }
@@ -784,13 +787,15 @@ onUnmounted(() => {
   border: none;
   background: transparent;
   padding: 11px 14px 11px 0;
-  font-size: 0.88rem;
+  font-size: .88rem;
   color: #031c36;
   outline: none;
 }
+
 .input-wrap select {
   cursor: pointer;
 }
+
 .input-wrap input:read-only {
   cursor: default;
   color: #555;
@@ -798,18 +803,18 @@ onUnmounted(() => {
 
 .err-msg {
   color: #dc3545;
-  font-size: 0.75rem;
+  font-size: .75rem;
   font-weight: 600;
   margin-top: 5px;
 }
 
 .edit-banner {
-  background: rgba(255, 95, 0, 0.07);
-  border: 1px solid rgba(255, 95, 0, 0.2);
+  background: rgba(255, 95, 0, .07);
+  border: 1px solid rgba(255, 95, 0, .2);
   border-left: 4px solid #ff5f00;
   border-radius: 10px;
   padding: 10px 16px;
-  font-size: 0.83rem;
+  font-size: .83rem;
   color: #c04800;
   font-weight: 500;
 }
@@ -822,11 +827,10 @@ onUnmounted(() => {
   border-radius: 10px;
   padding: 9px 18px;
   font-weight: 700;
-  font-size: 0.83rem;
-  transition:
-    background 0.2s,
-    transform 0.15s;
+  font-size: .83rem;
+  transition: background .2s, transform .15s;
 }
+
 .btn-edit-toggle:hover {
   background: #e65600;
   transform: translateY(-1px);
@@ -839,9 +843,10 @@ onUnmounted(() => {
   border-radius: 10px;
   padding: 9px 18px;
   font-weight: 600;
-  font-size: 0.83rem;
-  transition: all 0.2s;
+  font-size: .83rem;
+  transition: all .2s;
 }
+
 .btn-cancel:hover {
   background: #e9ecef;
 }
@@ -853,12 +858,13 @@ onUnmounted(() => {
   border-radius: 10px;
   padding: 9px 18px;
   font-weight: 600;
-  font-size: 0.83rem;
+  font-size: .83rem;
   text-decoration: none;
-  transition: all 0.2s;
+  transition: all .2s;
   display: inline-flex;
   align-items: center;
 }
+
 .btn-security:hover {
   background: #031c36;
   color: #fff;
@@ -872,21 +878,20 @@ onUnmounted(() => {
   border-radius: 12px;
   padding: 12px 32px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: .9rem;
   display: inline-flex;
   align-items: center;
-  transition:
-    background 0.2s,
-    transform 0.15s,
-    box-shadow 0.2s;
+  transition: background .2s, transform .15s, box-shadow .2s;
 }
+
 .btn-save-main:hover:not(:disabled) {
   background: #e65600;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 95, 0, 0.3);
+  box-shadow: 0 8px 20px rgba(255, 95, 0, .3);
 }
+
 .btn-save-main:disabled {
-  opacity: 0.7;
+  opacity: .7;
   cursor: not-allowed;
 }
 
@@ -898,7 +903,7 @@ onUnmounted(() => {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, .5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -911,9 +916,10 @@ onUnmounted(() => {
   width: 100%;
   max-width: 420px;
 }
+
 .confirm-modal-header {
   background: #031c36;
-  color: #f4a25a;
+  color: #F4A25A;
   padding: 18px 24px;
   font-weight: 700;
   font-size: 1rem;
@@ -921,9 +927,11 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
 }
+
 .confirm-modal-body {
   padding: 24px;
 }
+
 .confirm-modal-footer {
   padding: 0 24px 24px;
   display: flex;
@@ -942,21 +950,24 @@ onUnmounted(() => {
   padding: 12px 20px;
   border-radius: 50px;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: .85rem;
   color: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
 }
+
 .toast-pill.success {
   background: #198754;
 }
+
 .toast-pill.error {
   background: #dc3545;
 }
 
 .slide-toast-enter-active,
 .slide-toast-leave-active {
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all .35s cubic-bezier(.4, 0, .2, 1);
 }
+
 .slide-toast-enter-from,
 .slide-toast-leave-to {
   opacity: 0;
