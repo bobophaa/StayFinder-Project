@@ -2,7 +2,7 @@
   <div class="profile-page">
     <div v-if="!user" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
       <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
-      <p class="text-muted fw-semibold">Loading your profile...</p>
+      <p class="text-muted fw-semibold">កំពុងដំណើរការ...</p>
     </div>
 
     <div v-else>
@@ -28,10 +28,10 @@
               <transition name="menu-fade">
                 <div v-if="showActionsMenu" class="avatar-menu shadow" @click.stop>
                   <button class="avatar-menu-item" @click="triggerUpload">
-                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>Upload new photo
+                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>បញ្ចូលរូបភាព
                   </button>
                   <button v-if="avatarPreview || user.avatar" class="avatar-menu-item text-danger" @click="removeImage">
-                    <i class="bi bi-trash3-fill me-2"></i>Remove photo
+                    <i class="bi bi-trash3-fill me-2"></i>លុបរូបភាព
                   </button>
                 </div>
               </transition>
@@ -66,24 +66,24 @@
           <div class="col-lg-4">
             <div class="side-card mb-4">
               <div class="side-card-header">
-                <i class="bi bi-person-lines-fill me-2"></i>Account Info
+                <i class="bi bi-person-lines-fill me-2"></i>ព័ត៌មានគណនី
               </div>
               <div class="side-card-body">
                 <div class="info-row">
-                  <span class="info-label"><i class="bi bi-envelope me-2 text-orange"></i>Email</span>
+                  <span class="info-label"><i class="bi bi-envelope me-2 text-orange"></i>អ៊ីម៉ែល</span>
                   <span class="info-value">{{ user.email || '–' }}</span>
                 </div>
                 <div class="info-row">
-                  <span class="info-label"><i class="bi bi-telephone me-2 text-orange"></i>Phone</span>
+                  <span class="info-label"><i class="bi bi-telephone me-2 text-orange"></i>លេខទូរសព្ទ</span>
                   <span class="info-value">{{ user.phone || 'Not set' }}</span>
                 </div>
                 <div class="info-row">
-                  <span class="info-label"><i class="bi bi-gender-ambiguous me-2 text-orange"></i>Gender</span>
-                  <span class="info-value">{{ user.gender == 1 ? 'Male' : user.gender == 2 ? 'Female' : 'Not set'
+                  <span class="info-label"><i class="bi bi-gender-ambiguous me-2 text-orange"></i>ភេទ</span>
+                  <span class="info-value">{{ user.gender == 1 ? 'បុរស' : user.gender == 2 ? 'ស្រី្ត' : 'Not set'
                     }}</span>
                 </div>
                 <div class="info-row border-0">
-                  <span class="info-label"><i class="bi bi-briefcase me-2 text-orange"></i>Job</span>
+                  <span class="info-label"><i class="bi bi-briefcase me-2 text-orange"></i>ការងារ</span>
                   <span class="info-value">{{ user.current_job || 'Not set' }}</span>
                 </div>
               </div>
@@ -91,10 +91,10 @@
 
             <div class="id-card">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="small opacity-75">Member ID</span>
+                <span class="small opacity-75">លេខសម្គាល់</span>
                 <span class="id-badge">#{{ user.id }}</span>
               </div>
-              <div class="mt-3 small opacity-60">StayFinder verified member</div>
+              <div class="mt-3 small opacity-60">សមាជិកដែលបានចូលរួមជាមួយ StayFinder</div>
               <div class="id-dots"></div>
             </div>
           </div>
@@ -103,40 +103,40 @@
             <div class="form-card">
               <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                 <div>
-                  <h5 class="fw-bold text-navy mb-1">Profile Information</h5>
-                  <small class="text-muted">Keep your details up to date</small>
+                  <h5 class="fw-bold text-navy mb-1">ព័ត៌មានផ្ទាល់ខ្លួន</h5>
+                  <small class="text-muted">រក្សាព័ត៌មានរបស់អ្នក នឺង កែប្រែព័ត៌មាន</small>
                 </div>
                 <div class="d-flex gap-2">
                   <router-link to="/ChangePassword" class="btn btn-security">
-                    <i class="bi bi-shield-lock-fill me-2"></i>Change Password
+                    <i class="bi bi-shield-lock-fill me-2"></i>ប្ដូរពាក្យសម្ងាត់
                   </router-link>
                   <button v-if="!isEditing" class="btn btn-edit-toggle" @click="enableEdit">
-                    <i class="bi bi-pencil-fill me-2"></i>Edit Profile
+                    <i class="bi bi-pencil-fill me-2"></i>កែប្រែព័ត៌មាន
                   </button>
                   <button v-else class="btn btn-cancel" @click="cancelEdit">
-                    <i class="bi bi-x-lg me-1"></i>Cancel
+                    <i class="bi bi-x-lg me-1"></i>បោះបង់
                   </button>
                 </div>
               </div>
 
               <div v-if="isEditing" class="edit-banner mb-4">
                 <i class="bi bi-info-circle-fill me-2"></i>
-                You are now editing your profile. Click <strong>Save Changes</strong> when done.
+              អ្នកកំពុងកែសម្រួលប្រវត្តិរូបរបស់អ្នក។ ចុចលើប៊ូតុង <strong>រក្សាទុក</strong> នៅពេលបានធ្វើការរួច។
               </div>
 
               <form @submit.prevent="updateProfile">
                 <div class="row g-3">
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'field-label-err': errors.name }">Full Name</label>
+                    <label class="field-label" :class="{ 'field-label-err': errors.name }">ឈ្មោះពេញ</label>
                     <div class="input-wrap" :class="{ 'input-err': errors.name, 'input-readonly': !isEditing }">
                       <i class="bi bi-person input-icon"></i>
-                      <input v-model="form.name" placeholder="Your full name" :readonly="!isEditing" />
+                      <input v-model="form.name" placeholder="ឈ្មោះពេញ" :readonly="!isEditing" />
                     </div>
                     <div v-if="errors.name" class="err-msg">{{ errors.name }}</div>
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'field-label-err': errors.email }">Email</label>
+                    <label class="field-label" :class="{ 'field-label-err': errors.email }">អ៊ីម៉ែល</label>
                     <div class="input-wrap" :class="{ 'input-err': errors.email, 'input-readonly': !isEditing }">
                       <i class="bi bi-envelope input-icon"></i>
                       <input v-model="form.email" type="email" placeholder="email@example.com" :readonly="!isEditing" />
@@ -145,7 +145,7 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'field-label-err': errors.phone }">Phone</label>
+                    <label class="field-label" :class="{ 'field-label-err': errors.phone }">លេខទូរសព្ទ</label>
                     <div class="input-wrap" :class="{ 'input-err': errors.phone, 'input-readonly': !isEditing }">
                       <i class="bi bi-telephone input-icon"></i>
                       <input v-model="form.phone" placeholder="Phone number" :readonly="!isEditing" />
@@ -154,18 +154,18 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label">Gender</label>
+                    <label class="field-label">ភេទ</label>
                     <div class="input-wrap" :class="{ 'input-readonly': !isEditing }">
                       <i class="bi bi-gender-ambiguous input-icon"></i>
                       <select v-model="form.gender" :disabled="!isEditing">
-                        <option :value="1">Male</option>
-                        <option :value="2">Female</option>
+                        <option :value="1">ប្រុស</option>
+                        <option :value="2">ស្រី</option>
                       </select>
                     </div>
                   </div>
 
                   <div class="col-12">
-                    <label class="field-label">Current Job</label>
+                    <label class="field-label">ការងារបច្ចុប្បន្ន</label>
                     <div class="input-wrap" :class="{ 'input-readonly': !isEditing }">
                       <i class="bi bi-briefcase input-icon"></i>
                       <input v-model="form.current_job" placeholder="e.g. Web Developer" :readonly="!isEditing" />
@@ -177,7 +177,7 @@
                   <button type="submit" class="btn btn-save-main" :disabled="loading">
                     <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
                     <i v-else class="bi bi-check-circle-fill me-2"></i>
-                    Save Changes
+                    រក្សាទុក
                   </button>
                 </div>
               </form>
@@ -189,16 +189,16 @@
       <div v-if="showConfirmModal" class="modal-overlay">
         <div class="confirm-modal shadow-lg">
           <div class="confirm-modal-header">
-            <i class="bi bi-person-check-fill me-2"></i>Confirm Update
+            <i class="bi bi-person-check-fill me-2"></i>បញ្ជាក់ការកែប្រែប្រវត្តិរូប
           </div>
           <div class="confirm-modal-body">
-            <p class="text-muted mb-0">Are you sure you want to save these profile changes?</p>
+            <p class="text-muted mb-0">តើអ្នកប្រាកដជាចង់រក្សាទុកការកែប្រែនេះឬ?</p>
           </div>
           <div class="confirm-modal-footer">
-            <button class="btn btn-light rounded-3 px-4" @click="showConfirmModal = false">Cancel</button>
+            <button class="btn btn-light rounded-3 px-4" @click="showConfirmModal = false">បោះបង់</button>
             <button class="btn btn-save-main px-4" @click="confirmUpdateProfile" :disabled="loading">
               <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-              <i v-else class="bi bi-check2 me-1"></i>Confirm
+              <i v-else class="bi bi-check2 me-1"></i>បញ្ជាក់
             </button>
           </div>
         </div>
