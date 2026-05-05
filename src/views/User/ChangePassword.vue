@@ -1,20 +1,26 @@
 <template>
-  <div class="profile-page">
-
-    <div v-if="!user" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
-      <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
-      <p class="text-muted fw-semibold">Loading security settings...</p>
+  <div class="profile-page font-kh">
+    <div
+      v-if="!user"
+      class="d-flex flex-column align-items-center justify-content-center"
+      style="min-height: 60vh"
+    >
+      <div class="spinner-border text-orange mb-3" style="width: 3rem; height: 3rem"></div>
+      <p class="text-muted fw-semibold">កំពុងផ្ទុកការកំណត់សុវត្ថិភាព...</p>
     </div>
 
     <div v-else>
       <div class="hero-banner position-relative">
-        <div class="container position-relative" style="z-index:2">
-          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top:48px">
-
+        <div class="container position-relative" style="z-index: 2">
+          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top: 48px">
             <div class="avatar-wrapper">
               <div class="avatar-ring">
                 <div class="avatar-box">
-                  <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="avatar" />
+                  <img
+                    v-if="avatarPreview || user.avatar"
+                    :src="avatarPreview || user.avatar"
+                    alt="avatar"
+                  />
                   <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'U' }}</span>
 
                   <div v-if="uploadingAvatar" class="avatar-loading">
@@ -32,13 +38,23 @@
                   <button class="avatar-menu-item" @click="triggerUpload">
                     <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>Upload new photo
                   </button>
-                  <button v-if="user.avatar" class="avatar-menu-item text-danger" @click="removeImage">
+                  <button
+                    v-if="user.avatar"
+                    class="avatar-menu-item text-danger"
+                    @click="removeImage"
+                  >
                     <i class="bi bi-trash3-fill me-2"></i>Remove photo
                   </button>
                 </div>
               </transition>
 
-              <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
+              <input
+                ref="fileInput"
+                type="file"
+                hidden
+                accept="image/*"
+                @change="handleFileUpload"
+              />
             </div>
 
             <div class="pb-3">
@@ -55,24 +71,28 @@
       <div class="tab-bar-wrap">
         <div class="container">
           <div class="tab-bar">
-            <router-link to="/profile" class="tab-item"><i class="bi bi-person-fill me-2"></i>Profile</router-link>
-            <router-link to="/my-bookings" class="tab-item"><i
-                class="bi bi-calendar-check-fill me-2"></i>Bookings</router-link>
-            <router-link to="/my-rented" class="tab-item"><i class="bi bi-house-check-fill me-2"></i>Rented
-              Rooms</router-link>
-            <router-link to="/ChangePassword" class="tab-item tab-active"><i
-                class="bi bi-shield-lock-fill me-2"></i>Security</router-link>
+            <router-link to="/profile" class="tab-item"
+              ><i class="bi bi-person-fill me-2"></i>ប្រវត្តិរូប</router-link
+            >
+            <router-link to="/my-bookings" class="tab-item"
+              ><i class="bi bi-calendar-check-fill me-2"></i>ការកក់</router-link
+            >
+            <router-link to="/my-rented" class="tab-item"
+              ><i class="bi bi-house-check-fill me-2"></i>បន្ទប់ជួល</router-link
+            >
+            <router-link to="/ChangePassword" class="tab-item tab-active"
+              ><i class="bi bi-shield-lock-fill me-2"></i>សុវត្ថិភាព</router-link
+            >
           </div>
         </div>
       </div>
 
       <div class="container py-4 pb-5">
         <div class="row g-4">
-
           <div class="col-lg-4">
             <div class="side-card mb-4">
               <div class="side-card-header">
-                <i class="bi bi-shield-check me-2"></i>Security Status
+                <i class="bi bi-shield-check me-2"></i>សុវត្ថិភាពគណនី
               </div>
               <div class="side-card-body p-4">
                 <div class="d-flex align-items-start gap-3 mb-4">
@@ -80,24 +100,26 @@
                     <i class="bi bi-check2-circle"></i>
                   </div>
                   <div>
-                    <h6 class="fw-bold text-navy mb-1">Account Protected</h6>
-                    <p class="text-muted small mb-0">Your password helps keep your room bookings and personal data safe.
+                    <h6 class="fw-bold text-navy mb-1">គណនីត្រូវបានការពារ</h6>
+                    <p class="text-muted small mb-0">
+                      ពាក្យសម្ងាត់របស់អ្នកជួយការពារការកក់បន្ទប់ និងទិន្នន័យផ្ទាល់ខ្លួន។
                     </p>
                   </div>
                 </div>
                 <div class="p-3 rounded-3 bg-light border">
-                  <p class="small text-muted mb-0"><i class="bi bi-info-circle me-1"></i> Use a unique password to
-                    protect your account.</p>
+                  <p class="small text-muted mb-0">
+                    <i class="bi bi-info-circle me-1"></i> ប្រើពាក្យសម្ងាត់តែមួយគត់ ដើម្បីការពារគណនីរបស់អ្នក។
+                  </p>
                 </div>
               </div>
             </div>
 
             <div class="id-card">
               <div class="d-flex justify-content-between align-items-center">
-                <span class="small opacity-75">Member ID</span>
+            <span class="small opacity-75">លេខសម្គាល់សមាជិក</span>
                 <span class="id-badge">#{{ user.id }}</span>
               </div>
-              <div class="mt-3 small opacity-60">Verified Secure Profile</div>
+              <div class="mt-3 small opacity-60">ប្រវត្តិរូបសុវត្ថិភាពដែលបានផ្ទៀងផ្ទាត់</div>
               <div class="id-dots"></div>
             </div>
           </div>
@@ -105,47 +127,74 @@
           <div class="col-lg-8">
             <div class="form-card">
               <div class="mb-4">
-                <h5 class="fw-bold text-navy mb-1">Change Password</h5>
-                <p class="text-muted small">Update your password to keep your account secure.</p>
+             <h5 class="fw-bold text-navy mb-1">ផ្លាស់ប្តូរពាក្យសម្ងាត់</h5>
+               <p class="text-muted small">ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់ ដើម្បីរក្សាគណនីរបស់អ្នកឱ្យមានសុវត្ថិភាព។</p>
               </div>
 
               <form @submit.prevent="updatePassword">
                 <div class="row g-4">
                   <div class="col-12">
-                    <label class="field-label" :class="{ 'field-label-err': errors.current_password }">Current
-                      Password</label>
+                    <label
+                      class="field-label"
+                      :class="{ 'field-label-err': errors.current_password }"
+                      >ពាក្យសម្ងាត់បច្ចុប្បន្ន</label
+                    >
                     <div class="input-wrap" :class="{ 'input-err': errors.current_password }">
                       <i class="bi bi-lock input-icon"></i>
-                      <input type="password" v-model="form.current_password" placeholder="Enter current password" />
+                      <input
+                        type="password"
+                        v-model="form.current_password"
+                        placeholder="បញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន"
+                      />
                     </div>
-                    <div v-if="errors.current_password" class="err-msg">{{ errors.current_password }}</div>
+                    <div v-if="errors.current_password" class="err-msg">
+                      {{ errors.current_password }}
+                    </div>
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'field-label-err': errors.new_password }">New Password</label>
+                    <label class="field-label" :class="{ 'field-label-err': errors.new_password }"
+                      >ពាក្យសម្ងាត់ថ្មី</label
+                    >
                     <div class="input-wrap" :class="{ 'input-err': errors.new_password }">
                       <i class="bi bi-key input-icon"></i>
-                      <input type="password" v-model="form.new_password" placeholder="Min. 8 characters" />
+                      <input
+                        type="password"
+                        v-model="form.new_password"
+                        placeholder="យ៉ាងតិច ៨ តួអក្សរ"
+                      />
                     </div>
                     <div v-if="errors.new_password" class="err-msg">{{ errors.new_password }}</div>
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'field-label-err': errors.confirm_password }">Confirm
-                      Password</label>
+                    <label
+                      class="field-label"
+                      :class="{ 'field-label-err': errors.confirm_password }"
+                      >បញ្ជាក់ពាក្យសម្ងាត់</label
+                    >
                     <div class="input-wrap" :class="{ 'input-err': errors.confirm_password }">
                       <i class="bi bi-key-fill input-icon"></i>
-                      <input type="password" v-model="form.confirm_password" placeholder="Repeat new password" />
+                      <input
+                        type="password"
+                        v-model="form.confirm_password"
+                        placeholder="បញ្ជាក់ពាក្យសម្ងាត់ថ្មី"
+                      />
                     </div>
-                    <div v-if="errors.confirm_password" class="err-msg">{{ errors.confirm_password }}</div>
+                    <div v-if="errors.confirm_password" class="err-msg">
+                      {{ errors.confirm_password }}
+                    </div>
                   </div>
                 </div>
 
                 <div class="d-flex justify-content-end mt-5">
                   <button type="submit" class="btn btn-save-main" :disabled="loading">
-                    <span v-if="loading && !uploadingAvatar" class="spinner-border spinner-border-sm me-2"></span>
+                    <span
+                      v-if="loading && !uploadingAvatar"
+                      class="spinner-border spinner-border-sm me-2"
+                    ></span>
                     <i v-else class="bi bi-shield-lock me-2"></i>
-                    Update Security
+             កំណត់សុវត្ថិភាព
                   </button>
                 </div>
               </form>
@@ -157,11 +206,13 @@
 
     <transition name="slide-toast">
       <div v-if="toast.show" class="toast-pill" :class="toast.type">
-        <i class="bi me-2" :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+        <i
+          class="bi me-2"
+          :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"
+        ></i>
         {{ toast.message }}
       </div>
     </transition>
-
   </div>
 </template>
 
@@ -191,12 +242,14 @@ const fetchUserData = async () => {
   try {
     const res = await api.get('/me')
     user.value = res.data.data
-  } catch (err) { console.error(err) }
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 // ── AVATAR LOGIC (Same as Profile) ──
-const toggleMenu = () => showActionsMenu.value = !showActionsMenu.value
-const handleOutsideClick = () => showActionsMenu.value = false
+const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
+const handleOutsideClick = () => (showActionsMenu.value = false)
 
 const triggerUpload = () => {
   fileInput.value.click()
@@ -233,15 +286,26 @@ const removeImage = async () => {
     await api.delete('/profile/image')
     user.value.avatar = null
     showToast('Photo removed', 'success')
-  } catch (err) { showToast('Delete failed', 'error') }
+  } catch (err) {
+    showToast('Delete failed', 'error')
+  }
 }
 
 const updatePassword = async () => {
   errors.current_password = errors.new_password = errors.confirm_password = ''
   let ok = true
-  if (!form.current_password) { errors.current_password = 'Required'; ok = false }
-  if (form.new_password.length < 8) { errors.new_password = 'Min. 8 chars'; ok = false }
-  if (form.new_password !== form.confirm_password) { errors.confirm_password = 'No match'; ok = false }
+  if (!form.current_password) {
+    errors.current_password = 'ត្រូវបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន'
+    ok = false
+  }
+  if (form.new_password.length < 8) {
+    errors.new_password = 'យ៉ាងតិច ៨ តួអក្សរ'
+    ok = false
+  }
+  if (form.new_password !== form.confirm_password) {
+    errors.confirm_password = 'ពាក្យសម្ងាត់មិនត្រូវគ្នា'
+    ok = false
+  }
 
   if (!ok) return
   loading.value = true
@@ -249,13 +313,15 @@ const updatePassword = async () => {
     await api.put('/profile/pass', {
       old_pass: form.current_password,
       new_pass: form.new_password,
-      new_pass_confirmation: form.confirm_password
+      new_pass_confirmation: form.confirm_password,
     })
     showToast('Password updated!', 'success')
     form.current_password = form.new_password = form.confirm_password = ''
   } catch (err) {
     showToast(err.response?.data?.message || 'Update failed', 'error')
-  } finally { loading.value = false }
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
@@ -266,7 +332,6 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 </script>
 
 <style scoped>
-
 .profile-page {
   background: #f4f6f9;
   min-height: 100vh;
@@ -295,10 +360,10 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 }
 
 .user-role-badge {
-  background: rgba(255, 95, 0, .2);
+  background: rgba(255, 95, 0, 0.2);
   color: #ff9a5c;
-  border: 1px solid rgba(255, 95, 0, .3);
-  font-size: .75rem;
+  border: 1px solid rgba(255, 95, 0, 0.3);
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 12px;
   border-radius: 20px;
@@ -344,7 +409,7 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 .avatar-loading {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -386,7 +451,7 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
   border: none;
   background: none;
   padding: 11px 18px;
-  font-size: .85rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
 }
@@ -412,7 +477,7 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 
 .tab-item {
   padding: 14px 20px;
-  font-size: .85rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #888;
   text-decoration: none;
@@ -462,12 +527,12 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 }
 
 .id-badge {
-  background: rgba(255, 95, 0, .2);
+  background: rgba(255, 95, 0, 0.2);
   color: #ff9a5c;
   padding: 3px 10px;
   border-radius: 20px;
   font-weight: 800;
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .id-dots {
@@ -477,7 +542,7 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 20px solid rgba(255, 255, 255, .05);
+  border: 20px solid rgba(255, 255, 255, 0.05);
 }
 
 .form-card {
@@ -488,7 +553,7 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 }
 
 .field-label {
-  font-size: .72rem;
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
   color: #999;
@@ -508,7 +573,7 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 .input-wrap:focus-within {
   border-color: #ff5f00;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(255, 95, 0, .1);
+  box-shadow: 0 0 0 3px rgba(255, 95, 0, 0.1);
 }
 
 .input-wrap.input-err {
@@ -526,13 +591,13 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
   border: none;
   background: transparent;
   padding: 11px 14px 11px 0;
-  font-size: .88rem;
+  font-size: 0.88rem;
   outline: none;
 }
 
 .err-msg {
   color: #dc3545;
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 600;
   margin-top: 5px;
 }
@@ -550,13 +615,15 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 .btn-save-main:hover {
   background: #e65600;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 95, 0, .3);
+  box-shadow: 0 8px 20px rgba(255, 95, 0, 0.3);
 }
 
 /* Animations */
 .menu-fade-enter-active,
 .menu-fade-leave-active {
-  transition: opacity .15s, transform .15s;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
 }
 
 .menu-fade-enter-from,
@@ -576,7 +643,7 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
   border-radius: 50px;
   color: #fff;
   font-weight: 700;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .toast-pill.success {
@@ -589,7 +656,7 @@ onUnmounted(() => document.removeEventListener('click', handleOutsideClick))
 
 .slide-toast-enter-active,
 .slide-toast-leave-active {
-  transition: all .35s;
+  transition: all 0.35s;
 }
 
 .slide-toast-enter-from,

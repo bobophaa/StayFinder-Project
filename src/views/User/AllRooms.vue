@@ -5,8 +5,8 @@
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
       <div class="card-header-navy p-3 text-white d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div>
-          <h4 class="fw-bold mb-0">Browse Rooms</h4>
-          <small class="opacity-75">{{ totalRooms }} room{{ totalRooms !== 1 ? 's' : '' }} found</small>
+          <h4 class="fw-bold mb-0">រុករកបន្ទប់</h4>
+          <small class="opacity-75">{{ totalRooms }} បន្ទប់ត្រូវបានរកឃើញ</small>
         </div>
         <div class="d-flex gap-2 align-items-center">
           <span class="badge bg-orange px-3 py-2">
@@ -36,28 +36,26 @@
           <div class="card-body p-4">
 
             <div class="mb-4">
-              <label class="filter-label">Search</label>
+              <label class="filter-label">ស្វែងរក</label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0">
                   <i class="bi bi-search text-muted"></i>
                 </span>
                 <input v-model="filters.search" type="text"
                   class="form-control custom-input border-start-0 ps-0"
-                  placeholder="Room title..." @input="debouncedFetch" />
+                  placeholder="ចំណងជើងបន្ទប់..." @input="debouncedFetch" />
               </div>
             </div>
 
             <div class="mb-4">
-              <label class="filter-label">District</label>
-              <select v-model="filters.district" class="form-select custom-input" @change="applyFilters">
-                <option value="">All Districts</option>
+<label class="filter-label">ខណ្ឌ</label>              <select v-model="filters.district" class="form-select custom-input" @change="applyFilters">
+              <option value="">ខណ្ឌទាំងអស់</option>
                 <option v-for="d in districtStore.districts" :key="d.id" :value="d.id">{{ d.name }}</option>
               </select>
             </div>
 
             <div class="mb-4">
-              <label class="filter-label">Price Range ($/month)</label>
-              <div class="row g-2">
+<label class="filter-label">ចន្លោះតម្លៃ ($/ខែ)</label>              <div class="row g-2">
                 <div class="col-6">
                   <input v-model="filters.price_start" type="number" class="form-control custom-input"
                     placeholder="Min" min="0" @change="applyFilters" />
@@ -75,11 +73,12 @@
             </div>
 
             <div class="mb-4">
-              <label class="filter-label">Sort By</label>
+            <label class="filter-label">តម្រៀបតាម</label>
               <select v-model="filters.sort_col" class="form-select custom-input" @change="applyFilters">
-                <option value="id">Newest First</option>
-                <option value="price">Price</option>
-                <option value="title">Title (A–Z)</option>
+             <option value="id">ថ្មីជាងគេ</option>
+           <option value="price">តម្លៃ</option>
+<option value="title">ចំណងជើង (A–Z)</option>
+
               </select>
               <div class="d-flex gap-2 mt-2">
                 <button class="btn btn-sm flex-fill rounded-2"
@@ -96,8 +95,7 @@
             </div>
 
             <div class="mb-4">
-              <label class="filter-label">Beds</label>
-              <div class="d-flex flex-wrap gap-2">
+<label class="filter-label">គ្រែ</label>              <div class="d-flex flex-wrap gap-2">
                 <button v-for="b in bedOptions" :key="b" class="btn btn-sm"
                   :class="filters.bed === b ? 'btn-orange' : 'btn-outline-secondary'"
                   @click="toggleBed(b)">{{ b }}</button>
@@ -105,7 +103,8 @@
             </div>
 
             <div class="mb-4">
-              <label class="filter-label">Room Size</label>
+           <label class="filter-label">ទំហំបន្ទប់</label>
+
               <div class="d-flex flex-wrap gap-2">
                 <button v-for="s in sizeOptions" :key="s" class="btn btn-sm"
                   :class="filters.size === s ? 'btn-orange' : 'btn-outline-secondary'"
@@ -114,7 +113,7 @@
             </div>
 
             <div class="mb-2">
-              <label class="filter-label">Amenities</label>
+            <label class="filter-label">សេវាកម្ម</label>
               <div class="amenity-filter-grid">
                 <div v-for="opt in roomOptionStore.options" :key="opt.id"
                   class="amenity-check-item" :class="{ active: filters.options.includes(opt.id) }"
@@ -214,10 +213,10 @@
           <div class="empty-icon mb-3">
             <i class="bi bi-building-slash"></i>
           </div>
-          <h5 class="fw-bold text-navy">No rooms found</h5>
-          <p class="text-muted">Try adjusting your filters to see more results.</p>
+         <h5 class="fw-bold text-navy">រកមិនឃើញបន្ទប់</h5>
+       <p class="text-muted">សូមកែប្រែតម្រងដើម្បីមើលលទ្ធផលបន្ថែម។</p>
           <button class="btn btn-orange px-4" @click="clearFilters">
-            <i class="bi bi-arrow-counterclockwise me-2"></i>Reset Filters
+            <i class="bi bi-arrow-counterclockwise me-2"></i>កំណត់តម្រងឡើងវិញ
           </button>
         </div>
 
@@ -250,7 +249,7 @@
 
               <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start mb-1">
-                  <div class="room-price">${{ room.price }}<small class="text-muted fw-normal">/months</small></div>
+                  <div class="room-price">${{ room.price }}<small class="text-muted fw-normal">/ខែ</small></div>
                   <span v-if="room.district" class="badge district-badge">
                     <i class="bi bi-geo-alt-fill me-1"></i>{{ room.district.name }}
                   </span>

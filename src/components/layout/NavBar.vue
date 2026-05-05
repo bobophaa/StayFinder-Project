@@ -16,56 +16,63 @@
       <button
         class="navbar-toggler border-white"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
+        @click="navOpen = !navOpen"
+        :aria-expanded="navOpen"
+        aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <!-- Menu -->
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div
+        class="navbar-collapse"
+        :class="navOpen ? 'd-block' : 'd-none d-lg-flex'"
+        id="navbarNav"
+      >
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <router-link to="/" class="nav-link px-3" active-class="active-link">Home</router-link>
+            <router-link to="/" class="nav-link px-3" active-class="active-link" @click="navOpen = false">
+              Home
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/rooms" class="nav-link px-3" active-class="active-link"
-              >Explore Rooms</router-link
-            >
+            <router-link to="/rooms" class="nav-link px-3" active-class="active-link" @click="navOpen = false">
+              Explore Rooms
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/About" class="nav-link px-3" active-class="active-link"
-              >About Us</router-link
-            >
+            <router-link to="/About" class="nav-link px-3" active-class="active-link" @click="navOpen = false">
+              About Us
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/faq" class="nav-link px-3" active-class="active-link"
-              >FAQ</router-link
-            >
+            <router-link to="/faq" class="nav-link px-3" active-class="active-link" @click="navOpen = false">
+              FAQ
+            </router-link>
           </li>
         </ul>
 
-        <div class="d-flex align-items-center gap-3">
-          <!-- if user not login -->
+        <div class="d-flex align-items-center gap-3 flex-wrap mt-2 mt-lg-0">
+          <!-- Not logged in -->
           <template v-if="!authStore.isLoggedIn">
-            <router-link to="/login" class="btn-outline-main text-white text-decoration-none">
+            <router-link to="/login" class="btn-outline-main text-white text-decoration-none" @click="navOpen = false">
               Log In
             </router-link>
-            <router-link to="/register" class="btn-main text-decoration-none">
+            <router-link to="/register" class="btn-main text-decoration-none" @click="navOpen = false">
               Register
             </router-link>
           </template>
 
           <!-- Logged in -->
           <template v-else>
-            <!-- Wishlist -->
-            <router-link to="/wishlist" class="icon-circle shadow-sm">
+            <router-link to="/wishlist" class="icon-circle shadow-sm" @click="navOpen = false">
               <i class="bi bi-heart-fill"></i>
               <span v-if="wishlistStore.items?.length" class="wishlist-badge">
                 {{ wishlistStore.items.length }}
               </span>
             </router-link>
-            <router-link to="/profile" class="profile-circle shadow-sm">
+
+            <router-link to="/profile" class="profile-circle shadow-sm" @click="navOpen = false">
               <img
                 v-if="authStore.user"
                 :src="avatarUrl"
@@ -75,9 +82,10 @@
               />
             </router-link>
 
-            <router-link to="/info" class="btn-main px-3">List Your Property</router-link>
+            <router-link to="/info" class="btn-main px-3" @click="navOpen = false">
+              List Your Property
+            </router-link>
 
-            <!-- Logout -->
             <button @click="handleLogout" class="logout-btn" title="Log out">
               <i class="bi bi-box-arrow-right"></i>
             </button>
@@ -89,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useWishlistStore } from '@/stores/WishlistStore'
@@ -101,22 +109,27 @@ const route = useRoute()
 const router = useRouter()
 
 const isScrolled = ref(false)
+const navOpen = ref(false)
 const defaultAvatar = 'https://i.pinimg.com/736x/1d/ec/e2/1dece2c8357bdd7cee3b15036344faf5.jpg'
+
 const isHeroPage = computed(() => route.name === 'home' || route.path === '/')
 
 const avatarUrl = computed(() => {
   if (!authStore.user?.avatar) return defaultAvatar
-
   const url = authStore.user.avatar.startsWith('http')
     ? authStore.user.avatar
     : `http://127.0.0.1:8000/${authStore.user.avatar}`
-
   return url + '?t=' + Date.now()
 })
 
 const onAvatarError = (e: Event) => {
   ;(e.target as HTMLImageElement).src = defaultAvatar
 }
+
+// Close nav on route change
+watch(() => route.path, () => {
+  navOpen.value = false
+})
 
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
@@ -125,6 +138,7 @@ const handleScroll = () => {
 const handleLogout = async () => {
   const confirmed = await confirmDelete('Log out?')
   if (confirmed) {
+    navOpen.value = false
     await authStore.logout()
     alertSuccess('Logged out successfully!')
     router.push('/login')
@@ -146,7 +160,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   background-color: #031c36 !important;
 }
 
-/* Buttons */
 .btn-main {
   background-color: #ff5f00;
   color: white;
@@ -170,7 +183,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   color: #ff5f00 !important;
 }
 
-/* Profile circle */
 .profile-circle {
   width: 40px;
   height: 40px;
@@ -187,7 +199,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   display: block;
 }
 
-/* Wishlist */
 .icon-circle {
   width: 40px;
   height: 40px;
@@ -222,7 +233,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   font-weight: 700;
 }
 
-/* Logout */
 .logout-btn {
   background: transparent;
   border: none;
@@ -236,7 +246,6 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   transform: scale(1.1);
 }
 
-/* Nav links */
 .nav-link {
   color: rgba(255, 255, 255, 0.8);
   font-weight: 500;
