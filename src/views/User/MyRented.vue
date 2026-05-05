@@ -19,21 +19,9 @@
                 </div>
               </div>
 
-              <div class="avatar-cam" @click.stop="toggleMenu">
-                <i class="bi bi-camera-fill"></i>
-              </div>
+             
 
-              <transition name="menu-fade">
-                <div v-if="showActionsMenu" class="avatar-menu shadow" @click.stop>
-                  <button class="avatar-menu-item" @click="triggerUpload">
-                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>Upload photo
-                  </button>
-                  <button v-if="user?.avatar" class="avatar-menu-item text-danger" @click="removeImage">
-                    <i class="bi bi-trash3-fill me-2"></i>Remove photo
-                  </button>
-                </div>
-              </transition>
-              <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
+              
             </div>
 
             <div class="pb-3 text-white">

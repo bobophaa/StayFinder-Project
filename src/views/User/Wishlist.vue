@@ -7,9 +7,9 @@
 
         <div class="d-flex justify-content-between align-items-end mb-5">
           <div>
-            <h1 class="fw-bold text-navy mb-1">My Wishlist</h1>
+            <h1 class="fw-bold text-navy mb-1">បន្ទប់ដែលអ្នកពេញចិត្ត</h1>
             <p class="text-muted mb-0">
-              You have {{ wishlistItems.length }} saved properties
+             អ្នកបានរក្សាទុកបន្ទប់ {{ wishlistItems.length }} 
             </p>
           </div>
 
@@ -18,7 +18,7 @@
             @click="clearAll"
             class="btn btn-link text-danger text-decoration-none small fw-bold"
           >
-            <i class="bi bi-trash3 me-1"></i> Clear All
+            <i class="bi bi-trash3 me-1"></i> លុបទាំងអស់
           </button>
         </div>
 
@@ -28,9 +28,9 @@
             <i class="bi bi-heart text-light-gray display-1"></i>
           </div>
 
-          <h3 class="fw-bold text-navy">Your wishlist is empty</h3>
+          <h3 class="fw-bold text-navy">មិនមានបន្ទប់ដែលអ្នកពេញចិត្ត</h3>
           <p class="text-muted mb-4">
-            Explore rooms and click the heart icon to save them here.
+​​​​​​​​​​​​​​                   ចុចលើរូបសញ្ញាបេះដូង ដើម្បីស្វែងរកបន្ទប់ដែលអ្នកពេញចិត្ត
           </p>
 
           <router-link to="/rooms" class="btn-main px-5 py-3">
