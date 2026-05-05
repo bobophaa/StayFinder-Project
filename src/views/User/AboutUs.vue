@@ -1,6 +1,5 @@
 <template>
   <div class="about-page">
-
     <section class="hero-section">
       <div class="hero-overlay"></div>
       <div class="container position-relative" style="z-index: 2">

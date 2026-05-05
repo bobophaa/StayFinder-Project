@@ -122,7 +122,7 @@ const handleToggle = () => {
 }
 .description-text {
   display: -webkit-box;
-  -webkit-line-clamp: 2; 
+  -webkit-line-clamp: 1; 
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
