@@ -26,21 +26,21 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <router-link to="/" class="nav-link px-3" active-class="active-link">Home</router-link>
+            <router-link to="/" class="nav-link px-3" active-class="active-link">ទំព័រដើម</router-link>
           </li>
           <li class="nav-item">
             <router-link to="/rooms" class="nav-link px-3" active-class="active-link"
-              >Explore Rooms</router-link
+              >ស្វែងរកបបន្ទប់</router-link
             >
           </li>
           <li class="nav-item">
             <router-link to="/About" class="nav-link px-3" active-class="active-link"
-              >About Us</router-link
+              >អំពីពួកយើង</router-link
             >
           </li>
           <li class="nav-item">
             <router-link to="/faq" class="nav-link px-3" active-class="active-link"
-              >FAQ</router-link
+              >សំណួរដែលសួរញឹកញាប់</router-link
             >
           </li>
         </ul>
@@ -49,10 +49,10 @@
           <!-- if user not login -->
           <template v-if="!authStore.isLoggedIn">
             <router-link to="/login" class="btn-outline-main text-white text-decoration-none">
-              Log In
+              ចូលគណនី
             </router-link>
             <router-link to="/register" class="btn-main text-decoration-none">
-              Register
+              ចុះឈ្មោះ
             </router-link>
           </template>
 
@@ -126,7 +126,7 @@ const handleLogout = async () => {
   const confirmed = await confirmDelete('Log out?')
   if (confirmed) {
     await authStore.logout()
-    alertSuccess('Logged out successfully!')
+    alertSuccess('ការចាកចេញជោគជ័យ!')
     router.push('/login')
   }
 }

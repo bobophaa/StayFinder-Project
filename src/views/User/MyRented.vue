@@ -3,7 +3,7 @@
 
     <div v-if="loading" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
       <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
-      <p class="text-muted fw-semibold">Loading your stays...</p>
+      <p class="text-muted fw-semibold">កំពុងផ្ទុកការស្នាក់នៅរបស់អ្នក...</p>
     </div>
 
     <div v-else>
@@ -26,10 +26,10 @@
               <transition name="menu-fade">
                 <div v-if="showActionsMenu" class="avatar-menu shadow" @click.stop>
                   <button class="avatar-menu-item" @click="triggerUpload">
-                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>Upload photo
+                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>បញ្ចូលរូបភាព
                   </button>
                   <button v-if="user?.avatar" class="avatar-menu-item text-danger" @click="removeImage">
-                    <i class="bi bi-trash3-fill me-2"></i>Remove photo
+                    <i class="bi bi-trash3-fill me-2"></i>លុបរូបភាព
                   </button>
                 </div>
               </transition>
@@ -51,13 +51,13 @@
         <div class="container">
           <div class="tab-bar">
             <router-link to="/profile" class="tab-item">
-              <i class="bi bi-person-fill me-2"></i>Profile
+              <i class="bi bi-person-fill me-2"></i>ប្រវត្តិរូប
             </router-link>
             <router-link to="/my-bookings" class="tab-item">
-              <i class="bi bi-calendar-check-fill me-2"></i>Bookings
+              <i class="bi bi-calendar-check-fill me-2"></i>ការកក់បន្ទប់
             </router-link>
             <router-link to="/my-rented" class="tab-item tab-active">
-              <i class="bi bi-house-check-fill me-2"></i>Rented
+              <i class="bi bi-house-check-fill me-2"></i>ការជួលស្នាក់នៅ
             </router-link>
          
           </div>
@@ -67,8 +67,8 @@
       <div class="container py-4 pb-5">
         <header class="d-flex justify-content-between align-items-center mb-5">
           <div>
-            <h2 class="fw-bold text-navy">My Rented Rooms</h2>
-            <p class="text-muted">Total {{ pagination.total }} active rentals found</p>
+            <h2 class="fw-bold text-navy">ការជួលស្នាក់នៅរបស់ខ្ញុំ</h2>
+            <p class="text-muted">រកឃើញការជួលកំពុងដំណើរការសរុប {{ pagination.total }} </p>
           </div>
         </header>
 
@@ -77,9 +77,9 @@
             <div class="modern-booking-card" @click="openDetail(item)">
               <div class="image-area">
                 <img :src="item.room?.image" class="room-img" />
-                <div class="price-pill">${{ item.room?.price }}<span>/mo</span></div>
+                <div class="price-pill">${{ item.room?.price }}<span>/ក្នុងមួយខែ</span></div>
                 <div class="status-glass approved">
-                  <span class="status-dot"></span> Active Stay
+                  <span class="status-dot"></span> ស្នាក់នៅ
                 </div>
               </div>
 
@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="card-footer-action">
-                  <span>View Rental Details</span>
+                  <span>មើលព័ត៌មាន</span>
                   <div class="arrow-circle"><i class="bi bi-arrow-right"></i></div>
                 </div>
               </div>
@@ -103,7 +103,7 @@
 
         <div v-else class="text-center py-5">
           <i class="bi bi-house-x text-muted mb-3" style="font-size: 3rem;"></i>
-          <h4 class="text-muted">No active rentals found.</h4>
+          <h4 class="text-muted">រកមិនឃើញការជួលដែលកំពុងដំណើរការ។</h4>
         </div>
       </div>
 
@@ -119,7 +119,7 @@
                   <div class="position-absolute top-0 start-0 w-100 h-100 p-5 d-flex flex-column">
                     <div class="mb-auto">
                       <div class="glass-tag mb-3">
-                        <span class="status-dot-lg approved"></span> Active Stay
+                        <span class="status-dot-lg approved"></span> ស្នាក់នៅ
                       </div>
                       <h1 class="display-6 fw-bold text-white mb-2">{{ selectedItem?.room?.title }}</h1>
                       <p class="text-white-50"><i class="bi bi-geo-alt me-2"></i>{{ selectedItem?.room?.district?.name
@@ -132,7 +132,7 @@
                 <div class="col-lg-7 bg-white p-4 p-md-5">
                   <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                      <h4 class="fw-bold text-navy mb-0">Rental Overview</h4>
+                      <h4 class="fw-bold text-navy mb-0">ព័ត៌មានការជួល</h4>
                       <div class="title-underline"></div>
                     </div>
                     <button type="button" class="btn-close-custom" @click="closeModal"><i class="bi bi-x"></i></button>
@@ -142,7 +142,7 @@
                     <div class="col-sm-6">
                       <div class="bento-item">
                         <div class="bento-icon"><i class="bi bi-calendar-check-fill"></i></div>
-                        <div><small>Check-in Date</small>
+                        <div><small>កាលបរិច្ឆេទ</small>
                           <h6>{{ formatDate(selectedItem?.checkin_date) }}</h6>
                         </div>
                       </div>
@@ -150,7 +150,7 @@
                     <div class="col-sm-6">
                       <div class="bento-item">
                         <div class="bento-icon"><i class="bi bi-rulers"></i></div>
-                        <div><small>Room Size</small>
+                        <div><small>ទំហំបន្ទប់</small>
                           <h6>{{ selectedItem?.room?.size_room }}m² Total</h6>
                         </div>
                       </div>
@@ -159,35 +159,35 @@
 
                   <div class="row g-4 mb-4">
                     <div class="col-md-7">
-                      <p class="section-label">MONTHLY BILLING</p>
+                      <p class="section-label">ការចំណាយប្រចាំខែ</p>
                       <div class="payment-card-premium">
                         <div class="d-flex justify-content-between mb-2">
-                          <span class="text-muted small">Base Rent</span>
+                          <span class="text-muted small">ការជួល</span>
                           <span class="fw-bold text-navy">${{ selectedItem?.room?.price }}</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 small">
-                          <span class="text-muted">Est. Utilities</span>
+                          <span class="text-muted">ចំណាយផ្សេងៗ</span>
                           <span class="text-navy fw-semibold">$24.00</span>
                         </div>
                         <div class="total-box mt-3">
-                          <span class="text-white-50 small fw-bold">TOTAL TO PAY</span>
+                          <span class="text-white-50 small fw-bold">ចំណាយសរុប</span>
                           <h3 class="text-white mb-0">${{ (parseFloat(selectedItem?.room?.price || 0) + 24).toFixed(2)
                             }}</h3>
                         </div>
                       </div>
                     </div>
                     <div class="col-md-5">
-                      <p class="section-label">CONTACT SUPPORT</p>
+                      <p class="section-label">ទំនាក់ទំនងរកជំនួយ</p>
                       <div class="owner-card-mini">
                         <div class="landlord-avatar-lg">{{ selectedItem?.seller?.name?.charAt(0) || 'O' }}</div>
                         <h6 class="fw-bold text-navy mb-1">{{ selectedItem?.seller?.name || 'Owner' }}</h6>
                         <span
                           class="badge bg-success-subtle text-success rounded-pill px-3 py-2 border border-success-subtle">
-                          <i class="bi bi-shield-check me-1"></i>Owner
+                          <i class="bi bi-shield-check me-1"></i>ម្ចាស់
                         </span>
                         <a v-if="selectedItem?.room?.map_url" :href="selectedItem.room.map_url" target="_blank"
                           class="btn btn-map-link mt-3">
-                          <i class="bi bi-geo-fill me-2"></i>Map View
+                          <i class="bi bi-geo-fill me-2"></i>មើលផែនទី
                         </a>
                       </div>
                     </div>
@@ -195,7 +195,7 @@
 
                   <div class="d-grid">
                     <button class="btn btn-navy-action py-3 rounded-4 fw-bold shadow-sm" @click="closeModal">
-                      Close Overview
+                      បិទការមើល
                     </button>
                   </div>
                 </div>
