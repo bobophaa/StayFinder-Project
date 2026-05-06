@@ -31,35 +31,33 @@
       >
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <router-link to="/" class="nav-link px-3" active-class="active-link" @click="navOpen = false">
-              Home
-            </router-link>
+            <router-link to="/" class="nav-link px-3" active-class="active-link">ទំព័រដើម</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/rooms" class="nav-link px-3" active-class="active-link" @click="navOpen = false">
-              Explore Rooms
-            </router-link>
+            <router-link to="/rooms" class="nav-link px-3" active-class="active-link"
+              >ស្វែងរកបបន្ទប់</router-link
+            >
           </li>
           <li class="nav-item">
-            <router-link to="/About" class="nav-link px-3" active-class="active-link" @click="navOpen = false">
-              About Us
-            </router-link>
+            <router-link to="/About" class="nav-link px-3" active-class="active-link"
+              >អំពីពួកយើង</router-link
+            >
           </li>
           <li class="nav-item">
-            <router-link to="/faq" class="nav-link px-3" active-class="active-link" @click="navOpen = false">
-              FAQ
-            </router-link>
+            <router-link to="/faq" class="nav-link px-3" active-class="active-link"
+              >សំណួរដែលសួរញឹកញាប់</router-link
+            >
           </li>
         </ul>
 
         <div class="d-flex align-items-center gap-3 flex-wrap mt-2 mt-lg-0">
           <!-- Not logged in -->
           <template v-if="!authStore.isLoggedIn">
-            <router-link to="/login" class="btn-outline-main text-white text-decoration-none" @click="navOpen = false">
-              Log In
+            <router-link to="/login" class="btn-outline-main text-white text-decoration-none">
+              ចូលគណនី
             </router-link>
-            <router-link to="/register" class="btn-main text-decoration-none" @click="navOpen = false">
-              Register
+            <router-link to="/register" class="btn-main text-decoration-none">
+              ចុះឈ្មោះ
             </router-link>
           </template>
 
@@ -140,7 +138,7 @@ const handleLogout = async () => {
   if (confirmed) {
     navOpen.value = false
     await authStore.logout()
-    alertSuccess('Logged out successfully!')
+    alertSuccess('ការចាកចេញជោគជ័យ!')
     router.push('/login')
   }
 }

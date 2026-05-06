@@ -34,7 +34,7 @@ export const alertError = (message) => {
   Swal.fire({
     icon: 'error',
     title: 'Error!',
-    text: message || 'Something went wrong. Please try again.',
+    text: message || 'មានមានអ្វីមួយខុសប្រក្រដី។ សូមពិនិត្យព័ត៌មានរបស់អ្នក។',
 
   });
 };
