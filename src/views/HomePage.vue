@@ -276,7 +276,7 @@ function searchByDistrict(name) {
               @click="searchByDistrict('Chamkar Mon')"
             >
               <div class="location-badge shadow-sm">
-                <i class="bi bi-geo-alt-fill me-2"></i> Chamkar Mon
+                <i class="bi bi-geo-alt-fill me-2"></i> ចំការមន
               </div>
             </div>
           </div>
@@ -289,7 +289,7 @@ function searchByDistrict(name) {
               @click="searchByDistrict('Chroy Changvar')"
             >
               <div class="location-badge shadow-sm">
-                <i class="bi bi-geo-alt-fill me-2"></i> Chroy Changvar
+                <i class="bi bi-geo-alt-fill me-2"></i> ជ្រោយចង្វារ
               </div>
             </div>
           </div>
@@ -302,7 +302,7 @@ function searchByDistrict(name) {
               @click="searchByDistrict('Dangkao')"
             >
               <div class="location-badge shadow-sm">
-                <i class="bi bi-geo-alt-fill me-2"></i> Dangkao
+                <i class="bi bi-geo-alt-fill me-2"></i> ដង្កោរ
               </div>
             </div>
           </div>
@@ -315,7 +315,7 @@ function searchByDistrict(name) {
               @click="searchByDistrict('Boeng Keng Kang')"
             >
               <div class="location-badge shadow-sm">
-                <i class="bi bi-geo-alt-fill me-2"></i> Boeng Keng Kang
+                <i class="bi bi-geo-alt-fill me-2"></i> បឹងកេងកង
               </div>
             </div>
           </div>
@@ -328,7 +328,7 @@ function searchByDistrict(name) {
               @click="searchByDistrict('Doun Penh')"
             >
               <div class="location-badge shadow-sm">
-                <i class="bi bi-geo-alt-fill me-2"></i> Doun Penh
+                <i class="bi bi-geo-alt-fill me-2"></i> ដូនពេញ
               </div>
             </div>
           </div>
