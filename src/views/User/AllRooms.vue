@@ -10,7 +10,7 @@
         </div>
         <div class="d-flex gap-2 align-items-center">
           <span class="badge bg-orange px-3 py-2">
-            <i class="bi bi-buildings me-1"></i>Listings
+            <i class="bi bi-buildings me-1"></i>បង្ហាញទាងអស់ {{ filteredRooms.length }} បន្ទប់
           </span>
           <button class="btn btn-sm btn-outline-light d-lg-none" @click="showMobileFilter = !showMobileFilter">
             <i class="bi bi-funnel-fill me-1"></i>Filters
@@ -27,10 +27,10 @@
         <div class="card border-0 shadow-sm rounded-4 sticky-top " style="top: 80px;">
           <div class="card-header-navy px-4 py-3 d-flex justify-content-between align-items-center rounded-4">
             <span class="fw-bold text-white">
-              <i class="bi bi-funnel-fill me-2"></i>Filters
+              <i class="bi bi-funnel-fill me-2"></i>ជម្រើស
             </span>
             <button v-if="activeFilterCount > 0" class="btn btn-sm btn-outline-light" @click="clearFilters">
-              Clear All
+              ដកចេញ {{ activeFilterCount }} ជម្រើស
             </button>
           </div>
           <div class="card-body p-4">
