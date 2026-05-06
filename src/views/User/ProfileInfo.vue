@@ -1,19 +1,26 @@
 <template>
   <div class="profile-page">
-    <div v-if="!user" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
-      <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
+    <div
+      v-if="!user"
+      class="d-flex flex-column align-items-center justify-content-center"
+      style="min-height: 60vh"
+    >
+      <div class="spinner-border text-orange mb-3" style="width: 3rem; height: 3rem"></div>
       <p class="text-muted fw-semibold">កំពុងដំណើរការ...</p>
     </div>
 
     <div v-else>
       <div class="hero-banner position-relative">
-        <div class="container position-relative" style="z-index:2">
-          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top:48px">
-
+        <div class="container position-relative" style="z-index: 2">
+          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top: 48px">
             <div class="avatar-wrapper">
               <div class="avatar-ring">
                 <div class="avatar-box">
-                  <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="avatar" />
+                  <img
+                    v-if="avatarPreview || user.avatar"
+                    :src="avatarPreview || user.avatar"
+                    alt="avatar"
+                  />
                   <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'U' }}</span>
                   <div v-if="loading && uploadingAvatar" class="avatar-loading">
                     <div class="spinner-border spinner-border-sm text-white"></div>
@@ -30,13 +37,23 @@
                   <button class="avatar-menu-item" @click="triggerUpload">
                     <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i>បញ្ចូលរូបភាព
                   </button>
-                  <button v-if="avatarPreview || user.avatar" class="avatar-menu-item text-danger" @click="removeImage">
+                  <button
+                    v-if="avatarPreview || user.avatar"
+                    class="avatar-menu-item text-danger"
+                    @click="removeImage"
+                  >
                     <i class="bi bi-trash3-fill me-2"></i>លុបរូបភាព
                   </button>
                 </div>
               </transition>
 
-              <input ref="fileInput" type="file" hidden accept="image/*" @change="handleFileUpload" />
+              <input
+                ref="fileInput"
+                type="file"
+                hidden
+                accept="image/*"
+                @change="handleFileUpload"
+              />
             </div>
 
             <div class="pb-3">
@@ -53,8 +70,13 @@
       <div class="tab-bar-wrap">
         <div class="container">
           <div class="tab-bar">
-            <router-link v-for="tab in tabLinks" :key="tab.path" :to="tab.path" class="tab-item"
-              active-class="tab-active">
+            <router-link
+              v-for="tab in tabLinks"
+              :key="tab.path"
+              :to="tab.path"
+              class="tab-item"
+              active-class="tab-active"
+            >
               <i :class="['bi', tab.icon, 'me-2']"></i>{{ tab.name }}
             </router-link>
           </div>
@@ -70,20 +92,29 @@
               </div>
               <div class="side-card-body">
                 <div class="info-row">
-                  <span class="info-label"><i class="bi bi-envelope me-2 text-orange"></i>អ៊ីម៉ែល</span>
+                  <span class="info-label"
+                    ><i class="bi bi-envelope me-2 text-orange"></i>អ៊ីម៉ែល</span
+                  >
                   <span class="info-value">{{ user.email || '–' }}</span>
                 </div>
                 <div class="info-row">
-                  <span class="info-label"><i class="bi bi-telephone me-2 text-orange"></i>លេខទូរសព្ទ</span>
+                  <span class="info-label"
+                    ><i class="bi bi-telephone me-2 text-orange"></i>លេខទូរសព្ទ</span
+                  >
                   <span class="info-value">{{ user.phone || 'Not set' }}</span>
                 </div>
                 <div class="info-row">
-                  <span class="info-label"><i class="bi bi-gender-ambiguous me-2 text-orange"></i>ភេទ</span>
-                  <span class="info-value">{{ user.gender == 1 ? 'បុរស' : user.gender == 2 ? 'ស្រី្ត' : 'Not set'
-                    }}</span>
+                  <span class="info-label"
+                    ><i class="bi bi-gender-ambiguous me-2 text-orange"></i>ភេទ</span
+                  >
+                  <span class="info-value">{{
+                    user.gender == 1 ? 'បុរស' : user.gender == 2 ? 'ស្រី្ត' : 'Not set'
+                  }}</span>
                 </div>
                 <div class="info-row border-0">
-                  <span class="info-label"><i class="bi bi-briefcase me-2 text-orange"></i>ការងារ</span>
+                  <span class="info-label"
+                    ><i class="bi bi-briefcase me-2 text-orange"></i>ការងារ</span
+                  >
                   <span class="info-value">{{ user.current_job || 'Not set' }}</span>
                 </div>
               </div>
@@ -121,14 +152,20 @@
 
               <div v-if="isEditing" class="edit-banner mb-4">
                 <i class="bi bi-info-circle-fill me-2"></i>
-              អ្នកកំពុងកែសម្រួលប្រវត្តិរូបរបស់អ្នក។ ចុចលើប៊ូតុង <strong>រក្សាទុក</strong> នៅពេលបានធ្វើការរួច។
+                អ្នកកំពុងកែសម្រួលប្រវត្តិរូបរបស់អ្នក។ ចុចលើប៊ូតុង
+                <strong>រក្សាទុក</strong> នៅពេលបានធ្វើការរួច។
               </div>
 
               <form @submit.prevent="updateProfile">
                 <div class="row g-3">
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'field-label-err': errors.name }">ឈ្មោះពេញ</label>
-                    <div class="input-wrap" :class="{ 'input-err': errors.name, 'input-readonly': !isEditing }">
+                    <label class="field-label" :class="{ 'field-label-err': errors.name }"
+                      >ឈ្មោះពេញ</label
+                    >
+                    <div
+                      class="input-wrap"
+                      :class="{ 'input-err': errors.name, 'input-readonly': !isEditing }"
+                    >
                       <i class="bi bi-person input-icon"></i>
                       <input v-model="form.name" placeholder="ឈ្មោះពេញ" :readonly="!isEditing" />
                     </div>
@@ -136,19 +173,38 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'field-label-err': errors.email }">អ៊ីម៉ែល</label>
-                    <div class="input-wrap" :class="{ 'input-err': errors.email, 'input-readonly': !isEditing }">
+                    <label class="field-label" :class="{ 'field-label-err': errors.email }"
+                      >អ៊ីម៉ែល</label
+                    >
+                    <div
+                      class="input-wrap"
+                      :class="{ 'input-err': errors.email, 'input-readonly': !isEditing }"
+                    >
                       <i class="bi bi-envelope input-icon"></i>
-                      <input v-model="form.email" type="email" placeholder="email@example.com" :readonly="!isEditing" />
+                      <input
+                        v-model="form.email"
+                        type="email"
+                        placeholder="email@example.com"
+                        :readonly="!isEditing"
+                      />
                     </div>
                     <div v-if="errors.email" class="err-msg">{{ errors.email }}</div>
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'field-label-err': errors.phone }">លេខទូរសព្ទ</label>
-                    <div class="input-wrap" :class="{ 'input-err': errors.phone, 'input-readonly': !isEditing }">
+                    <label class="field-label" :class="{ 'field-label-err': errors.phone }"
+                      >លេខទូរសព្ទ</label
+                    >
+                    <div
+                      class="input-wrap"
+                      :class="{ 'input-err': errors.phone, 'input-readonly': !isEditing }"
+                    >
                       <i class="bi bi-telephone input-icon"></i>
-                      <input v-model="form.phone" placeholder="Phone number" :readonly="!isEditing" />
+                      <input
+                        v-model="form.phone"
+                        placeholder="Phone number"
+                        :readonly="!isEditing"
+                      />
                     </div>
                     <div v-if="errors.phone" class="err-msg">{{ errors.phone }}</div>
                   </div>
@@ -168,7 +224,11 @@
                     <label class="field-label">ការងារបច្ចុប្បន្ន</label>
                     <div class="input-wrap" :class="{ 'input-readonly': !isEditing }">
                       <i class="bi bi-briefcase input-icon"></i>
-                      <input v-model="form.current_job" placeholder="e.g. Web Developer" :readonly="!isEditing" />
+                      <input
+                        v-model="form.current_job"
+                        placeholder="e.g. Web Developer"
+                        :readonly="!isEditing"
+                      />
                     </div>
                   </div>
                 </div>
@@ -195,8 +255,14 @@
             <p class="text-muted mb-0">តើអ្នកប្រាកដជាចង់រក្សាទុកការកែប្រែនេះឬ?</p>
           </div>
           <div class="confirm-modal-footer">
-            <button class="btn btn-light rounded-3 px-4" @click="showConfirmModal = false">បោះបង់</button>
-            <button class="btn btn-save-main px-4" @click="confirmUpdateProfile" :disabled="loading">
+            <button class="btn btn-light rounded-3 px-4" @click="showConfirmModal = false">
+              បោះបង់
+            </button>
+            <button
+              class="btn btn-save-main px-4"
+              @click="confirmUpdateProfile"
+              :disabled="loading"
+            >
               <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
               <i v-else class="bi bi-check2 me-1"></i>បញ្ជាក់
             </button>
@@ -206,7 +272,10 @@
 
       <transition name="slide-toast">
         <div v-if="toast.show" class="toast-pill" :class="toast.type">
-          <i class="bi me-2" :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+          <i
+            class="bi me-2"
+            :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"
+          ></i>
           {{ toast.message }}
         </div>
       </transition>
@@ -217,7 +286,9 @@
 <script setup>
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import api from '@/api/http'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const user = ref(null)
 const loading = ref(false)
 const uploadingAvatar = ref(false)
@@ -295,6 +366,7 @@ const handleFileUpload = async (e) => {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     await fetchUserData()
+    await authStore.fetchMe()
     avatarPreview.value = null
     showToast('Profile photo updated!', 'success')
   } catch (err) {
@@ -315,6 +387,7 @@ const removeImage = async () => {
     await api.delete('/profile/image')
     user.value.avatar = null
     avatarPreview.value = null
+    await authStore.fetchMe()
     showToast('Profile photo removed', 'success')
   } catch (err) {
     showToast(err.response?.data?.message || 'Delete failed', 'error')
@@ -326,13 +399,23 @@ const removeImage = async () => {
 const validateForm = () => {
   errors.name = errors.email = errors.phone = ''
   let ok = true
-  if (!form.name?.trim()) { errors.name = 'Full name is required'; ok = false }
-  if (!form.email) { errors.email = 'Email is required'; ok = false }
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) { errors.email = 'Invalid email format'; ok = false }
+  if (!form.name?.trim()) {
+    errors.name = 'Full name is required'
+    ok = false
+  }
+  if (!form.email) {
+    errors.email = 'Email is required'
+    ok = false
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errors.email = 'Invalid email format'
+    ok = false
+  }
   return ok
 }
 
-const enableEdit = () => { isEditing.value = true }
+const enableEdit = () => {
+  isEditing.value = true
+}
 const cancelEdit = () => {
   isEditing.value = false
   Object.assign(form, {
@@ -354,6 +437,7 @@ const confirmUpdateProfile = async () => {
   loading.value = true
   try {
     await api.post('/profile/info', form)
+    await authStore.fetchMe()
     Object.assign(user.value, form)
     showToast('Profile updated successfully!', 'success')
     isEditing.value = false
@@ -407,10 +491,10 @@ onUnmounted(() => {
 }
 
 .user-role-badge {
-  background: rgba(255, 95, 0, .2);
+  background: rgba(255, 95, 0, 0.2);
   color: #ff9a5c;
-  border: 1px solid rgba(255, 95, 0, .3);
-  font-size: .75rem;
+  border: 1px solid rgba(255, 95, 0, 0.3);
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 12px;
   border-radius: 20px;
@@ -456,7 +540,7 @@ onUnmounted(() => {
 .avatar-loading {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -476,9 +560,11 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: .8rem;
+  font-size: 0.8rem;
   cursor: pointer;
-  transition: background .2s, transform .2s;
+  transition:
+    background 0.2s,
+    transform 0.2s;
   z-index: 11;
 }
 
@@ -506,9 +592,9 @@ onUnmounted(() => {
   border: none;
   background: none;
   padding: 11px 18px;
-  font-size: .85rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: background .15s;
+  transition: background 0.15s;
   display: flex;
   align-items: center;
 }
@@ -520,7 +606,9 @@ onUnmounted(() => {
 /* Menu fade transition */
 .menu-fade-enter-active,
 .menu-fade-leave-active {
-  transition: opacity .15s, transform .15s;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
 }
 
 .menu-fade-enter-from,
@@ -539,7 +627,7 @@ onUnmounted(() => {
 .tab-bar-wrap {
   background: #fff;
   border-bottom: 1px solid #eee;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -560,13 +648,15 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   padding: 14px 20px;
-  font-size: .85rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #888;
   text-decoration: none;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
-  transition: color .2s, border-color .2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
 
 .tab-item:hover {
@@ -591,7 +681,7 @@ onUnmounted(() => {
   color: #fff;
   padding: 14px 20px;
   font-weight: 700;
-  font-size: .9rem;
+  font-size: 0.9rem;
   border-bottom: 3px solid #ff5f00;
 }
 
@@ -607,16 +697,16 @@ onUnmounted(() => {
 }
 
 .info-label {
-  font-size: .72rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: .05em;
+  letter-spacing: 0.05em;
   color: #999;
   margin-bottom: 4px;
 }
 
 .info-value {
-  font-size: .88rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: #031c36;
   word-break: break-word;
@@ -633,10 +723,10 @@ onUnmounted(() => {
 }
 
 .id-badge {
-  background: rgba(255, 95, 0, .2);
+  background: rgba(255, 95, 0, 0.2);
   color: #ff9a5c;
-  border: 1px solid rgba(255, 95, 0, .3);
-  font-size: .78rem;
+  border: 1px solid rgba(255, 95, 0, 0.3);
+  font-size: 0.78rem;
   font-weight: 800;
   padding: 3px 10px;
   border-radius: 20px;
@@ -649,7 +739,7 @@ onUnmounted(() => {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 20px solid rgba(255, 255, 255, .05);
+  border: 20px solid rgba(255, 255, 255, 0.05);
 }
 
 /* ── Form card ── */
@@ -661,10 +751,10 @@ onUnmounted(() => {
 }
 
 .field-label {
-  font-size: .72rem;
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: .06em;
+  letter-spacing: 0.06em;
   color: #999;
   margin-bottom: 8px;
   display: block;
@@ -681,12 +771,14 @@ onUnmounted(() => {
   border-radius: 12px;
   background: #fafbfc;
   overflow: hidden;
-  transition: border-color .2s, box-shadow .2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .input-wrap:focus-within {
   border-color: #ff5f00;
-  box-shadow: 0 0 0 3px rgba(255, 95, 0, .1);
+  box-shadow: 0 0 0 3px rgba(255, 95, 0, 0.1);
   background: #fff;
 }
 
@@ -717,7 +809,7 @@ onUnmounted(() => {
   border: none;
   background: transparent;
   padding: 11px 14px 11px 0;
-  font-size: .88rem;
+  font-size: 0.88rem;
   color: #031c36;
   outline: none;
 }
@@ -733,18 +825,18 @@ onUnmounted(() => {
 
 .err-msg {
   color: #dc3545;
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 600;
   margin-top: 5px;
 }
 
 .edit-banner {
-  background: rgba(255, 95, 0, .07);
-  border: 1px solid rgba(255, 95, 0, .2);
+  background: rgba(255, 95, 0, 0.07);
+  border: 1px solid rgba(255, 95, 0, 0.2);
   border-left: 4px solid #ff5f00;
   border-radius: 10px;
   padding: 10px 16px;
-  font-size: .83rem;
+  font-size: 0.83rem;
   color: #c04800;
   font-weight: 500;
 }
@@ -757,8 +849,10 @@ onUnmounted(() => {
   border-radius: 10px;
   padding: 9px 18px;
   font-weight: 700;
-  font-size: .83rem;
-  transition: background .2s, transform .15s;
+  font-size: 0.83rem;
+  transition:
+    background 0.2s,
+    transform 0.15s;
 }
 
 .btn-edit-toggle:hover {
@@ -773,8 +867,8 @@ onUnmounted(() => {
   border-radius: 10px;
   padding: 9px 18px;
   font-weight: 600;
-  font-size: .83rem;
-  transition: all .2s;
+  font-size: 0.83rem;
+  transition: all 0.2s;
 }
 
 .btn-cancel:hover {
@@ -788,9 +882,9 @@ onUnmounted(() => {
   border-radius: 10px;
   padding: 9px 18px;
   font-weight: 600;
-  font-size: .83rem;
+  font-size: 0.83rem;
   text-decoration: none;
-  transition: all .2s;
+  transition: all 0.2s;
   display: inline-flex;
   align-items: center;
 }
@@ -808,20 +902,23 @@ onUnmounted(() => {
   border-radius: 12px;
   padding: 12px 32px;
   font-weight: 700;
-  font-size: .9rem;
+  font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
-  transition: background .2s, transform .15s, box-shadow .2s;
+  transition:
+    background 0.2s,
+    transform 0.15s,
+    box-shadow 0.2s;
 }
 
 .btn-save-main:hover:not(:disabled) {
   background: #e65600;
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 95, 0, .3);
+  box-shadow: 0 8px 20px rgba(255, 95, 0, 0.3);
 }
 
 .btn-save-main:disabled {
-  opacity: .7;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
@@ -833,7 +930,7 @@ onUnmounted(() => {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -850,7 +947,7 @@ onUnmounted(() => {
 
 .confirm-modal-header {
   background: #031c36;
-  color: #F4A25A;
+  color: #f4a25a;
   padding: 18px 24px;
   font-weight: 700;
   font-size: 1rem;
@@ -881,9 +978,9 @@ onUnmounted(() => {
   padding: 12px 20px;
   border-radius: 50px;
   font-weight: 700;
-  font-size: .85rem;
+  font-size: 0.85rem;
   color: #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .toast-pill.success {
@@ -896,7 +993,7 @@ onUnmounted(() => {
 
 .slide-toast-enter-active,
 .slide-toast-leave-active {
-  transition: all .35s cubic-bezier(.4, 0, .2, 1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .slide-toast-enter-from,

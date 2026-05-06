@@ -81,7 +81,7 @@
             </router-link>
 
             <router-link to="/info" class="btn-main px-3" @click="navOpen = false">
-              List Your Property
+              ក្លាយជាម្ចាស់ផ្ទះជួល
             </router-link>
 
             <button @click="handleLogout" class="logout-btn" title="Log out">
