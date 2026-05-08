@@ -94,13 +94,13 @@ function searchByDistrict(name) {
         <swiper-slide class="hero-slide slide-2">
           <div class="hero-overlay"></div>
           <div class="container position-relative z-index-2 text-center text-white">
-            <h1 class="display-3 fw-bold mb-3 animate-pop">Find Your Perfect Room Today</h1>
+            <h1 class="display-3 fw-bold mb-3 animate-pop">ស្វែងរកបន្ទប់ដែលសាកសមបំផុតសម្រាប់អ្នកថ្ងៃនេះ</h1>
             <p class="fs-5 mb-5 opacity-75 mx-auto animate-pop-delay" style="max-width: 700px">
-              Quality rooms for rent at affordable prices in the heart of Phnom Penh.
+            បន្ទប់ស្អាត មានគុណភាពល្អ និងតម្លៃសមរម្យ នៅកណ្តាលទីក្រុងភ្នំពេញ
             </p>
             <div class="d-flex justify-content-center gap-3">
               <router-link to="/rooms" class="btn-banner-main px-5 py-3 shadow">
-                View All Rooms
+                មើលបន្ទប់ទាំងអស់
               </router-link>
             </div>
           </div>
@@ -109,9 +109,9 @@ function searchByDistrict(name) {
         <swiper-slide class="hero-slide slide-1">
           <div class="hero-overlay"></div>
           <div class="container position-relative z-index-2 text-center text-white">
-            <h1 class="display-3 fw-bold mb-3 animate-pop">Start Business with StayFinder</h1>
+            <h1 class="display-3 fw-bold mb-3 animate-pop">ចាប់ផ្តើមអាជីវកម្មរបស់អ្នកជាមួយ StayFinder</h1>
             <p class="fs-5 mb-5 opacity-75 mx-auto animate-pop-delay" style="max-width: 700px">
-              Turn your spare space into a steady income stream. Join our trusted community today.
+            បម្លែងកន្លែងទំនេររបស់អ្នកទៅជាចំណូលថេរ។ ចូលរួមជាមួយយើងថ្ងៃនេះ
             </p>
             <div class="d-flex justify-content-center gap-3">
               <a
@@ -119,7 +119,7 @@ function searchByDistrict(name) {
                 target="_blank"
                 class="btn-main px-4 py-2 d-inline-flex align-items-center"
               >
-                <i class="bi bi-telegram me-2 fs-5"></i> Contact Admin Now
+                <i class="bi bi-telegram me-2 fs-5"></i> ទាក់ទងអ្នកគ្រប់គ្រងឥឡូវនេះ
               </a>
             </div>
           </div>
@@ -140,7 +140,7 @@ function searchByDistrict(name) {
                   v-model="filters.search"
                   type="text"
                   class="form-control border-0 py-2"
-                  placeholder="Search by room title..."
+                  placeholder="ស្វែងរកតាមចំណងជើងបន្ទប់..."
                   @keyup.enter="handleSearch"
                 />
 
@@ -160,7 +160,7 @@ function searchByDistrict(name) {
                 v-model="filters.district_id"
                 class="form-select border-1 py-2 custom-select shadow-sm"
               >
-                <option value="">All Districts</option>
+                <option value="">គ្រប់ខណ្ឌ</option>
                 <option v-for="dist in districtStore.districts" :key="dist.id" :value="dist.id">
                   {{ dist.name }}
                 </option>
@@ -172,12 +172,12 @@ function searchByDistrict(name) {
                 v-model="filters.price_range"
                 class="form-select border-1 py-2 custom-select shadow-sm"
               >
-                <option value="">Any Price</option>
-                <option value="0-50">Under $50</option>
+                <option value="">គ្រប់តម្លៃ</option>
+                <option value="0-50">ក្រោម $50</option>
                 <option value="0-100">$0 – $100</option>
                 <option value="100-200">$100 – $200</option>
                 <option value="200-500">$200 – $500</option>
-                <option value="500-">Above $500</option>
+                <option value="500-">លើ $500</option>
               </select>
             </div>
 
@@ -186,7 +186,7 @@ function searchByDistrict(name) {
                 class="btn-main w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2"
                 @click="handleSearch"
               >
-                <i class="bi bi-search"></i> Search Now
+                <i class="bi bi-search"></i> ស្វែងរកឥឡូវ
               </button>
             </div>
           </div>
@@ -195,7 +195,7 @@ function searchByDistrict(name) {
             v-if="filters.search || filters.district_id || filters.price_range"
             class="d-flex flex-wrap gap-2 mt-3 pt-3 border-top"
           >
-            <small class="text-muted fw-bold me-1">Active:</small>
+            <small class="text-muted fw-bold me-1">សកម្ម:</small>
             <span v-if="filters.search" class="search-hint-tag">
               <i class="bi bi-search me-1"></i>{{ filters.search }}
               <i class="bi bi-x ms-1" style="cursor: pointer" @click="filters.search = ''"></i>
@@ -215,8 +215,8 @@ function searchByDistrict(name) {
     </section>
     <section v-if="promoRooms.length > 0" class="promo-section py-5 px-3">
       <div class="container py-4 position-relative">
-        <h2 class="promo-title text-navy">Promotions — HOT DEALS</h2>
-        <p class="promo-subtitle">Rooms featured by top guests — grab them before they're gone!</p>
+        <h2 class="promo-title text-navy">ការផ្តល់ជូនពិសេស — ប្រូម៉ូសិនកំពុងពេញនិយម</h2>
+        <p class="promo-subtitle">បន្ទប់ពេញនិយម — កក់ឥឡូវនេះ មុនពេលគេកក់អស់!</p>
 
         <!-- LEFT BUTTON -->
         <button class="scroll-btn left" @click="scrollLeft">
@@ -240,9 +240,9 @@ function searchByDistrict(name) {
     <section class="all-rooms-section py-5 px-3">
       <div class="container text-start">
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3 class="fw-bold text-navy mb-0">Featured Rooms</h3>
+          <h3 class="fw-bold text-navy mb-0">បន្ទប់ណែនាំ</h3>
           <router-link to="/rooms" class="btn btn-outline-navy rounded-pill px-4 d-none d-md-block">
-            View All Rooms
+            មើលបន្ទប់ទាំងអស់
           </router-link>
         </div>
 
@@ -254,7 +254,7 @@ function searchByDistrict(name) {
 
         <div class="text-center mt-5">
           <router-link to="/rooms" class="btn-banner-main px-5 py-3 shadow">
-            View All Rooms <i class="bi bi-arrow-right ms-2"></i>
+            មើលបន្ទប់ទាំងអស់ <i class="bi bi-arrow-right ms-2"></i>
           </router-link>
         </div>
       </div>
@@ -262,8 +262,8 @@ function searchByDistrict(name) {
 
     <section class="location-section py-5 bg-white">
       <div class="container text-center mb-5">
-        <h2 class="display-5 fw-bold text-navy">Special Location in Phnom Penh</h2>
-        <p class="text-muted">Find your next home in the most popular districts of the capital.</p>
+        <h2 class="display-5 fw-bold text-navy">ទីតាំងលេចធ្លោនៅភ្នំពេញ</h2>
+        <p class="text-muted">ស្វែងរកកន្លែងស្នាក់នៅបន្ទាប់របស់អ្នក នៅក្នុងខណ្ឌពេញនិយមបំផុតនៃរាជធានី</p>
       </div>
       <div class="container">
         <div class="row g-4">
@@ -338,9 +338,9 @@ function searchByDistrict(name) {
 
     <section class="features-section py-5 bg-light">
       <div class="container text-center">
-        <h2 class="fw-bold text-navy display-6 mb-2">Why Choose StayFinder?</h2>
+        <h2 class="fw-bold text-navy display-6 mb-2">ហេតុអ្វីគួរជ្រើសរើស StayFinder?</h2>
         <p class="text-muted mb-5">
-          We make finding and renting rooms simple, safe, and stress-free
+         យើងធ្វើឱ្យការស្វែងរក និងជួលបន្ទប់ ងាយស្រួល សុវត្ថិភាព និងគ្មានបារម្ភសម្រាប់សិស្ស និងម្ចាស់ផ្ទះនៅភ្នំពេញ
         </p>
         <div class="row g-4">
           <div class="col-md-6 col-lg-3">
@@ -348,9 +348,9 @@ function searchByDistrict(name) {
               <div class="icon-circle mb-4 mx-auto bg-soft-navy text-navy">
                 <i class="bi bi-shield-check fs-2"></i>
               </div>
-              <h5 class="fw-bold text-navy">Verified Listings</h5>
+              <h5 class="fw-bold text-navy">បញ្ជីដែលបានផ្ទៀងផ្ទាត់</h5>
               <p class="small text-muted mb-0">
-                All rooms are verified for authenticity and safety
+                បន្ទប់ទាំងអស់ត្រូវបានផ្ទៀងផ្ទាត់ ដើម្បីធានាភាពពិតប្រាកដ និងសុវត្ថិភាព
               </p>
             </div>
           </div>
@@ -359,9 +359,9 @@ function searchByDistrict(name) {
               <div class="icon-circle mb-4 mx-auto bg-soft-navy text-navy">
                 <i class="bi bi-search fs-2"></i>
               </div>
-              <h5 class="fw-bold text-navy">No Hidden Fees</h5>
+              <h5 class="fw-bold text-navy">គ្មានការចំណាយលផ្សេងៗ</h5>
               <p class="small text-muted mb-0">
-                Transparent pricing with no unexpected costs during booking
+               តម្លៃមានភាពបើកចំហ និងច្បាស់លាស់ ដោយគ្មានការចំណាយដែលមិនបានរំពឹងទុក ក្នុងដំណើរការកក់
               </p>
             </div>
           </div>
@@ -370,9 +370,9 @@ function searchByDistrict(name) {
               <div class="icon-circle mb-4 mx-auto bg-soft-navy text-navy">
                 <i class="bi bi-currency-dollar fs-2"></i>
               </div>
-              <h5 class="fw-bold text-navy">Secure Payments</h5>
+              <h5 class="fw-bold text-navy">ការទូទាត់ដែលមានសុវត្ថិភាព</h5>
               <p class="small text-muted mb-0">
-                Safe transaction systems for both tenants and landlords
+                ប្រព័ន្ធប្រតិបត្តិការទូទាត់ដែលមានសុវត្ថិភាព សម្រាប់ការពារទាំងអ្នកជួល និងម្ចាស់ផ្ទះ
               </p>
             </div>
           </div>
@@ -381,9 +381,9 @@ function searchByDistrict(name) {
               <div class="icon-circle mb-4 mx-auto bg-soft-navy text-navy">
                 <i class="bi bi-lightning-charge fs-2"></i>
               </div>
-              <h5 class="fw-bold text-navy">Easy Management</h5>
+              <h5 class="fw-bold text-navy">ការគ្រប់គ្រងយ៉ាងងាយស្រួល</h5>
               <p class="small text-muted mb-0">
-                Tools to manage your listings and bookings from one place
+                ឧបករណ៍សម្រាប់គ្រប់គ្រងបញ្ជី និងការកក់របស់អ្នក ពីទីតាំងតែមួយ
               </p>
             </div>
           </div>
@@ -403,37 +403,35 @@ function searchByDistrict(name) {
               />
             </div>
             <div class="col-lg-7 p-5">
-              <h2 class="fw-bold text-navy mb-3">Start your rental business with StayFinder</h2>
+              <h2 class="fw-bold text-navy mb-3">ចាប់ផ្តើមអាជីវកម្មជួលរបស់អ្នកជាមួយ StayFinder</h2>
               <p class="text-muted mb-4">
-                Earn extra income by renting out your spare room. Our team will help you set up your
-                account and verify your first listing to ensure the best quality for our students.
+               ទទួលបានប្រាក់ចំណូលបន្ថែមតាមរយៈការជួលបន្ទប់ទំនេររបស់អ្នក។ ក្រុមការងាររបស់យើងនឹងជួយអ្នកក្នុងការបង្កើតគណនី និងធ្វើការផ្ទៀងផ្ទាត់បញ្ជីដំបូងរបស់អ្នក ដើម្បីធានាគុណភាពខ្ពស់សម្រាប់សិស្សានុសិស្ស។
               </p>
               <div class="benefits-list mb-5">
                 <div class="d-flex mb-3">
                   <i class="bi bi-check-circle-fill text-orange me-3 fs-4"></i>
-                  <span>Free listing for the first 3 months.</span>
+                  <span>ការដាក់បញ្ជីឥតគិតថ្លៃ សម្រាប់រយៈពេល ៣ ខែដំបូង</span>
                 </div>
                 <div class="d-flex mb-3">
                   <i class="bi bi-check-circle-fill text-orange me-3 fs-4"></i>
-                  <span>Direct dashboard to manage your rooms.</span>
+                  <span>ផ្ទាំងគ្រប់គ្រងដោយផ្ទាល់ សម្រាប់ការគ្រប់គ្រងបន្ទប់របស់អ្នក</span>
                 </div>
                 <div class="d-flex mb-3">
                   <i class="bi bi-check-circle-fill text-orange me-3 fs-4"></i>
-                  <span>24/7 support for all providers.</span>
+                  <span>សេវាគាំទ្របន្ត ២៤ ម៉ោងក្នុងមួយថ្ងៃ ៧ ថ្ងៃក្នុងមួយសប្ដាហ៍សម្រាប់អ្នកផ្តល់សេវាទាំងអស់</span>
                 </div>
               </div>
               <div class="contact-box p-4 rounded-4 bg-light border">
-                <h6 class="fw-bold text-navy mb-2">Ready to start?</h6>
+                <h6 class="fw-bold text-navy mb-2">ត្រៀមខ្លួនរួចរាល់ហើយឬនៅ?</h6>
                 <p class="small text-muted mb-3">
-                  Contact our Admin on Telegram to verify your identity and get your Provider
-                  access.
+                សូមទាក់ទងអ្នកគ្រប់គ្រងរបស់យើងតាម Telegram ដើម្បីធ្វើការផ្ទៀងផ្ទាត់អត្តសញ្ញាណនិងទទួលបានសិទ្ធិចូលប្រើជាអ្នកផ្តល់សេវា
                 </p>
                 <a
                   href="https://t.me/your_admin_username"
                   target="_blank"
                   class="btn-main px-4 py-2 d-inline-flex align-items-center"
                 >
-                  <i class="bi bi-telegram me-2 fs-5"></i> Contact Admin Now
+                  <i class="bi bi-telegram me-2 fs-5"></i> សូមទាក់ទងអ្នកគ្រប់គ្រងឥឡូវនេះ
                 </a>
               </div>
             </div>

@@ -34,7 +34,7 @@ export const alertError = (message) => {
   Swal.fire({
     icon: 'error',
     title: 'Error!',
-    text: message || 'Something went wrong. Please try again.',
+    text: message || 'មានមានអ្វីមួយខុសប្រក្រដី។ សូមពិនិត្យព័ត៌មានរបស់អ្នក។',
 
   });
 };
@@ -42,10 +42,10 @@ export const alertError = (message) => {
 /**
  * Show a confirmation dialog for deletions
  */
-export const confirmDelete = async (title = "Are you sure?") => {
+export const confirmDelete = async (title = "តើអ្នកប្រាកដជាចង់លុបមែនទេ?") => {
   const result = await Swal.fire({
     title: title,
-    text: "This action cannot be undone!",
+    text: "សកម្មភាពនេះមិនអាចត្រឡប់បានទេ!",
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#d33', // Red for delete

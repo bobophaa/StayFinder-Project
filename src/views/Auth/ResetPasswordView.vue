@@ -8,8 +8,8 @@
           <div class="logo-badge mb-4">
             <i class="bi bi-house-heart-fill me-2"></i>StayFinder
           </div>
-          <h1 class="fw-bold text-navy mb-1">New Password</h1>
-          <p class="text-muted small">Set a strong password to protect your account.</p>
+          <h1 class="fw-bold text-navy mb-1">ពាក្យសម្ងាត់ថ្មី</h1>
+          <p class="text-muted small">កំណត់ពាក្យសម្ងាត់ខ្លាំងមួយ ដើម្បីការពារគណនីរបស់អ្នក។</p>
         </div>
 
         <form @submit.prevent="handleResetPassword">
@@ -27,7 +27,7 @@
 
           <!-- New Password -->
           <div class="mb-4">
-            <label class="form-label small fw-bold text-navy">New Password</label>
+            <label class="form-label small fw-bold text-navy">ពាក្យសម្ងាត់ថ្មី</label>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && !authStore.newPassword }">
               <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
               <input
@@ -40,12 +40,12 @@
                 <i :class="showNewPass ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
               </span>
             </div>
-            <small v-if="submitted && !authStore.newPassword" class="text-danger mt-1 d-block">Password is required.</small>
+            <small v-if="submitted && !authStore.newPassword" class="text-danger mt-1 d-block">ពាក្យសម្ងាត់ថ្មីត្រូវបានទាមទារ។</small>
           </div>
 
           <!-- Confirm Password -->
           <div class="mb-5">
-            <label class="form-label small fw-bold text-navy">Confirm Password</label>
+            <label class="form-label small fw-bold text-navy">បញ្ជាក់ពាក្យសម្ងាត់</label>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && authStore.newPassword !== authStore.resetConfirmPassword }">
               <span class="input-group-text"><i class="bi bi-shield-check"></i></span>
               <input
@@ -59,18 +59,18 @@
               </span>
             </div>
             <small v-if="submitted && authStore.newPassword !== authStore.resetConfirmPassword" class="text-danger mt-1 d-block">
-              Passwords do not match.
+              ពាក្យសម្ងាត់មិនត្រូវគ្នា
             </small>
           </div>
 
           <button type="submit" class="btn btn-main w-100 py-3 rounded-4 fw-bold mb-4" :disabled="authStore.loading">
             <span v-if="authStore.loading" class="spinner-border spinner-border-sm me-2"></span>
-            {{ authStore.loading ? 'Saving...' : 'Save Password' }}
+            {{ authStore.loading ? 'Saving...' : 'រក្សាទុកពាក្យសម្ងាត់' }}
           </button>
 
           <div class="text-center">
             <RouterLink to="/login" class="text-decoration-none text-muted small fw-bold">
-              <i class="bi bi-arrow-left me-1"></i> Back to Sign In
+              <i class="bi bi-arrow-left me-1"></i> ត្រលប់ទៅកាន់គណនី
             </RouterLink>
           </div>
         </form>
@@ -81,10 +81,10 @@
         <div class="orange-glow"></div>
         <div class="visual-content text-center">
           <img src="@/assets/images/ho.svg" alt="Secure" class="house-illustration" />
-          <h2 class="text-white fw-bold mt-3">Final Step</h2>
-          <p class="text-white-50 px-4 small">Almost done! You can log in once your password is saved.</p>
+          <h2 class="text-white fw-bold mt-3">ជំហានចុងក្រោយ</h2>
+          <p class="text-white-50 px-4 small">បានធ្វើរួចហើយ! អ្នកអាចចូលគណនីបាននៅពេលដែលពាក្យសម្ងាត់របស់អ្នកត្រូវបានរក្សាទុក។</p>
           <div class="floating-badge">
-            <i class="bi bi-lock-fill me-1" style="color:#ff5f00"></i> Secure & Encrypted
+            <i class="bi bi-lock-fill me-1" style="color:#ff5f00"></i> សុវត្ថិភាពជាអាទិភាព
           </div>
         </div>
       </div>

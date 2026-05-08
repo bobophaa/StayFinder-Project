@@ -14,7 +14,11 @@
             <div class="avatar-wrapper" v-click-outside="closeMenu">
               <div class="avatar-ring">
                 <div class="avatar-box">
-                  <img v-if="avatarPreview || user.avatar" :src="avatarPreview || user.avatar" alt="avatar" />
+                  <img
+                    v-if="avatarPreview || user.avatar"
+                    :src="avatarPreview || user.avatar"
+                    alt="avatar"
+                  />
                   <span v-else>{{ user.name?.charAt(0)?.toUpperCase() || 'U' }}</span>
                   <div v-if="uploadingAvatar" class="avatar-loading">
                     <div class="spinner-border spinner-border-sm text-white"></div>
@@ -25,18 +29,7 @@
                 <i class="bi bi-camera-fill"></i>
               </div>
 
-              <transition name="menu-fade">
-                <div v-if="showActionsMenu" class="avatar-menu shadow" @click.stop>
-                  <button type="button" class="avatar-menu-item" @click="triggerUpload">
-                    <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i> Upload photo
-                  </button>
-                  <button type="button" v-if="user.avatar" class="avatar-menu-item text-danger" @click="removeImage">
-                    <i class="bi bi-trash3-fill me-2"></i> Remove photo
-                  </button>
-                </div>
-              </transition>
-              <input type="file" ref="fileInput" class="d-none" accept="image/*" @change="handleFileUpload" />
-            </div>
+          
 
             <div class="pb-3 text-white">
               <div class="d-flex align-items-center gap-2 mb-1">
@@ -65,13 +58,13 @@
         <div class="row g-4">
           <div class="col-lg-8">
             <div class="form-card">
-              <h4 class="text-navy fw-bold mb-4">Change Password</h4>
+              <h4 class="text-navy fw-bold mb-4">ផ្លាស់ប្តូរពាក្យសម្ងាត់</h4>
               
               <form @submit.prevent="updatePassword" novalidate>
                 <div class="row g-4">
                   <!-- Current Password -->
                   <div class="col-12">
-                    <label class="field-label" :class="{ 'text-danger': errors.current_password }">Current Password</label>
+                    <label class="field-label" :class="{ 'text-danger': errors.current_password }">ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
                     <div class="input-wrap" :class="{ 'input-err': errors.current_password }">
                       <i class="bi bi-lock input-icon"></i>
                       <input 
@@ -90,7 +83,7 @@
 
                   <!-- New Password (Disabled until current_password is typed) -->
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'text-danger': errors.new_password, 'locked-text': !isUnlocked }">New Password</label>
+                    <label class="field-label" :class="{ 'text-danger': errors.new_password, 'locked-text': !isUnlocked }">ពាក្យសម្ងាត់ថ្មី</label>
                     <div class="input-wrap" :class="{ 'input-err': errors.new_password, 'input-locked': !isUnlocked }">
                       <i class="bi bi-shield-lock input-icon"></i>
                       <input 
@@ -121,7 +114,6 @@
                       <i v-if="isUnlocked" class="bi cursor-pointer px-3" :class="show.confirm_password ? 'bi-eye-slash' : 'bi-eye'"
                         @click="toggleShow('confirm_password')"></i>
                     </div>
-                    <div v-if="errors.confirm_password" class="err-msg">{{ errors.confirm_password }}</div>
                   </div>
                 </div>
 
@@ -145,11 +137,11 @@
                   </div>
                   <div>
                     <h6 class="fw-bold text-navy mb-1">{{ isUnlocked ? 'Unlocked' : 'Locked' }}</h6>
-                    <p class="text-muted small mb-0">Enter current password to modify security settings.</p>
+                    <p class="text-muted small mb-0">បញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន ដើម្បីកែប្រែសុវត្ថិភាពគណនី។</p>
                   </div>
                 </div>
                 <div class="p-3 rounded-3 bg-light border">
-                  <p class="small text-muted mb-0"><i class="bi bi-info-circle me-1"></i> Ensure your password is unique and not used on other websites.</p>
+                  <p class="small text-muted mb-0"><i class="bi bi-info-circle me-1"></i> បញ្ជាក់ថាវាមិនបានប្រើនៅគេហទំព័រផ្សេងទេ។</p>
                 </div>
               </div>
             </div>
@@ -161,11 +153,16 @@
     <!-- Toast Notification -->
     <transition name="slide-toast">
       <div v-if="toast.show" class="toast-pill" :class="toast.type">
-        <i class="bi me-2" :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+        <i
+          class="bi me-2"
+          :class="toast.type === 'success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"
+        ></i>
         {{ toast.message }}
       </div>
     </transition>
   </div>
+    </div>
+
 </template>
 
 <script setup>
@@ -192,7 +189,9 @@ const closeMenu = () => (showActionsMenu.value = false)
 const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
 
 const showToast = (msg, type = 'success') => {
-  toast.message = msg; toast.type = type; toast.show = true
+  toast.message = msg
+  toast.type = type
+  toast.show = true
   setTimeout(() => (toast.show = false), 3200)
 }
 
@@ -200,7 +199,9 @@ const fetchUserData = async () => {
   try {
     const res = await api.get('/me')
     user.value = res.data.data
-  } catch (err) { console.error(err) }
+  } catch (err) {
+    console.error(err)
+  }
 }
 
 const updatePassword = async () => {
@@ -214,10 +215,10 @@ const updatePassword = async () => {
 
   loading.value = true
   try {
-    await api.put('/profile/pass', {
+    const res = await api.put('/profile/pass', {
       old_pass: form.current_password,
       new_pass: form.new_password,
-      new_pass_confirmation: form.confirm_password
+      new_pass_confirmation: form.confirm_password,
     })
     
     showToast('Password updated!', 'success')
@@ -227,7 +228,7 @@ const updatePassword = async () => {
   } catch (err) {
     const res = err.response?.data
     if (res?.errors) {
-      errors.current_password = res.errors.old_pass?.[0] || 'Current password incorrect'
+      errors.current_password = res.errors.old_pass?.[0] || 'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ'
       errors.new_password = res.errors.new_pass?.[0] || ''
       errors.confirm_password = res.errors.new_pass_confirmation?.[0] || ''
       
@@ -249,31 +250,46 @@ const updatePassword = async () => {
 // Avatar Logic
 const triggerUpload = () => { fileInput.value.click(); closeMenu(); }
 const handleFileUpload = async (e) => {
-  const file = e.target.files[0]; if (!file) return
+  const file = e.target.files[0]
+  if (!file) return
   uploadingAvatar.value = true
   avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData(); fd.append('image', file)
+  const fd = new FormData()
+  fd.append('image', file)
   try {
     await api.post('/profile/image', fd)
-    showToast('Image updated!', 'success'); fetchUserData()
-  } catch { showToast('Upload failed', 'error') }
-  finally { uploadingAvatar.value = false; avatarPreview.value = null; }
+    showToast('Image updated!', 'success')
+    fetchUserData()
+  } catch {
+    showToast('Upload failed', 'error')
+  } finally {
+    uploadingAvatar.value = false
+    avatarPreview.value = null
+  }
 }
 
 const removeImage = async () => {
   if (!confirm('Delete photo?')) return
   try {
     await api.delete('/profile/image')
-    user.value.avatar = null; showToast('Image deleted', 'success'); closeMenu()
-  } catch { showToast('Delete failed', 'error') }
+    user.value.avatar = null
+    showToast('Image deleted', 'success')
+    closeMenu()
+  } catch {
+    showToast('Delete failed', 'error')
+  }
 }
 
 const vClickOutside = {
   mounted(el, binding) {
-    el.clickOutsideEvent = (e) => { if (!(el === e.target || el.contains(e.target))) binding.value() }
+    el.clickOutsideEvent = (e) => {
+      if (!(el === e.target || el.contains(e.target))) binding.value()
+    }
     document.addEventListener('click', el.clickOutsideEvent)
   },
-  unmounted(el) { document.removeEventListener('click', el.clickOutsideEvent) }
+  unmounted(el) {
+    document.removeEventListener('click', el.clickOutsideEvent)
+  },
 }
 
 onMounted(fetchUserData)

@@ -19,7 +19,7 @@ export const useRoomStore = defineStore('room', {
         this.rooms = response.data.data;
         this.paginate = response.data.paginate || null;
       } catch (err) {
-        this.error = "Error fetching rooms.";
+        this.error = "មិនអាចទាញយកបញ្ជីបន្ទប់បានទេ។ សូមពិនិត្យការតភ្ជាប់របស់អ្នក។";
         console.error(err);
       } finally {
         this.loading = false;
@@ -34,7 +34,7 @@ export const useRoomStore = defineStore('room', {
         const res = await api.get(`/rooms/${id}`);
         this.room = res.data.data;
       } catch (err) {
-        this.error = "Could not find room details.";
+        this.error = "មិនអាចទាញយកព័ត៌មានបន្ទប់បានទេ។ សូមពិនិត្យការតភ្ជាប់របស់អ្នក។";
         console.error(err);
       } finally {
         this.loading = false;
@@ -52,6 +52,7 @@ export const useRoomStore = defineStore('room', {
         return false;
       } catch (err) {
         console.error("Submission failed:", err.response?.data);
+        this.error = "មិនអាចបញ្ជូនព័ត៌មានបន្ទប់បានទេ។ សូមពិនិត្យការតភ្ជាប់របស់អ្នក។";
         return false;
       } finally {
         this.loading = false;

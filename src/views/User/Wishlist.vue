@@ -67,7 +67,7 @@
 
            
                 <div class="price-badge">
-                  ${{ room.price }}<small>/month</small>
+                  ${{ room.price }}<small>/ក្នុងមួយខែ</small>
                 </div>
               </div>
 

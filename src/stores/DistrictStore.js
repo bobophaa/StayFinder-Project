@@ -15,7 +15,7 @@ export const useDistrictStore = defineStore('district', {
           this.districts = response.data.data;
         }
       } catch (error) {
-        console.error("Error fetching districts:", error);
+        console.error("មិនអាចទាញយកព័ត៌មានស្រុកបានទេ:", error);
       } finally {
         this.loading = false;
       }

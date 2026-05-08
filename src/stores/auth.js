@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
     // LOGIN
     async login() {
       if (!this.emailOrPhone || !this.password) {
-        this.error = 'Please enter your email/phone and password.'
+        this.error = 'សូមបញ្ចូលអ៊ីមែល និង ពាក្យសម្ងាត់។'
         return false
       }
       this.loading = true
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
         const user = responseData.user
 
         if (!token) {
-          this.error = 'Authentication failed: Token not found.'
+          this.error = 'Authentication failed: សូមពិនិត្យព័ត៌មានរបស់អ្នក។'
           return false
         }
         this.token = token
@@ -58,7 +58,7 @@ export const useAuthStore = defineStore('auth', {
         await this.fetchMe()
         return true
       } catch (err) {
-        this.error = err.response?.data?.message || 'Invalid email or password.'
+        this.error = err.response?.data?.message || 'អុីមែល ឬ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ។'
         return false
       } finally {
         this.loading = false
@@ -69,11 +69,11 @@ export const useAuthStore = defineStore('auth', {
     // Accepts a form object: { name, current_job, email, password, password_confirmation }
     async register(form) {
       if (!form.name || !form.email || !form.password || !form.password_confirmation) {
-        this.error = 'Please fill in all fields.'
+        this.error = 'សូមបញ្ចូលព័ត៌មានទាំងអស់។'
         return false
       }
       if (form.password !== form.password_confirmation) {
-        this.error = 'Passwords do not match.'
+        this.error = 'ពាក្យសម្ងាត់ និង ការបញ្ជាក់ពាក្យសម្ងាត់មិនត្រូវគ្នា។'
         return false
       }
       this.loading = true
@@ -87,10 +87,10 @@ export const useAuthStore = defineStore('auth', {
           password: form.password,
           password_confirmation: form.password_confirmation,
         })
-        this.successMessage = 'Account created successfully.'
+        this.successMessage = 'ការចុះឈ្មោះបានជោគជ័យ! សូមចូលគណនីរបស់អ្នក។'
         return true
       } catch (err) {
-        this.error = err.response?.data?.message || 'Registration failed.'
+        this.error = err.response?.data?.message || 'ការចុះឈ្មោះបរាជ័យ។ សូមពិនិត្យព័ត៌មានរបស់អ្នក។'
         return false
       } finally {
         this.loading = false
@@ -100,7 +100,7 @@ export const useAuthStore = defineStore('auth', {
     // FORGOT PASSWORD (send OTP)
     async forgotPassword(email) {
       if (!email) {
-        this.error = 'Email is required.'
+        this.error = 'សូមបញ្ចូលអ៊ីមែល។'
         return false
       }
       this.loading = true
@@ -110,10 +110,10 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('forgotEmail', email)
       try {
         await api.post('/forgot/pass', { email })
-        this.successMessage = 'Verification code sent to your email.'
+        this.successMessage = 'កូដ OTP ត្រូវបានផ្ញើទៅអ៊ីមែលរបស់អ្នក។ សូមពិនិត្យអ៊ីមែលរបស់អ្នក។'
         return true
       } catch (err) {
-        this.error = err.response?.data?.message || 'Error sending reset email.'
+        this.error = err.response?.data?.message || 'ការបញ្ជូន OTP បរាជ័យ។ សូមពិនិត្យអ៊ីមែលរបស់អ្នក។'
         return false
       } finally {
         this.loading = false
@@ -123,11 +123,11 @@ export const useAuthStore = defineStore('auth', {
     //  VERIFY OTP
     async verifyCode() {
       if (!this.forgotEmail) {
-        this.error = 'Missing email. Please restart the process.'
+        this.error = 'ភ្លេចអ៊ីមែល។ សូមចាប់ផ្តើមដំណើរការឡើងវិញ។'
         return false
       }
       if (!this.verificationCode || this.verificationCode.length !== 6) {
-        this.error = 'Please enter the full 6-character code.'
+        this.error = 'សូមបញ្ចូលកូដ 6 តួរបស់អ្នក។'
         return false
       }
       this.loading = true
@@ -139,10 +139,10 @@ export const useAuthStore = defineStore('auth', {
           otp: this.verificationCode.toUpperCase(),
         })
         localStorage.setItem('forgotOtp', this.verificationCode.toUpperCase())
-        this.successMessage = 'Code verified!'
+        this.successMessage = 'កូដត្រូវបានផ្ទៀងផ្ទាត់!'
         return true
       } catch (err) {
-        this.error = err.response?.data?.message || 'Invalid or expired code.'
+        this.error = err.response?.data?.message || 'ការផ្ទៀងផ្ទាត់ OTP បរាជ័យ។ សូមពិនិត្យកូដរបស់អ្នក។'
         return false
       } finally {
         this.loading = false
@@ -152,7 +152,7 @@ export const useAuthStore = defineStore('auth', {
     // RESEND OTP (was missing in new repo)
     async resendCode() {
       if (!this.forgotEmail) {
-        this.error = 'Missing email. Please restart the process.'
+        this.error = 'ភ្លេចអ៊ីមែល។ សូមចាប់ផ្តើមដំណើរការឡើងវិញ។'
         return false
       }
       this.loading = true
@@ -160,10 +160,10 @@ export const useAuthStore = defineStore('auth', {
       this.successMessage = ''
       try {
         await api.post('/forgot/pass', { email: this.forgotEmail })
-        this.successMessage = 'New code sent to your email.'
+        this.successMessage = 'កូដ OTP ត្រូវបានផ្ញើទៅអ៊ីមែលរបស់អ្នក។ សូមពិនិត្យអ៊ីមែលរបស់អ្នក។'
         return true
       } catch (err) {
-        this.error = err.response?.data?.message || 'Failed to resend code.'
+        this.error = err.response?.data?.message || 'ការបញ្ជូន OTP បរាជ័យ។ សូមពិនិត្យអ៊ីមែលរបស់អ្នក។'
         return false
       } finally {
         this.loading = false
@@ -173,15 +173,15 @@ export const useAuthStore = defineStore('auth', {
     // RESET PASSWORD
     async resetPassword() {
       if (!this.forgotEmail || !this.verificationCode) {
-        this.error = 'Missing email or verification code. Please restart.'
+        this.error = 'ភ្លេចអ៊ីមែល ឬ កូដផ្ទៀងផ្ទាត់។ សូមចាប់ផ្តើមដំណើរការឡើងវិញ។'
         return false
       }
       if (!this.newPassword || !this.resetConfirmPassword) {
-        this.error = 'Please fill in all password fields.'
+        this.error = 'សូមបញ្ចូលពាក្យសម្ងាត់ថ្មី និង ការបញ្ជាក់ពាក្យសម្ងាត់។'
         return false
       }
       if (this.newPassword !== this.resetConfirmPassword) {
-        this.error = 'Passwords do not match.'
+        this.error = 'ពាក្យសម្ងាត់មិនត្រូវគ្នា។'
         return false
       }
       this.loading = true
@@ -194,7 +194,7 @@ export const useAuthStore = defineStore('auth', {
           new_pass: this.newPassword,
           new_pass_confirmation: this.resetConfirmPassword,
         })
-        this.successMessage = 'Password reset successfully!'
+        this.successMessage = 'ការកំណត់ពាក្យសម្ងាត់ថ្មីបានជោគជ័យ! សូមចូលគណនីរបស់អ្នក។'
         this.emailOrPhone = this.forgotEmail // pre-fill login
 
         // Cleanup
@@ -209,7 +209,7 @@ export const useAuthStore = defineStore('auth', {
         this.error =
           err.response?.data?.message ||
           JSON.stringify(err.response?.data) ||
-          'Failed to reset password.'
+          'ការកំណត់ពាក្យសម្ងាត់ថ្មីបរាជ័យ។ សូមពិនិត្យព័ត៌មានរបស់អ្នក។'
         return false
       } finally {
         this.loading = false

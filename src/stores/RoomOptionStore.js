@@ -15,7 +15,7 @@ export const useRoomOptionStore = defineStore('roomOption', {
           this.options = response.data.data;
         }
       } catch (error) {
-        console.error("Error fetching room options:", error);
+        console.error("មិនអាចទាញយកព័ត៌មានជាមួយ Room Options បានទេ:", error);
       } finally {
         this.loading = false;
       }

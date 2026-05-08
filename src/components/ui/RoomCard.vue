@@ -26,14 +26,15 @@
         <div class="d-flex justify-content-between align-items-center pt-2">
           <div class="price-container">
             <span class="price-value text-orange fw-bold fs-3">${{ item.price }}</span>
-            <span class="text-muted small">/month</span>
+            <span class="text-muted small">/ក្នុងមួយខែ</span>
           </div>
 
           <router-link
             :to="'/rooms/' + item.id"
             class="btn btn-outline-navy btn-sm rounded-pill px-3"
           >
-            View Details
+            មើលព័ត៌មានលម្អិត
+            <!-- View Details -->
           </router-link>
         </div>
       </div></router-link

@@ -5,25 +5,24 @@
         <div class="col-lg-4 col-md-6">
           <img src="@/assets/images/image.png" alt="StayFinder Logo" height="60" class="mb-3" />
           <p class="text-light-muted pe-lg-5">
-            Find your perfect room with ease. Quality rooms for rent at affordable prices in the
-            heart of Phnom Penh.
+            StayFinder គឺជាវេបសាយស្វែងរកបន្ទប់ដែលមានគោលបំណងជួយអ្នករកឃើញទីកន្លែងរស់នៅដ៏ល្អបំផុតនៅក្នុងទីក្រុងភ្នំពេញ។ យើងផ្តល់ជូននូវបន្ទប់ដែលមានគុណភាពខ្ពស់ និងតម្លៃសមរម្យ ដើម្បីធានាថាអ្នកអាចរកឃើញទីកន្លែងដែលសមរម្យសម្រាប់ការរស់នៅរបស់អ្នក។
           </p>
         </div>
 
         <!-- QUICK LINKS -->
         <div class="col-lg-2 col-md-6">
-          <h5 class="fw-bold text-white mb-4">Quick Links</h5>
+          <h5 class="fw-bold text-white mb-4">តំណភ្ជាប់លឿន</h5>
           <ul class="list-unstyled footer-links">
-            <li><router-link to="/">Home</router-link></li>
-            <li><router-link to="/rooms">All Rooms</router-link></li>
-            <li><router-link to="/about">About Us</router-link></li>
-            <li><router-link to="/contact">Contact</router-link></li>
+            <li><router-link to="/">ទំព័រដើម</router-link></li>
+            <li><router-link to="/rooms">បន្ទប់ទាំងអស់</router-link></li>
+            <li><router-link to="/about">អំពីពួកយើង</router-link></li>
+            <li><router-link to="/contact">ទាក់ទាញយើង</router-link></li>
           </ul>
         </div>
 
         <!-- CONTACT -->
         <div class="col-lg-3 col-md-6">
-          <h5 class="fw-bold text-white mb-4">Contact Us</h5>
+          <h5 class="fw-bold text-white mb-4">ទំនាក់ទំនង</h5>
           <ul class="list-unstyled contact-info">
             <!-- PHONE -->
             <li class="mb-3">
@@ -56,7 +55,7 @@
         </div>
         <!-- SOCIAL -->
         <div class="col-lg-3 col-md-6 text-center">
-          <h5 class="fw-bold text-white mb-4">Follow Us</h5>
+          <h5 class="fw-bold text-white mb-4">តាមដានពួកយើង</h5>
 
           <div class="d-flex gap-3 justify-content-center">
             <a :href="social.facebook" target="_blank" class="social-circle">
@@ -78,7 +77,7 @@
 
       <div class="row">
         <div class="col-md-6 text-center text-md-start">
-          <p class="small text-light-muted mb-0">© 2026 StayFinder. All rights reserved.</p>
+          <p class="small text-light-muted mb-0">© 2026 StayFinder. រក្សាសិទ្ធិទាំងអស់។</p>
         </div>
       </div>
     </div>

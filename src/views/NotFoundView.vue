@@ -10,21 +10,21 @@
 
      
       <h1 class="error-code">404</h1>
-      <h2 class="title mb-3">Page Not Found</h2>
+      <h2 class="title mb-3">ទំព័រមិនត្រូវបានរកឃើញ</h2>
 
 
       <p class="desc mb-4">
-        Sorry, the page or room you are looking for doesn’t exist or has been moved.
+        សូមអភ័យទោស ទំព័រ ឬបន្ទប់ដែលអ្នកកំពុងស្វែងរក មិនមាននៅឡើយ ឬត្រូវបានផ្លាស់ទីទៅកន្លែងផ្សេង
       </p>
 
   
       <div class="d-flex justify-content-center gap-3 flex-wrap">
         <RouterLink to="/" class="btn-main">
-          <i class="bi bi-house-door-fill me-2"></i>Home
+          <i class="bi bi-house-door-fill me-2"></i>ទំព័រដើម
         </RouterLink>
 
         <RouterLink to="/rooms" class="btn-outline">
-          <i class="bi bi-search me-2"></i>Explore Rooms
+          <i class="bi bi-search me-2"></i>រកមើលបន្ទប់
         </RouterLink>
       </div>
 

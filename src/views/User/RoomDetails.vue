@@ -23,7 +23,7 @@
           <div class="small text-muted">
             <i class="bi bi-star-fill text-warning me-1"></i>4.8 (New)
             <span class="mx-2">•</span>
-            <i class="bi bi-geo-alt me-1"></i>{{ roomStore.room.district?.name }}, Phnom Penh
+            <i class="bi bi-geo-alt me-1"></i>{{ roomStore.room.district?.name }}, ភ្នំពេញ
           </div>
         </div>
       </div>
@@ -50,7 +50,7 @@
             ></i>
           </div>
           <div class="promo-tag" v-if="roomStore.room.percent_promotion > 0">
-            -{{ roomStore.room.percent_promotion }}% Off
+            -{{ roomStore.room.percent_promotion }}​បញ្ចុះតម្លៃ​%
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@
                 style="object-fit: cover"
               />
               <div>
-                <h6 class="fw-bold mb-0 text-navy">Hosted by {{ roomStore.room.creator?.name }}</h6>
+                <h6 class="fw-bold mb-0 text-navy">បង្ហោះដោយ {{ roomStore.room.creator?.name }}</h6>
                 <span class="small text-muted">{{
                   roomStore.room.creator?.current_job || 'Property Owner'
                 }}</span>
@@ -78,11 +78,11 @@
             <div class="row text-center border-top border-bottom py-3 g-0 mb-4">
               <div class="col-4 border-end">
                 <i class="bi bi-door-open d-block text-navy fs-5"></i>
-                <span class="small text-muted">{{ roomStore.room.bed || 1 }} Bed</span>
+                <span class="small text-muted">{{ roomStore.room.bed || 1 }} គ្រែ</span>
               </div>
               <div class="col-4 border-end">
                 <i class="bi bi-droplet d-block text-navy fs-5"></i>
-                <span class="small text-muted">1 Bath</span>
+                <span class="small text-muted">1 បន្ទប់ទឹក</span>
               </div>
               <div class="col-4">
                 <i class="bi bi-arrows-fullscreen d-block text-navy fs-5"></i>
@@ -94,7 +94,7 @@
 
           <!-- Amenities -->
           <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-            <h5 class="fw-bold text-navy mb-4">Amenities & Features</h5>
+            <h5 class="fw-bold text-navy mb-4">សម្ភារៈ និងលក្ខណៈពិសេស</h5>
             <div class="row g-4">
               <div v-for="opt in roomStore.room.options" :key="opt.id" class="col-6 col-md-4">
                 <div class="amenity-item d-flex align-items-center gap-3">
@@ -123,7 +123,7 @@
                   </div>
                   <div>
                     <span class="fw-semibold text-navy d-block">{{ opt.name }}</span>
-                    <span class="small text-muted">Included</span>
+                    <span class="small text-muted">រួមបញ្ចូល</span>
                   </div>
                 </div>
               </div>
@@ -133,7 +133,7 @@
           <!-- Location -->
           <div class="card border-0 shadow-sm rounded-4 p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="fw-bold text-navy mb-0">Location</h5>
+              <h5 class="fw-bold text-navy mb-0">ទីតាំង</h5>
               <span class="badge bg-light text-navy rounded-pill px-3 border">
                 {{ roomStore.room.district?.name }}
               </span>
@@ -153,14 +153,14 @@
             <div class="d-flex align-items-start gap-2">
               <i class="bi bi-geo-alt-fill text-orange mt-1"></i>
               <div>
-                <p class="text-navy fw-bold mb-0">Address in {{ roomStore.room.district?.name }}</p>
-                <p class="text-muted small mb-3">Phnom Penh, Cambodia</p>
+                <p class="text-navy fw-bold mb-0">អាស័យដ្ឋាននៅ {{ roomStore.room.district?.name }}</p>
+                <p class="text-muted small mb-3">ភ្នំពេញ, កម្ពុជា</p>
                 <a
                   :href="roomStore.room.map_url"
                   target="_blank"
                   class="btn btn-outline-navy rounded-pill px-4 fw-bold"
                 >
-                  <i class="bi bi-cursor-fill me-2"></i>Get Directions
+                  <i class="bi bi-cursor-fill me-2"></i>បង្ហាញទិសដៅ
                 </a>
               </div>
             </div>
@@ -173,13 +173,13 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
               <div>
                 <span class="h3 fw-bold text-orange">${{ roomStore.room.price }}</span>
-                <span class="text-navy"> /month</span>
+                <span class="text-navy"> /ក្នុងមូយខែ</span>
               </div>
               <span
                 v-if="roomStore.room.percent_promotion > 0"
                 class="badge bg-orange-light text-orange px-3 py-2 fw-bold"
               >
-                -{{ roomStore.room.percent_promotion }}% OFF
+                -{{ roomStore.room.percent_promotion }}បញ្ចុះតម្លៃ​%
               </span>
             </div>
 
@@ -189,29 +189,29 @@
               style="background: #f8f9fa; border: 1.5px solid #eee"
             >
               <p class="fw-bold text-navy small mb-2">
-                <i class="bi bi-receipt me-2 text-orange"></i>Monthly Bills
+                <i class="bi bi-receipt me-2 text-orange"></i>ការចំណាយប្រចាំខែ
               </p>
               <div class="d-flex justify-content-between mb-1 small">
                 <span class="text-muted"
-                  ><i class="bi bi-lightning-fill text-warning me-1"></i>Electric</span
+                  ><i class="bi bi-lightning-fill text-warning me-1"></i>អគ្គីនី</span
                 >
                 <span class="fw-bold text-navy">${{ roomStore.room.pay_electric || 0 }}</span>
               </div>
               <div class="d-flex justify-content-between mb-1 small">
                 <span class="text-muted"
-                  ><i class="bi bi-droplet-fill text-info me-1"></i>Water</span
+                  ><i class="bi bi-droplet-fill text-info me-1"></i>ទឹក</span
                 >
                 <span class="fw-bold text-navy">${{ roomStore.room.pay_water || 0 }}</span>
               </div>
               <div class="d-flex justify-content-between mb-1 small">
                 <span class="text-muted"
-                  ><i class="bi bi-trash3-fill text-success me-1"></i>Trash</span
+                  ><i class="bi bi-trash3-fill text-success me-1"></i>សំរាម</span
                 >
                 <span class="fw-bold text-navy">${{ roomStore.room.pay_trash || 0 }}</span>
               </div>
               <div class="d-flex justify-content-between small" v-if="roomStore.room.pay_parking">
                 <span class="text-muted"
-                  ><i class="bi bi-car-front-fill text-secondary me-1"></i>Parking</span
+                  ><i class="bi bi-car-front-fill text-secondary me-1"></i>ចំណត</span
                 >
                 <span class="fw-bold text-navy">${{ roomStore.room.pay_parking }}</span>
               </div>
@@ -221,16 +221,16 @@
               class="btn btn-orange w-100 py-3 fw-bold rounded-3 mb-3 shadow-sm"
               @click="openBookingModal"
             >
-              <i class="bi bi-calendar-check-fill me-2"></i>Request Booking
+              <i class="bi bi-calendar-check-fill me-2"></i>ស្នើសុំកក់បន្ទប់
             </button>
 
             <button class="btn btn-navy w-100 py-3 fw-bold rounded-3" @click="openRentModal">
-              <i class="bi bi-house-check-fill me-2"></i>Rent Now
+              <i class="bi bi-house-check-fill me-2"></i>ជួលបន្ទប់
             </button>
 
             <p class="text-muted text-center small mt-3 mb-0">
               <i class="bi bi-shield-check me-1 text-success"></i>
-              Secure & verified listing
+              ការទូទាត់មានសុវត្ថិភាព និងការពារអ្នកទិញ
             </p>
           </div>
         </div>
@@ -248,7 +248,7 @@
         <div class="bj-modal-header">
           <div>
             <h5 class="fw-bold mb-0 text-white">
-              <i class="bi bi-calendar-check-fill me-2"></i>Request Booking
+              <i class="bi bi-calendar-check-fill me-2"></i>ស្នើសុំកក់បន្ទប់
             </h5>
             <small class="opacity-75">{{ roomStore.room?.title }}</small>
           </div>
@@ -270,12 +270,12 @@
                 <div class="fw-bold text-navy small text-truncate">{{ roomStore.room?.title }}</div>
                 <div class="text-muted" style="font-size: 0.75rem">
                   <i class="bi bi-geo-alt me-1 text-orange"></i
-                  >{{ roomStore.room?.district?.name }}, Phnom Penh
+                  >{{ roomStore.room?.district?.name }}, ភ្នំពេញ
                 </div>
               </div>
               <div class="text-end">
                 <div class="fw-bold text-orange">${{ roomStore.room?.price }}</div>
-                <div class="text-muted" style="font-size: 0.72rem">/month</div>
+                <div class="text-muted" style="font-size: 0.72rem">/ក្នុងមូយខែ</div>
               </div>
             </div>
           </div>
@@ -293,7 +293,7 @@
 
           <!-- Check-in date -->
           <div class="bj-field mb-3">
-            <label class="bj-label">Check-in Date</label>
+            <label class="bj-label">កាលបរិច្ឆេទច</label>
             <div class="bj-input-wrap" :class="{ 'bj-input-err': fieldErrors.checkin }">
               <i class="bi bi-calendar-event bj-input-icon"></i>
               <input type="date" v-model="checkin_date" />
@@ -303,7 +303,7 @@
 
           <!-- Payment proof -->
           <div class="bj-field mb-1">
-            <label class="bj-label">Payment Proof</label>
+            <label class="bj-label">វិកាយប័ត្រការទូទាត់</label>
             <label
               class="bj-upload"
               :class="{ 'bj-upload-filled': !!fileName, 'bj-upload-err': fieldErrors.file }"
@@ -319,7 +319,7 @@
                 ></i>
                 <span>{{ fileName || 'Click to upload payment screenshot' }}</span>
                 <small v-if="!fileName" class="text-muted"
-                  >ABA, Wing, or any transfer receipt</small
+                  >ABA, Wing, ឬ វិកាយប័ត្រការទូទាត់ផ្សេងៗ</small
                 >
               </div>
               <input
@@ -336,7 +336,7 @@
         <!-- Footer -->
         <div class="bj-modal-footer">
           <button class="btn-bj-reset" @click="resetBooking">
-            <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+            <i class="bi bi-arrow-counterclockwise me-1"></i>កំណត់ឡើងវិញ
           </button>
           <button class="btn-bj-submit" @click="handleBooking" :disabled="bookingLoading">
             <span v-if="bookingLoading" class="spinner-border spinner-border-sm me-2"></span>
@@ -357,7 +357,7 @@
         <div class="bj-modal-header">
           <div>
             <h5 class="fw-bold mb-0 text-white">
-              <i class="bi bi-house-check-fill me-2"></i>Rent This Room
+              <i class="bi bi-house-check-fill me-2"></i>ជួលបន្ទប់
             </h5>
             <small class="opacity-75">{{ roomStore.room?.title }}</small>
           </div>
@@ -378,12 +378,12 @@
                 <div class="fw-bold text-navy small text-truncate">{{ roomStore.room?.title }}</div>
                 <div class="text-muted" style="font-size: 0.75rem">
                   <i class="bi bi-geo-alt me-1 text-orange"></i
-                  >{{ roomStore.room?.district?.name }}, Phnom Penh
+                  >{{ roomStore.room?.district?.name }}, ភ្នំពេញ
                 </div>
               </div>
               <div class="text-end">
                 <div class="fw-bold text-orange">${{ roomStore.room?.price }}</div>
-                <div class="text-muted" style="font-size: 0.72rem">/month</div>
+                <div class="text-muted" style="font-size: 0.72rem">/ក្នុងមូយខែ</div>
               </div>
             </div>
           </div>
@@ -391,8 +391,7 @@
           <!-- Info box -->
           <div class="rent-info-box mb-4">
             <i class="bi bi-info-circle-fill me-2 text-orange"></i>
-            By clicking <strong>Confirm Rent</strong>, your request will be sent to the property
-            owner for approval. Upload your payment receipt as proof.
+           នៅណេលចុច <strong>Confirm Rent</strong>, សំណើរបស់អ្នកនឹងត្រូវផ្ញើទៅម្ចាស់ផ្ទះសម្រាប់ការអនុម័ត។ សូមផ្ទុកវិក័យប័ត្រទូទាត់របស់អ្នកជាភស្តុតាង។
           </div>
 
           <!-- Success / Error -->
@@ -408,7 +407,7 @@
 
           <!-- Payment proof -->
           <div class="bj-field mb-1">
-            <label class="bj-label">Payment Proof</label>
+            <label class="bj-label">វិកាយប័ត្រការទូទាត់</label>
             <label
               class="bj-upload"
               :class="{ 'bj-upload-filled': !!rentFileName, 'bj-upload-err': rentFieldErrors.file }"
@@ -424,7 +423,7 @@
                 ></i>
                 <span>{{ rentFileName || 'Click to upload payment screenshot' }}</span>
                 <small v-if="!rentFileName" class="text-muted"
-                  >ABA, Wing, or any transfer receipt</small
+                  >ABA, Wing, ឬ វិកាយប័ត្រការទូទាត់ផ្សេងៗ</small
                 >
               </div>
               <input
@@ -440,7 +439,7 @@
 
         <div class="bj-modal-footer">
           <button class="btn-bj-reset" @click="resetRent">
-            <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+            <i class="bi bi-arrow-counterclockwise me-1"></i>កំណត់ឡើងវិញ
           </button>
           <button class="btn-bj-submit" @click="handleRent" :disabled="rentLoading">
             <span v-if="rentLoading" class="spinner-border spinner-border-sm me-2"></span>
@@ -524,11 +523,11 @@ const validateBooking = () => {
   fieldErrors.file = ''
   let ok = true
   if (!checkin_date.value) {
-    fieldErrors.checkin = 'Please select a check-in date.'
+    fieldErrors.checkin = 'សូមជ្រើសរើសកាលបរិច្ឆេទចូលនៅ។'
     ok = false
   }
   if (!file.value) {
-    fieldErrors.file = 'Please upload your payment receipt.'
+    fieldErrors.file = 'សូមផ្ទុកវិក័យប័ត្រទូទាត់របស់អ្នក។'
     ok = false
   }
   return ok
@@ -544,15 +543,15 @@ const handleBooking = async () => {
     fd.append('checkin_date', checkin_date.value + ' 00:00:00')
     fd.append('transaction_file', file.value)
     const res = await api.post('/books', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
-    bookingStatus.value = 'success'
-    bookingMessage.value = res.data?.message ?? 'Booking submitted successfully!'
+    bookingStatus.value = 'ជោគជ័យ'
+    bookingMessage.value = res.data?.message ?? 'ការកក់បានជោគជ័យ!'
 
     setTimeout(() => {
       showBookingModal.value = false
     }, 1500)
   } catch (err) {
-    bookingStatus.value = 'error'
-    bookingMessage.value = err?.response?.data?.message ?? 'Booking failed. Please try again.'
+    bookingStatus.value = 'បរាជ័យ'
+    bookingMessage.value = err?.response?.data?.message ?? 'ការកក់បរាជ័យ។ សូមព្យាយាមម្តងទៀត។'
   } finally {
     bookingLoading.value = false
   }
@@ -586,7 +585,7 @@ const handleRentFileChange = (e) => {
 const handleRent = async () => {
   rentFieldErrors.file = ''
   if (!rentFile.value) {
-    rentFieldErrors.file = 'Please upload your payment receipt.'
+    rentFieldErrors.file = 'សូមផ្ទុកវិក័យប័ត្រទូទាត់របស់អ្នក។'
     return
   }
   rentLoading.value = true
@@ -597,16 +596,14 @@ const handleRent = async () => {
     fd.append('transaction_file', rentFile.value)
     const res = await api.post('/rents', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
 
-    console.log(1)
-
-    rentStatus.value = 'success'
-    rentMessage.value = res.data?.message ?? 'Rent request submitted successfully!'
+    rentStatus.value = 'ជោគជ័យ'
+    rentMessage.value = res.data?.message ?? 'ការស្នើសុំជោគជ័យ!'
     setTimeout(() => {
       showRentModal.value = false
     }, 1500)
   } catch (err) {
-    rentStatus.value = 'error'
-    rentMessage.value = err?.response?.data?.message ?? 'Rent request failed. Please try again.'
+    rentStatus.value = 'បរាជ័យ'
+    rentMessage.value = err?.response?.data?.message ?? 'ការស្នើសុំបរាជ័យ។ សូមព្យាយាមម្តងទៀត។'
   } finally {
     rentLoading.value = false
   }

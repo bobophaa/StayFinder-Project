@@ -8,8 +8,8 @@
           <div class="logo-badge mb-4">
             <i class="bi bi-house-heart-fill me-2"></i>StayFinder
           </div>
-          <h1 class="fw-bold text-navy mb-1">Forgot Password</h1>
-          <p class="text-muted small">Enter your email to receive a 6-character code.</p>
+          <h1 class="fw-bold text-navy mb-1">ភ្លេចពាក្យសម្ងាត់?</h1>
+          <p class="text-muted small">បញ្ចូលអ៊ីមែលរបស់អ្នកដើម្បីទទួលបានកូដ 6 តួអក្សរ។</p>
         </div>
 
         <form @submit.prevent="handleForgotPassword">
@@ -26,7 +26,7 @@
           </transition>
 
           <div class="mb-4">
-            <label class="form-label small fw-bold text-navy">Email Address</label>
+            <label class="form-label small fw-bold text-navy">អ៊ីមែល</label>
             <div class="input-group custom-group" :class="{ 'group-invalid': submitted && !authStore.forgotEmail }">
               <span class="input-group-text"><i class="bi bi-envelope"></i></span>
               <input
@@ -36,17 +36,17 @@
                 placeholder="example@gmail.com"
               />
             </div>
-            <small v-if="submitted && !authStore.forgotEmail" class="text-danger mt-1 d-block">Email is required.</small>
+            <small v-if="submitted && !authStore.forgotEmail" class="text-danger mt-1 d-block">អ៊ីមែលត្រូវបានទាមទារ</small>
           </div>
 
           <button type="submit" class="btn btn-main w-100 py-3 rounded-4 fw-bold mb-4" :disabled="authStore.loading">
             <span v-if="authStore.loading" class="spinner-border spinner-border-sm me-2"></span>
-            {{ authStore.loading ? 'Sending Code...' : 'Send OTP Code' }}
+            {{ authStore.loading ? 'Sending Code...' : 'ផ្ញើរកូដOTP' }}
           </button>
 
           <div class="text-center">
             <RouterLink to="/login" class="text-decoration-none text-muted small fw-bold">
-              <i class="bi bi-arrow-left me-1"></i> Back to Sign In
+              <i class="bi bi-arrow-left me-1"></i> ត្រលប់កទៅកាន់គណនី
             </RouterLink>
           </div>
         </form>
@@ -57,10 +57,10 @@
         <div class="orange-glow"></div>
         <div class="visual-content text-center">
           <img src="@/assets/images/ho.svg" alt="House" class="house-illustration" />
-          <h2 class="text-white fw-bold mt-3">Verify Email</h2>
-          <p class="text-white-50 px-4 small">We use OTP verification to keep your StayFinder account safe.</p>
+          <h2 class="text-white fw-bold mt-3">ផ្ទៀងផ្តាត់អ៊ីមែល</h2>
+          <p class="text-white-50 px-4 small">យើងប្រើការផ្ទៀងផ្ទាត់ OTP ដើម្បីរក្សាសុវត្ថិភាពគណនី StayFinder របស់អ្នក។</p>
           <div class="floating-badge">
-            <i class="bi bi-shield-check-fill me-1" style="color:#ff5f00"></i> Secure Verification
+            <i class="bi bi-shield-check-fill me-1" style="color:#ff5f00"></i> ការផ្ទៀងផ្ទាត់សុវត្ថិភាព
           </div>
         </div>
       </div>

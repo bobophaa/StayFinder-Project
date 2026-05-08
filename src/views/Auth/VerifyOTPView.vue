@@ -8,11 +8,11 @@
           <div class="logo-badge mb-4">
             <i class="bi bi-house-heart-fill me-2"></i>StayFinder
           </div>
-          <h1 class="fw-bold text-navy mb-1">Verify OTP</h1>
+          <h1 class="fw-bold text-navy mb-1">ផ្ទៀងផ្ទាត់ OTP</h1>
           <p class="text-muted small">
-            We've sent a 6-character code to<br />
+           យើងបានផ្ញើកូដ ៦ តួអក្សរ ទៅកាន់អ៊ីមែលរបស់អ្នក<br />
             <!-- ✅ Fixed: use forgotEmail not emailOrPhone -->
-            <span class="text-orange fw-bold">{{ authStore.forgotEmail || 'your email' }}</span>
+            <span class="text-orange fw-bold">{{ authStore.forgotEmail || 'អ៊ីមែលរបស់អ្នក' }}</span>
           </p>
         </div>
 
@@ -46,11 +46,11 @@
 
           <button type="submit" class="btn btn-main w-100 py-3 rounded-4 fw-bold mb-4" :disabled="authStore.loading">
             <span v-if="authStore.loading" class="spinner-border spinner-border-sm me-2"></span>
-            {{ authStore.loading ? 'Verifying...' : 'Verify Code' }}
+            {{ authStore.loading ? 'Verifying...' : 'ផ្ទៀងផ្ទាត់កូដ' }}
           </button>
 
           <div class="text-center mb-3">
-            <p class="small text-muted mb-1">Didn't receive the code?</p>
+            <p class="small text-muted mb-1">មិនទទួលបានកូដមែនទេ?</p>
             <!-- ✅ Fixed: calls resendCode() not forgotPassword() -->
             <button
               type="button"
@@ -58,13 +58,13 @@
               class="btn btn-link text-orange fw-bold text-decoration-none small p-0"
               :disabled="authStore.loading || resendCooldown > 0"
             >
-              {{ resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend New Code' }}
+              {{ resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'ផ្ញើកូដថ្មីម្តងទៀត' }}
             </button>
           </div>
 
           <div class="text-center">
             <RouterLink to="/login" class="text-decoration-none text-muted small fw-bold">
-              <i class="bi bi-arrow-left me-1"></i> Back to Sign In
+              <i class="bi bi-arrow-left me-1"></i> ត្រលប់ទៅកាន់គណនី
             </RouterLink>
           </div>
         </form>
@@ -75,10 +75,10 @@
         <div class="orange-glow"></div>
         <div class="visual-content text-center">
           <img src="@/assets/images/ho.svg" alt="House" class="house-illustration" />
-          <h2 class="text-white fw-bold mt-3">Almost There!</h2>
-          <p class="text-white-50 px-4 small">Check your inbox (and spam folder) for the verification code.</p>
+          <h2 class="text-white fw-bold mt-3">ស្ទើរតែរួចរាល់ហើយ!</h2>
+          <p class="text-white-50 px-4 small">សូមពិនិត្យមើលប្រអប់អ៊ីមែលរបស់អ្នក (និងថត spam) ដើម្បីរកមើលកូដផ្ទៀងផ្ទាត់។</p>
           <div class="floating-badge">
-            <i class="bi bi-envelope-check-fill me-1" style="color:#ff5f00"></i> Check Your Email
+            <i class="bi bi-envelope-check-fill me-1" style="color:#ff5f00"></i> កូដផ្ទៀងផ្ទាត់ត្រូវបានផ្ញើរួចហើយ
           </div>
         </div>
       </div>

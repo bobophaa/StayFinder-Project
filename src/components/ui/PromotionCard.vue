@@ -17,7 +17,7 @@
 
         <div class="discount-circle">
           <span class="fw-bold">{{ item.percent_promotion }}%</span>
-          <span class="d-block small">OFF</span>
+          <span class="d-block small">បញ្ចុះតម្លៃ</span>
         </div>
       </div>
 
@@ -35,10 +35,10 @@
             <span class="text-decoration-line-through text-white-50 fs-5">${{ item.price }}</span>
             <span class="text-orange fw-bold fs-2">${{ discountedPrice }}</span>
           </div>
-          <span class="text-white-50 small mb-2">/month</span>
+          <span class="text-white-50 small mb-2">/ក្នុងមួយខែ</span>
         </div>
 
-        <div class="btn btn-grab shadow-sm w-100 py-2 fw-bold">BOOK NOW</div>
+        <div class="btn btn-grab shadow-sm w-100 py-2 fw-bold">កក់ឥឡូវនេះ</div>
       </div>
     </router-link>
   </div>
