@@ -1,15 +1,18 @@
 <template>
   <div class="profile-page">
-    <div v-if="!user" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
-      <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
+    <div
+      v-if="!user"
+      class="d-flex flex-column align-items-center justify-content-center"
+      style="min-height: 60vh"
+    >
+      <div class="spinner-border text-orange mb-3" style="width: 3rem; height: 3rem"></div>
       <p class="text-muted fw-semibold">Loading security settings...</p>
     </div>
 
     <div v-else>
       <div class="hero-banner position-relative">
-        <div class="container position-relative" style="z-index:2">
-          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top:48px">
-
+        <div class="container position-relative" style="z-index: 2">
+          <div class="d-flex align-items-end gap-4 pb-0" style="padding-top: 48px">
             <div class="avatar-wrapper" v-click-outside="closeMenu">
               <div class="avatar-ring">
                 <div class="avatar-box">
@@ -33,12 +36,23 @@
                   <button type="button" class="avatar-menu-item" @click="triggerUpload">
                     <i class="bi bi-cloud-arrow-up-fill me-2 text-orange"></i> Upload photo
                   </button>
-                  <button type="button" v-if="user.avatar" class="avatar-menu-item text-danger" @click="removeImage">
+                  <button
+                    type="button"
+                    v-if="user.avatar"
+                    class="avatar-menu-item text-danger"
+                    @click="removeImage"
+                  >
                     <i class="bi bi-trash3-fill me-2"></i> Remove photo
                   </button>
                 </div>
               </transition>
-              <input type="file" ref="fileInput" class="d-none" accept="image/*" @change="handleFileUpload" />
+              <input
+                type="file"
+                ref="fileInput"
+                class="d-none"
+                accept="image/*"
+                @change="handleFileUpload"
+              />
             </div>
 
             <div class="pb-3 text-white">
@@ -79,14 +93,22 @@
               <form @submit.prevent="updatePassword" novalidate>
                 <div class="row g-4">
                   <div class="col-12">
-                    <label class="field-label" :class="{ 'text-danger': errors.current_password }">Current
-                      Password</label>
+                    <label class="field-label" :class="{ 'text-danger': errors.current_password }"
+                      >Current Password</label
+                    >
                     <div class="input-wrap" :class="{ 'input-err': errors.current_password }">
                       <i class="bi bi-lock input-icon"></i>
-                      <input :type="show.current_password ? 'text' : 'password'" v-model="form.current_password"
-                        placeholder="Enter current password" @input="errors.current_password = ''" />
-                      <i class="bi cursor-pointer px-3" :class="show.current_password ? 'bi-eye-slash' : 'bi-eye'"
-                        @click="toggleShow('current_password')"></i>
+                      <input
+                        :type="show.current_password ? 'text' : 'password'"
+                        v-model="form.current_password"
+                        placeholder="Enter current password"
+                        @input="errors.current_password = ''"
+                      />
+                      <i
+                        class="bi cursor-pointer px-3"
+                        :class="show.current_password ? 'bi-eye-slash' : 'bi-eye'"
+                        @click="toggleShow('current_password')"
+                      ></i>
                     </div>
                     <div v-if="errors.current_password" class="err-msg">
                       <i class="bi bi-exclamation-circle me-1"></i> {{ errors.current_password }}
@@ -94,28 +116,47 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'text-danger': errors.new_password }">New Password</label>
+                    <label class="field-label" :class="{ 'text-danger': errors.new_password }"
+                      >New Password</label
+                    >
                     <div class="input-wrap" :class="{ 'input-err': errors.new_password }">
                       <i class="bi bi-shield-lock input-icon"></i>
-                      <input :type="show.new_password ? 'text' : 'password'" v-model="form.new_password"
-                        placeholder="New password" @input="errors.new_password = ''" />
-                      <i class="bi cursor-pointer px-3" :class="show.new_password ? 'bi-eye-slash' : 'bi-eye'"
-                        @click="toggleShow('new_password')"></i>
+                      <input
+                        :type="show.new_password ? 'text' : 'password'"
+                        v-model="form.new_password"
+                        placeholder="New password"
+                        @input="errors.new_password = ''"
+                      />
+                      <i
+                        class="bi cursor-pointer px-3"
+                        :class="show.new_password ? 'bi-eye-slash' : 'bi-eye'"
+                        @click="toggleShow('new_password')"
+                      ></i>
                     </div>
                     <div v-if="errors.new_password" class="err-msg">{{ errors.new_password }}</div>
                   </div>
 
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'text-danger': errors.confirm_password }">Confirm
-                      Password</label>
+                    <label class="field-label" :class="{ 'text-danger': errors.confirm_password }"
+                      >Confirm Password</label
+                    >
                     <div class="input-wrap" :class="{ 'input-err': errors.confirm_password }">
                       <i class="bi bi-shield-check input-icon"></i>
-                      <input :type="show.confirm_password ? 'text' : 'password'" v-model="form.confirm_password"
-                        placeholder="Confirm password" @input="errors.confirm_password = ''" />
-                      <i class="bi cursor-pointer px-3" :class="show.confirm_password ? 'bi-eye-slash' : 'bi-eye'"
-                        @click="toggleShow('confirm_password')"></i>
+                      <input
+                        :type="show.confirm_password ? 'text' : 'password'"
+                        v-model="form.confirm_password"
+                        placeholder="Confirm password"
+                        @input="errors.confirm_password = ''"
+                      />
+                      <i
+                        class="bi cursor-pointer px-3"
+                        :class="show.confirm_password ? 'bi-eye-slash' : 'bi-eye'"
+                        @click="toggleShow('confirm_password')"
+                      ></i>
                     </div>
-                    <div v-if="errors.confirm_password" class="err-msg">{{ errors.confirm_password }}</div>
+                    <div v-if="errors.confirm_password" class="err-msg">
+                      {{ errors.confirm_password }}
+                    </div>
                   </div>
                 </div>
 
@@ -139,12 +180,16 @@
                   </div>
                   <div>
                     <h6 class="fw-bold text-navy mb-1">Account Protected</h6>
-                    <p class="text-muted small mb-0">Your password protects your room bookings and personal data.</p>
+                    <p class="text-muted small mb-0">
+                      Your password protects your room bookings and personal data.
+                    </p>
                   </div>
                 </div>
                 <div class="p-3 rounded-3 bg-light border">
-                  <p class="small text-muted mb-0"><i class="bi bi-info-circle me-1"></i> Use at least 8 characters with
-                    a mix of letters and numbers.</p>
+                  <p class="small text-muted mb-0">
+                    <i class="bi bi-info-circle me-1"></i> Use at least 8 characters with a mix of
+                    letters and numbers.
+                  </p>
                 </div>
               </div>
             </div>
@@ -186,7 +231,9 @@ const closeMenu = () => (showActionsMenu.value = false)
 const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
 
 const showToast = (msg, type = 'success') => {
-  toast.message = msg; toast.type = type; toast.show = true
+  toast.message = msg
+  toast.type = type
+  toast.show = true
   setTimeout(() => (toast.show = false), 3200)
 }
 
@@ -201,61 +248,98 @@ const fetchUserData = async () => {
 
 const updatePassword = async () => {
   errors.current_password = errors.new_password = errors.confirm_password = ''
-  if (!form.current_password) { errors.current_password = 'Current password is required'; return; }
-  if (form.new_password.length < 8) { errors.new_password = 'Minimum 8 characters required'; return; }
-  if (form.new_password !== form.confirm_password) { errors.confirm_password = 'Passwords do not match'; return; }
+  if (!form.current_password) {
+    errors.current_password = 'Current password is required'
+    return
+  }
+  if (form.new_password.length < 8) {
+    errors.new_password = 'Minimum 8 characters required'
+    return
+  }
+  if (form.new_password !== form.confirm_password) {
+    errors.confirm_password = 'Passwords do not match'
+    return
+  }
 
   loading.value = true
   try {
-    await api.put('/profile/pass', {
+    const res = await api.put('/profile/pass', {
       old_pass: form.current_password,
       new_pass: form.new_password,
       new_pass_confirmation: form.confirm_password,
     })
+    if (res.data && res.data.result === false) {
+      errors.current_password = res.data.message || 'Incorrect current password'
+      showToast(res.data.message || 'Validation failed', 'error')
+      return
+    }
     showToast('Password updated successfully!', 'success')
-    form.current_password = form.new_password = form.confirm_password = ''
+    form.current_password = ''
+    form.new_password = ''
+    form.confirm_password = ''
   } catch (err) {
     const res = err.response?.data
     if (res?.errors) {
       errors.current_password = res.errors.old_pass?.[0] || res.errors.current_password?.[0] || ''
       errors.new_password = res.errors.new_pass?.[0] || res.errors.new_password?.[0] || ''
-      errors.confirm_password = res.errors.new_pass_confirmation?.[0] || res.errors.password_confirmation?.[0] || ''
+      errors.confirm_password =
+        res.errors.new_pass_confirmation?.[0] || res.errors.password_confirmation?.[0] || ''
+      showToast('Please check the highlighted fields', 'error')
     } else {
-      errors.current_password = res?.message || 'Update failed'
+      const errorMsg = res?.message || 'Server error occurred'
+      errors.current_password = errorMsg
+      showToast(errorMsg, 'error')
     }
-    showToast('Update failed', 'error')
   } finally {
     loading.value = false
   }
 }
 
-const triggerUpload = () => { fileInput.value.click(); closeMenu(); }
+const triggerUpload = () => {
+  fileInput.value.click()
+  closeMenu()
+}
 const handleFileUpload = async (e) => {
-  const file = e.target.files[0]; if (!file) return
+  const file = e.target.files[0]
+  if (!file) return
   uploadingAvatar.value = true
   avatarPreview.value = URL.createObjectURL(file)
-  const fd = new FormData(); fd.append('image', file)
+  const fd = new FormData()
+  fd.append('image', file)
   try {
     await api.post('/profile/image', fd)
-    showToast('Image updated!', 'success'); fetchUserData()
-  } catch { showToast('Upload failed', 'error') }
-  finally { uploadingAvatar.value = false; avatarPreview.value = null; }
+    showToast('Image updated!', 'success')
+    fetchUserData()
+  } catch {
+    showToast('Upload failed', 'error')
+  } finally {
+    uploadingAvatar.value = false
+    avatarPreview.value = null
+  }
 }
 
 const removeImage = async () => {
   if (!confirm('Delete photo?')) return
   try {
     await api.delete('/profile/image')
-    user.value.avatar = null; showToast('Image deleted', 'success'); closeMenu()
-  } catch { showToast('Delete failed', 'error') }
+    user.value.avatar = null
+    showToast('Image deleted', 'success')
+    closeMenu()
+  } catch {
+    showToast('Delete failed', 'error')
+  }
 }
 
 const vClickOutside = {
   mounted(el, binding) {
-    el.clickOutsideEvent = (e) => { if (!(el === e.target || el.contains(e.target))) binding.value() }
+    el.clickOutsideEvent = (e) => {
+      if (!(el === e.target || el.contains(e.target))) binding.value()
+    }
     document.addEventListener('click', el.clickOutsideEvent)
   },
-  unmounted(el) { document.removeEventListener('click', el.clickOutsideEvent) }
+  unmounted(el) {
+    document.removeEventListener('click', el.clickOutsideEvent)
+  },
 }
 
 onMounted(fetchUserData)
@@ -363,7 +447,7 @@ onMounted(fetchUserData)
   border: none;
   background: none;
   padding: 11px 18px;
-  font-size: .85rem;
+  font-size: 0.85rem;
   text-align: left;
   display: flex;
   align-items: center;
@@ -371,10 +455,10 @@ onMounted(fetchUserData)
 }
 
 .user-role-badge {
-  background: rgba(255, 95, 0, .2);
+  background: rgba(255, 95, 0, 0.2);
   color: #ff9a5c;
-  border: 1px solid rgba(255, 95, 0, .3);
-  font-size: .75rem;
+  border: 1px solid rgba(255, 95, 0, 0.3);
+  font-size: 0.75rem;
   font-weight: 700;
   padding: 4px 12px;
   border-radius: 20px;
@@ -399,7 +483,7 @@ onMounted(fetchUserData)
   color: #888;
   text-decoration: none;
   font-weight: 600;
-  font-size: .85rem;
+  font-size: 0.85rem;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
 }
@@ -434,7 +518,7 @@ onMounted(fetchUserData)
 }
 
 .field-label {
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   color: #888;
@@ -473,7 +557,7 @@ onMounted(fetchUserData)
   background: transparent;
   padding: 12px 0;
   outline: none;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 /* Old Orange Button */
@@ -510,7 +594,7 @@ onMounted(fetchUserData)
 
 .err-msg {
   color: #dc3545;
-  font-size: .78rem;
+  font-size: 0.78rem;
   margin-top: 6px;
   font-weight: 600;
 }
@@ -539,7 +623,9 @@ onMounted(fetchUserData)
 
 .menu-fade-enter-active,
 .menu-fade-leave-active {
-  transition: opacity .15s, transform .15s;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
 }
 
 .menu-fade-enter-from,
@@ -550,7 +636,7 @@ onMounted(fetchUserData)
 
 .slide-toast-enter-active,
 .slide-toast-leave-active {
-  transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .slide-toast-enter-from {
