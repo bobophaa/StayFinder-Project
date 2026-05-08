@@ -22,13 +22,13 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     // --- Public Routes ---
-    { path: '/', name: 'home', component: HomePage },
+    { path: '/', name: 'home', component: HomePage, meta: { title: 'Home' } },
     { path: '/rooms', name: 'allRooms', component: AllRooms },
     { path: '/rooms/:id', name: 'roomDetails', component: RoomDetails },
     { path: '/faq', name: 'faq', component: FAQView },
     { path: '/about', name: 'about', component: AboutUs },
 
-    { path: '/login', name: 'login', component: LoginView, meta: { hideNavbar: true } },
+    { path: '/login', name: 'login', component: LoginView, meta: { hideNavbar: true } ,meta:{title : 'Login'}},
     { path: '/register', name: 'register', component: RegisterView, meta: { hideNavbar: true } },
     {
       path: '/forgot-password',
@@ -75,6 +75,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || 'Room Rental App' // Set page title based on route meta
   const authStore = useAuthStore()
   const token = localStorage.getItem('token')
 
