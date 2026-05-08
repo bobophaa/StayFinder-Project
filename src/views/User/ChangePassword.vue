@@ -3,7 +3,7 @@
     <!-- Loading State -->
     <div v-if="!user" class="d-flex flex-column align-items-center justify-content-center" style="min-height:60vh">
       <div class="spinner-border text-orange mb-3" style="width:3rem;height:3rem"></div>
-      <p class="text-muted fw-semibold">Loading security settings...</p>
+      <p class="text-muted fw-semibold">កំពុងផ្លាស់ប្តូរពាក្យសម្ងាត់...</p>
     </div>
 
     <div v-else>
@@ -46,10 +46,10 @@
       <div class="tab-bar-wrap">
         <div class="container">
           <div class="tab-bar">
-            <router-link to="/profile" class="tab-item"><i class="bi bi-person-fill me-2"></i>Profile</router-link>
-            <router-link to="/my-bookings" class="tab-item"><i class="bi bi-calendar-check-fill me-2"></i>Bookings</router-link>
-            <router-link to="/my-rented" class="tab-item"><i class="bi bi-house-check-fill me-2"></i>Rented</router-link>
-            <router-link to="/ChangePassword" class="tab-item tab-active"><i class="bi bi-shield-lock-fill me-2"></i>Security</router-link>
+            <router-link to="/profile" class="tab-item"><i class="bi bi-person-fill me-2"></i>ប្រវត្តិរូប</router-link>
+            <router-link to="/my-bookings" class="tab-item"><i class="bi bi-calendar-check-fill me-2"></i>ការកក់</router-link>
+            <router-link to="/my-rented" class="tab-item"><i class="bi bi-house-check-fill me-2"></i>បន្ទប់ដែលបានជួល</router-link>
+            <router-link to="/ChangePassword" class="tab-item tab-active"><i class="bi bi-shield-lock-fill me-2"></i>ផ្លាស់ប្តូរពាក្យសម្ងាត់</router-link>
           </div>
         </div>
       </div>
@@ -70,7 +70,7 @@
                       <input 
                         :type="show.current_password ? 'text' : 'password'" 
                         v-model="form.current_password"
-                        placeholder="Enter current password to unlock fields" 
+                        placeholder="បញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន " 
                         @input="errors.current_password = ''" 
                       />
                       <i class="bi cursor-pointer px-3" :class="show.current_password ? 'bi-eye-slash' : 'bi-eye'"
@@ -89,7 +89,7 @@
                       <input 
                         :type="show.new_password ? 'text' : 'password'" 
                         v-model="form.new_password"
-                        placeholder="New password" 
+                        placeholder="ពាក្យសម្ងាត់ថ្មី" 
                         :disabled="!isUnlocked"
                         @input="errors.new_password = ''" 
                       />
@@ -101,13 +101,13 @@
 
                   <!-- Confirm Password (Disabled until current_password is typed) -->
                   <div class="col-md-6">
-                    <label class="field-label" :class="{ 'text-danger': errors.confirm_password, 'locked-text': !isUnlocked }">Confirm Password</label>
+                    <label class="field-label" :class="{ 'text-danger': errors.confirm_password, 'locked-text': !isUnlocked }">បញ្ជាក់ពាក្យសម្ងាត់ថ្មី</label>
                     <div class="input-wrap" :class="{ 'input-err': errors.confirm_password, 'input-locked': !isUnlocked }">
                       <i class="bi bi-shield-check input-icon"></i>
                       <input 
                         :type="show.confirm_password ? 'text' : 'password'" 
                         v-model="form.confirm_password"
-                        placeholder="Confirm password" 
+                        placeholder="បញ្ជាក់ពាក្យសម្ងាត់ថ្មី" 
                         :disabled="!isUnlocked"
                         @input="errors.confirm_password = ''" 
                       />
@@ -120,7 +120,7 @@
                 <div class="mt-5">
                   <button type="submit" class="btn-save-main" :disabled="loading || !isUnlocked">
                     <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-                    {{ loading ? 'Updating...' : 'Save New Password' }}
+                    {{ loading ? 'Updating...' : 'រក្សាទុកពាក្យសម្ងាត់ថ្មី' }}
                   </button>
                 </div>
               </form>
@@ -129,7 +129,7 @@
 
           <div class="col-lg-4">
             <div class="side-card">
-              <div class="side-card-header">Security Tips</div>
+              <div class="side-card-header">ការណែនាំអំពីសុវត្ថិភាព</div>
               <div class="side-card-body p-4">
                 <div class="d-flex align-items-start gap-3 mb-4">
                   <div class="status-icon" :class="isUnlocked ? 'success' : 'pending'">
@@ -209,9 +209,9 @@ const updatePassword = async () => {
   errors.current_password = errors.new_password = errors.confirm_password = ''
   
   // Validation
-  if (!form.current_password) { errors.current_password = 'Required'; return; }
-  if (form.new_password.length < 8) { errors.new_password = 'Minimum 8 characters'; return; }
-  if (form.new_password !== form.confirm_password) { errors.confirm_password = 'Passwords do not match'; return; }
+  if (!form.current_password) { errors.current_password = 'ត្រូវបំពេញ'; return; }
+  if (form.new_password.length < 8) { errors.new_password = 'យ៉ាងហោច 8 តួអក្សរ'; return; }
+  if (form.new_password !== form.confirm_password) { errors.confirm_password = 'ពាក្យសម្ងាត់មិនដូចគ្នា'; return; }
 
   loading.value = true
   try {
@@ -236,11 +236,11 @@ const updatePassword = async () => {
       if (res.errors.old_pass) {
         form.new_password = ''
         form.confirm_password = ''
-        showToast('Incorrect password. Access denied.', 'error')
+        showToast('ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ', 'error')
       }
     } else {
       errors.current_password = res?.message || 'Update failed'
-      showToast('Update failed', 'error')
+      showToast('ការធ្វើបច្ចុប្បន្នភាពបរាជ័យ', 'error')
     }
   } finally {
     loading.value = false
