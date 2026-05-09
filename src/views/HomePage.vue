@@ -44,7 +44,7 @@ const promoRooms = computed(() => {
 })
 
 const featuredRooms = computed(() => {
-  return roomStore.rooms ? roomStore.rooms.slice(8, 14) : []
+  return roomStore.rooms && roomStore.rooms.length > 0 ? roomStore.rooms.slice(0, 6) : []
 })
 
 onMounted(async () => {
@@ -94,9 +94,11 @@ function searchByDistrict(name) {
         <swiper-slide class="hero-slide slide-2">
           <div class="hero-overlay"></div>
           <div class="container position-relative z-index-2 text-center text-white">
-            <h1 class="display-3 fw-bold mb-3 animate-pop">ស្វែងរកបន្ទប់ដែលសាកសមបំផុតសម្រាប់អ្នកថ្ងៃនេះ</h1>
+            <h1 class="display-3 fw-bold mb-3 animate-pop">
+              ស្វែងរកបន្ទប់ដែលសាកសមបំផុតសម្រាប់អ្នកថ្ងៃនេះ
+            </h1>
             <p class="fs-5 mb-5 opacity-75 mx-auto animate-pop-delay" style="max-width: 700px">
-            បន្ទប់ស្អាត មានគុណភាពល្អ និងតម្លៃសមរម្យ នៅកណ្តាលទីក្រុងភ្នំពេញ
+              បន្ទប់ស្អាត មានគុណភាពល្អ និងតម្លៃសមរម្យ នៅកណ្តាលទីក្រុងភ្នំពេញ
             </p>
             <div class="d-flex justify-content-center gap-3">
               <router-link to="/rooms" class="btn-banner-main px-5 py-3 shadow">
@@ -109,9 +111,11 @@ function searchByDistrict(name) {
         <swiper-slide class="hero-slide slide-1">
           <div class="hero-overlay"></div>
           <div class="container position-relative z-index-2 text-center text-white">
-            <h1 class="display-3 fw-bold mb-3 animate-pop">ចាប់ផ្តើមអាជីវកម្មរបស់អ្នកជាមួយ StayFinder</h1>
+            <h1 class="display-3 fw-bold mb-3 animate-pop">
+              ចាប់ផ្តើមអាជីវកម្មរបស់អ្នកជាមួយ StayFinder
+            </h1>
             <p class="fs-5 mb-5 opacity-75 mx-auto animate-pop-delay" style="max-width: 700px">
-            បម្លែងកន្លែងទំនេររបស់អ្នកទៅជាចំណូលថេរ។ ចូលរួមជាមួយយើងថ្ងៃនេះ
+              បម្លែងកន្លែងទំនេររបស់អ្នកទៅជាចំណូលថេរ។ ចូលរួមជាមួយយើងថ្ងៃនេះ
             </p>
             <div class="d-flex justify-content-center gap-3">
               <a
@@ -246,10 +250,20 @@ function searchByDistrict(name) {
           </router-link>
         </div>
 
-        <div class="row g-4">
+        <div v-if="roomStore.loading" class="text-center py-5">
+          <div class="spinner-border text-orange" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+
+        <div v-else-if="featuredRooms.length > 0" class="row g-4">
           <div v-for="room in featuredRooms" :key="room.id" class="col-md-4">
             <RoomCard :item="room" />
           </div>
+        </div>
+
+        <div v-else class="alert alert-info text-center">
+          មិនមានបន្ទប់ដែលមាន។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។
         </div>
 
         <div class="text-center mt-5">
@@ -263,7 +277,9 @@ function searchByDistrict(name) {
     <section class="location-section py-5 bg-white">
       <div class="container text-center mb-5">
         <h2 class="display-5 fw-bold text-navy">ទីតាំងលេចធ្លោនៅភ្នំពេញ</h2>
-        <p class="text-muted">ស្វែងរកកន្លែងស្នាក់នៅបន្ទាប់របស់អ្នក នៅក្នុងខណ្ឌពេញនិយមបំផុតនៃរាជធានី</p>
+        <p class="text-muted">
+          ស្វែងរកកន្លែងស្នាក់នៅបន្ទាប់របស់អ្នក នៅក្នុងខណ្ឌពេញនិយមបំផុតនៃរាជធានី
+        </p>
       </div>
       <div class="container">
         <div class="row g-4">
@@ -340,7 +356,8 @@ function searchByDistrict(name) {
       <div class="container text-center">
         <h2 class="fw-bold text-navy display-6 mb-2">ហេតុអ្វីគួរជ្រើសរើស StayFinder?</h2>
         <p class="text-muted mb-5">
-         យើងធ្វើឱ្យការស្វែងរក និងជួលបន្ទប់ ងាយស្រួល សុវត្ថិភាព និងគ្មានបារម្ភសម្រាប់សិស្ស និងម្ចាស់ផ្ទះនៅភ្នំពេញ
+          យើងធ្វើឱ្យការស្វែងរក និងជួលបន្ទប់ ងាយស្រួល សុវត្ថិភាព និងគ្មានបារម្ភសម្រាប់សិស្ស
+          និងម្ចាស់ផ្ទះនៅភ្នំពេញ
         </p>
         <div class="row g-4">
           <div class="col-md-6 col-lg-3">
@@ -361,7 +378,7 @@ function searchByDistrict(name) {
               </div>
               <h5 class="fw-bold text-navy">គ្មានការចំណាយលផ្សេងៗ</h5>
               <p class="small text-muted mb-0">
-               តម្លៃមានភាពបើកចំហ និងច្បាស់លាស់ ដោយគ្មានការចំណាយដែលមិនបានរំពឹងទុក ក្នុងដំណើរការកក់
+                តម្លៃមានភាពបើកចំហ និងច្បាស់លាស់ ដោយគ្មានការចំណាយដែលមិនបានរំពឹងទុក ក្នុងដំណើរការកក់
               </p>
             </div>
           </div>
@@ -405,7 +422,9 @@ function searchByDistrict(name) {
             <div class="col-lg-7 p-5">
               <h2 class="fw-bold text-navy mb-3">ចាប់ផ្តើមអាជីវកម្មជួលរបស់អ្នកជាមួយ StayFinder</h2>
               <p class="text-muted mb-4">
-               ទទួលបានប្រាក់ចំណូលបន្ថែមតាមរយៈការជួលបន្ទប់ទំនេររបស់អ្នក។ ក្រុមការងាររបស់យើងនឹងជួយអ្នកក្នុងការបង្កើតគណនី និងធ្វើការផ្ទៀងផ្ទាត់បញ្ជីដំបូងរបស់អ្នក ដើម្បីធានាគុណភាពខ្ពស់សម្រាប់សិស្សានុសិស្ស។
+                ទទួលបានប្រាក់ចំណូលបន្ថែមតាមរយៈការជួលបន្ទប់ទំនេររបស់អ្នក។
+                ក្រុមការងាររបស់យើងនឹងជួយអ្នកក្នុងការបង្កើតគណនី
+                និងធ្វើការផ្ទៀងផ្ទាត់បញ្ជីដំបូងរបស់អ្នក ដើម្បីធានាគុណភាពខ្ពស់សម្រាប់សិស្សានុសិស្ស។
               </p>
               <div class="benefits-list mb-5">
                 <div class="d-flex mb-3">
@@ -418,13 +437,17 @@ function searchByDistrict(name) {
                 </div>
                 <div class="d-flex mb-3">
                   <i class="bi bi-check-circle-fill text-orange me-3 fs-4"></i>
-                  <span>សេវាគាំទ្របន្ត ២៤ ម៉ោងក្នុងមួយថ្ងៃ ៧ ថ្ងៃក្នុងមួយសប្ដាហ៍សម្រាប់អ្នកផ្តល់សេវាទាំងអស់</span>
+                  <span
+                    >សេវាគាំទ្របន្ត ២៤ ម៉ោងក្នុងមួយថ្ងៃ ៧
+                    ថ្ងៃក្នុងមួយសប្ដាហ៍សម្រាប់អ្នកផ្តល់សេវាទាំងអស់</span
+                  >
                 </div>
               </div>
               <div class="contact-box p-4 rounded-4 bg-light border">
                 <h6 class="fw-bold text-navy mb-2">ត្រៀមខ្លួនរួចរាល់ហើយឬនៅ?</h6>
                 <p class="small text-muted mb-3">
-                សូមទាក់ទងអ្នកគ្រប់គ្រងរបស់យើងតាម Telegram ដើម្បីធ្វើការផ្ទៀងផ្ទាត់អត្តសញ្ញាណនិងទទួលបានសិទ្ធិចូលប្រើជាអ្នកផ្តល់សេវា
+                  សូមទាក់ទងអ្នកគ្រប់គ្រងរបស់យើងតាម Telegram
+                  ដើម្បីធ្វើការផ្ទៀងផ្ទាត់អត្តសញ្ញាណនិងទទួលបានសិទ្ធិចូលប្រើជាអ្នកផ្តល់សេវា
                 </p>
                 <a
                   href="https://t.me/your_admin_username"

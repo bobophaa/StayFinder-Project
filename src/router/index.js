@@ -18,70 +18,49 @@ import FAQView from '@/views/User/FAQView.vue'
 import InformationPage from '@/views/User/InformationPage.vue'
 import AboutUs from '@/views/User/AboutUs.vue'
 import ChangePassword from '@/views/User/ChangePassword.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     // --- Public Routes ---
-    { path: '/', name: 'home', component: HomePage, meta: { title: 'Home' } },
-    { path: '/rooms', name: 'allRooms', component: AllRooms },
-    { path: '/rooms/:id', name: 'roomDetails', component: RoomDetails },
-    { path: '/faq', name: 'faq', component: FAQView },
-    { path: '/about', name: 'about', component: AboutUs },
+    { path: '/',        name: 'home',       component: HomePage,   meta: { title: 'Home' } },
+    { path: '/rooms',   name: 'allRooms',   component: AllRooms,   meta: { title: 'All Rooms' } },
+    { path: '/rooms/:id', name: 'roomDetails', component: RoomDetails, meta: { title: 'Room Details' } },
+    { path: '/faq',     name: 'faq',        component: FAQView,    meta: { title: 'FAQ' } },
+    { path: '/about',   name: 'about',      component: AboutUs,    meta: { title: 'About Us' } },
 
-    { path: '/login', name: 'login', component: LoginView, meta: { hideNavbar: true } ,meta:{title : 'Login'}},
-    { path: '/register', name: 'register', component: RegisterView, meta: { hideNavbar: true } },
-    {
-      path: '/forgot-password',
-      name: 'forgotPassword',
-      component: ForgotPassword,
-      meta: { hideNavbar: true },
-    },
-    { path: '/verify-otp', name: 'verifyOtp', component: VerifyOTP, meta: { hideNavbar: true } },
-    {
-      path: '/reset-password',
-      name: 'resetPassword',
-      component: ResetPassword,
-      meta: { hideNavbar: true },
-    },
+    // --- Auth Routes ---
+    { path: '/login',   name: 'login',      component: LoginView,      meta: { title: 'Login',           hideNavbar: true } },
+    { path: '/register', name: 'register',  component: RegisterView,   meta: { title: 'Register',        hideNavbar: true } },
+    { path: '/forgot-password', name: 'forgotPassword', component: ForgotPassword, meta: { title: 'Forgot Password', hideNavbar: true } },
+    { path: '/verify-otp',      name: 'verifyOtp',      component: VerifyOTP,      meta: { title: 'Verify OTP',      hideNavbar: true } },
+    { path: '/reset-password',  name: 'resetPassword',  component: ResetPassword,  meta: { title: 'Reset Password',  hideNavbar: true } },
 
     // --- User Protected Routes ---
-    { path: '/profile', name: 'profile', component: ProfileInfo, meta: { requiresAuth: true } },
-        { path: '/ChangePassword', name: 'changePassword', component: ChangePassword, meta: { requiresAuth: true } },
-
-     { path: '/about', name: 'about', component:AboutUs,  },
-    { path: '/wishlist', name: 'wishlist', component: Wishlist, meta: { requiresAuth: true } },
-    {
-      path: '/my-bookings',
-      name: 'myBookings',
-      component: MyBookings,
-      meta: { requiresAuth: true },
-    },
-    { path: '/my-rented', name: 'myRented', component: MyRented, meta: { requiresAuth: true } },
-    {
-      path: '/info',
-      name: 'information',
-      component: InformationPage,
-      meta: { requiresAuth: true },
-    },
+    { path: '/profile',          name: 'profile',        component: ProfileInfo,    meta: { title: 'My Profile',   requiresAuth: true } },
+    { path: '/change-password',  name: 'changePassword', component: ChangePassword, meta: { title: 'Change Password', requiresAuth: true } },
+    { path: '/wishlist',         name: 'wishlist',       component: Wishlist,       meta: { title: 'My Wishlist',  requiresAuth: true } },
+    { path: '/my-bookings',      name: 'myBookings',     component: MyBookings,     meta: { title: 'My Bookings',  requiresAuth: true } },
+    { path: '/my-rented',        name: 'myRented',       component: MyRented,       meta: { title: 'My Rented',    requiresAuth: true } },
+    { path: '/info',             name: 'information',    component: InformationPage, meta: { title: 'Information', requiresAuth: true } },
 
     // --- 404 Not Found ---
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/views/NotFoundView.vue'),
-      meta: { hideNavbar: true },
+      meta: { title: 'Page Not Found', hideNavbar: true },
     },
   ],
 })
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title || 'Room Rental App' // Set page title based on route meta
+  document.title = to.meta.title ? `${to.meta.title} | Room Rental` : 'Room Rental App'
   const authStore = useAuthStore()
   const token = localStorage.getItem('token')
 
-  // Protected route
   if (to.meta.requiresAuth && !token) {
-    return next({ name: 'login' }) // redirect to login if not logged in
+    return next({ name: 'login' })
   }
 
   if ((to.name === 'login' || to.name === 'register') && token) {

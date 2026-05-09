@@ -1,36 +1,40 @@
 <template>
   <div class="room-card border-0 bg-white overflow-hidden shadow-sm">
-    <router-link :to="'/rooms/' + item.id" class="text-decoration-none text-dark">
+    <router-link :to="'/rooms/' + (item?.id || '#')" class="text-decoration-none text-dark">
       <div class="position-relative overflow-hidden">
-        <img :src="item.image" class="room-img w-100" :alt="item.title" />
+        <img
+          :src="item?.image || 'https://via.placeholder.com/400x300?text=No+Image'"
+          class="room-img w-100"
+          :alt="item?.title || 'Room'"
+        />
 
         <div
           @click.stop.prevent="handleToggle"
           class="heart-container position-absolute top-0 end-0 m-3 d-flex align-items-center justify-content-center shadow-sm"
-          :class="{ 'is-active': wishlistStore.isWishlisted(item.id) }"
+          :class="{ 'is-active': wishlistStore.isWishlisted(item?.id) }"
         >
-          <i :class="wishlistStore.isWishlisted(item.id) ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
+          <i :class="wishlistStore.isWishlisted(item?.id) ? 'bi bi-heart-fill' : 'bi bi-heart'"></i>
         </div>
       </div>
 
       <div class="card-content p-4 text-start">
-        <h5 class="fw-bold mb-2 room-title text-navy">{{ item.title }}</h5>
+        <h5 class="fw-bold mb-2 room-title text-navy">{{ item?.title || 'Untitled Room' }}</h5>
 
         <div class="location-box d-flex align-items-center m text-muted">
           <i class="bi bi-geo-alt-fill text-orange me-1"></i>
-          <span class="small">{{ item.district?.name || 'Phnom Penh' }}</span>
+          <span class="small">{{ item?.district?.name || item?.location || 'Phnom Penh' }}</span>
         </div>
         <p class="description-text mb-2 text-muted">
-          {{ item.description || 'No description available for this apartment.' }}
+          {{ item?.description || 'No description available for this apartment.' }}
         </p>
         <div class="d-flex justify-content-between align-items-center pt-2">
           <div class="price-container">
-            <span class="price-value text-orange fw-bold fs-3">${{ item.price }}</span>
+            <span class="price-value text-orange fw-bold fs-3">${{ item?.price || '0' }}</span>
             <span class="text-muted small">/ក្នុងមួយខែ</span>
           </div>
 
           <router-link
-            :to="'/rooms/' + item.id"
+            :to="'/rooms/' + (item?.id || '#')"
             class="btn btn-outline-navy btn-sm rounded-pill px-3"
           >
             មើលព័ត៌មានលម្អិត
@@ -123,10 +127,8 @@ const handleToggle = () => {
 }
 .description-text {
   display: -webkit-box;
-  -webkit-line-clamp: 1; 
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
-
 </style>
