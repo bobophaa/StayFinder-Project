@@ -58,11 +58,11 @@
 <label class="filter-label">ចន្លោះតម្លៃ ($/ខែ)</label>              <div class="row g-2">
                 <div class="col-6">
                   <input v-model="filters.price_start" type="number" class="form-control custom-input"
-                    placeholder="Min" min="0" @change="applyFilters" />
+                    placeholder="តម្លៃតូចបំផុត" min="0" @change="applyFilters" />
                 </div>
                 <div class="col-6">
                   <input v-model="filters.price_end" type="number" class="form-control custom-input"
-                    placeholder="Max" min="0" @change="applyFilters" />
+                    placeholder="តម្លៃធំបំផុត" min="0" @change="applyFilters" />
                 </div>
               </div>
               <div class="d-flex flex-wrap gap-1 mt-2">
@@ -102,15 +102,7 @@
               </div>
             </div>
 
-            <div class="mb-4">
-           <label class="filter-label">ទំហំបន្ទប់</label>
-
-              <div class="d-flex flex-wrap gap-2">
-                <button v-for="s in sizeOptions" :key="s" class="btn btn-sm"
-                  :class="filters.size === s ? 'btn-orange' : 'btn-outline-secondary'"
-                  @click="toggleSize(s)">{{ s }}</button>
-              </div>
-            </div>
+        
 
             <div class="mb-2">
             <label class="filter-label">សេវាកម្ម</label>

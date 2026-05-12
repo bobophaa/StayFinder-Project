@@ -8,8 +8,8 @@
             <span class="hero-label mb-3 d-inline-block">អំពី StayFinder</span>
             <h1 class="hero-title mb-4">រកផ្ទះស្នាក់នៅដ៏ល្អឥតខ្ចោះរបស់អ្នក</h1>
             <p class="hero-subtitle">
-              យើងភ្ជាប់អ្នករកស្នាក់នៅជាមួយបន្ទប់ល្អៗនៅទូទាំងភ្នំពេញ។
-              មានតម្លាភាព គួរឱ្យទុកចិត្ត និងត្រូវបានបង្កើតសម្រាប់អ្នកជួលទំនើប។
+              យើងភ្ជាប់អ្នករកស្នាក់នៅជាមួយបន្ទប់ល្អៗនៅទូទាំងភ្នំពេញ។ មានតម្លាភាព គួរឱ្យទុកចិត្ត
+              និងត្រូវបានបង្កើតសម្រាប់អ្នកជួលទំនើប។
             </p>
           </div>
         </div>
@@ -50,8 +50,8 @@
             <p class="text-muted lh-lg mb-4">
               StayFinder បានកើតឡើងពីការខកចិត្តដ៏សាមញ្ញ — ការស្វែងរកបន្ទប់ល្អនៅភ្នំពេញ
               មានភាពស្មុគស្មាញ យឺតយ៉ាវ និងមានហានិភ័យ។ យើងបានបង្កើតវេទិកាមួយ
-              ដែលអ្នកជួលអាចរុករករាយការណ៍ដែលបានផ្ទៀងផ្ទាត់ ជាមួយរូបភាពពិត
-              តម្លៃច្បាស់លាស់ និងការវាយតម្លៃស្មោះត្រង់។
+              ដែលអ្នកជួលអាចរុករករាយការណ៍ដែលបានផ្ទៀងផ្ទាត់ ជាមួយរូបភាពពិត តម្លៃច្បាស់លាស់
+              និងការវាយតម្លៃស្មោះត្រង់។
             </p>
             <p class="text-muted lh-lg mb-4">
               សម្រាប់ម្ចាស់អចលនទ្រព្យ យើងផ្តល់ឧបករណ៍សម្រាប់ចុះបញ្ជី គ្រប់គ្រង
@@ -101,9 +101,10 @@
           <div class="col-sm-6 col-lg-3" v-for="member in team" :key="member.name">
             <div class="team-card">
               <div class="team-avatar-wrap">
-                <div class="team-avatar" :style="{ background: member.bg }">
-                  <span class="avatar-initial">{{ member.name.charAt(0) }}</span>
+                <div class="team-avatar">
+                  <img :src="member.image" :alt="member.name" class="team-avatar-img" />
                 </div>
+
                 <div class="team-avatar-ring"></div>
               </div>
               <div class="team-info p-4 text-center">
@@ -111,13 +112,30 @@
                 <span class="team-role-badge mb-3 d-inline-block">{{ member.role }}</span>
                 <p class="text-muted small mb-3" style="line-height: 1.6">{{ member.bio }}</p>
                 <div class="d-flex justify-content-center gap-3">
-                  <a v-if="member.github" :href="member.github" target="_blank" class="social-link" title="GitHub">
+                  <a
+                    v-if="member.github"
+                    :href="member.github"
+                    target="_blank"
+                    class="social-link"
+                    title="GitHub"
+                  >
                     <i class="bi bi-github"></i>
                   </a>
-                  <a v-if="member.linkedin" :href="member.linkedin" target="_blank" class="social-link" title="LinkedIn">
+                  <a
+                    v-if="member.linkedin"
+                    :href="member.linkedin"
+                    target="_blank"
+                    class="social-link"
+                    title="LinkedIn"
+                  >
                     <i class="bi bi-linkedin"></i>
                   </a>
-                  <a v-if="member.email" :href="'mailto:' + member.email" class="social-link" title="Email">
+                  <a
+                    v-if="member.email"
+                    :href="'mailto:' + member.email"
+                    class="social-link"
+                    title="Email"
+                  >
                     <i class="bi bi-envelope-fill"></i>
                   </a>
                 </div>
@@ -175,7 +193,10 @@
 
 <script setup>
 import Foooter from '@/components/layout/Foooter.vue'
-
+import sieiImg from '@/assets/team/siei.jpg'
+import bophaImg from '@/assets/team/pha.jpg'
+import phichsangImg from '@/assets/team/sang.jpg'
+import mineaImg from '@/assets/team/minea.jpg'
 const stats = [
   { value: '500+', label: 'បន្ទប់ដែលបានចុះបញ្ជី' },
   { value: '1,200+', label: 'អ្នកជួលពេញចិត្ត' },
@@ -183,7 +204,12 @@ const stats = [
   { value: '98%', label: 'អត្រាពេញចិត្ត' },
 ]
 
-const values = ['តម្លាភាព', 'បញ្ជីដែលបានផ្ទៀងផ្ទាត់', 'ការទូទាត់ប្រកបដោយសុវត្ថិភាព', 'ការគាំទ្ររហ័ស']
+const values = [
+  'តម្លាភាព',
+  'បញ្ជីដែលបានផ្ទៀងផ្ទាត់',
+  'ការទូទាត់ប្រកបដោយសុវត្ថិភាព',
+  'ការគាំទ្ររហ័ស',
+]
 
 const steps = [
   {
@@ -207,38 +233,43 @@ const team = [
   {
     name: 'Tha Siei',
     role: 'SETEC',
-    bio: 'ជាអ្នកដឹកនាំក្រុមទាំងមូល សម្របសម្រួលក្រុម និងគ្រប់គ្រងដំណើរការកក់ និងជួល ដើម្បីឱ្យអ្នកប្រើប្រាស់អាចស្នើសុំបន្ទប់បានយ៉ាងងាយស្រួល។',
+    bio: 'ទទួលខុសត្រូវក្នុងការអភិវឌ្ឍដំណើរការកក់និងជួលបន្ទប់​ ដើម្បីធានាបទពិសោធន៍ប្រើប្រាស់ដែលមានភាពរលូន និងមានប្រសិទ្ធភាព។',
     bg: 'linear-gradient(135deg, #031c36, #0d3a6e)',
     github: '#',
     linkedin: '#',
     email: 'member1@example.com',
+
+    image: sieiImg,
   },
   {
     name: 'Hing Chanbopha',
     role: 'RUPP',
-    bio: 'ទទួលខុសត្រូវក្នុងការបង្កើតបន្ទប់ ទំព័រដើម អ្នកប្រើ និងមុខងារចុះបញ្ជីបន្ទប់',
+    bio: 'ទទួលខុសត្រូវក្នុងការរចនា និងអភិវឌ្ឍផ្នែក User Interface រួមទាំងទំព័របន្ទប់ ទំព័រដើម និងប្រព័ន្ធគ្រប់គ្រងអ្នកប្រើប្រាស់។',
     bg: 'linear-gradient(135deg, #ff5f00, #ff8c00)',
     github: '#',
     linkedin: '#',
     email: 'member2@example.com',
+    image: bophaImg,
   },
   {
     name: 'Leav Phichsang',
     role: 'Norton',
-    bio: 'ទទួលខុសត្រូវក្នុងការបង្កើតប្រព័ន្ធផ្ទៀងផ្ទាត់អត្តសញ្ញាណ និងធានាការចូលប្រើប្រកបដោយសុវត្ថិភាព។',
+    bio: 'ទទួលខុសត្រូវក្នុងការបង្កើតប្រព័ន្ធ Authentication និងការពារសុវត្ថិភាពទិន្នន័យ ដើម្បីធានាការចូលប្រើដែលមានសុវត្ថិភាព។',
     bg: 'linear-gradient(135deg, #198754, #2dc08c)',
     github: '#',
     linkedin: '#',
     email: 'member3@example.com',
+    image: phichsangImg,
   },
   {
     name: 'Meng Minea',
     role: 'RUPP',
-    bio: 'ទទួលខុសត្រូវក្នុងការគ្រប់គ្រងប្រវត្តិរូប អ្នកប្រើ ប្រវត្តិកក់ និងការពិនិត្យឡើងវិញ។',
+    bio: 'ទទួលខុសត្រូវក្នុងការគ្រប់គ្រងព័ត៌មានអ្នកប្រើប្រាស់ ប្រវត្តិកក់ និងប្រព័ន្ធពិនិត្យមតិ ដើម្បីបង្កើនបទពិសោធន៍អ្នកប្រើ។',
     bg: 'linear-gradient(135deg, #6f42c1, #9d6fe8)',
     github: '#',
     linkedin: '#',
     email: 'member4@example.com',
+    image: mineaImg,
   },
 ]
 
@@ -287,8 +318,12 @@ const reasons = [
 .about-page {
   background: #f8f9fa;
 }
-.text-navy { color: #031c36; }
-.text-orange { color: #ff5f00; }
+.text-navy {
+  color: #031c36;
+}
+.text-orange {
+  color: #ff5f00;
+}
 
 /* ── Hero ── */
 .hero-section {
@@ -330,9 +365,15 @@ const reasons = [
 }
 
 /* ── Stats ── */
-.stats-bar { background: #031c36; }
-.stat-item { padding: 20px 12px; }
-.stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,0.1); }
+.stats-bar {
+  background: #031c36;
+}
+.stat-item {
+  padding: 20px 12px;
+}
+.stat-item + .stat-item {
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
 .stat-number {
   font-size: 1.8rem;
   font-weight: 800;
@@ -341,7 +382,7 @@ const reasons = [
 }
 .stat-label {
   font-size: 0.8rem;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
   letter-spacing: 0.03em;
   margin-top: 4px;
 }
@@ -363,8 +404,17 @@ const reasons = [
 }
 
 /* ── Mission ── */
-.mission-img-wrap { position: relative; display: inline-block; width: 100%; }
-.mission-img { width: 100%; height: 420px; object-fit: cover; border-radius: 20px; }
+.mission-img-wrap {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+.mission-img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 20px;
+}
 .mission-badge {
   position: absolute;
   bottom: 24px;
@@ -372,14 +422,14 @@ const reasons = [
   background: #fff;
   border-radius: 16px;
   padding: 16px 20px;
-  box-shadow: 0 8px 24px rgba(3,28,54,0.15);
+  box-shadow: 0 8px 24px rgba(3, 28, 54, 0.15);
   text-align: center;
 }
 
 /* ── Values ── */
 .value-pill {
-  background: rgba(255,95,0,0.08);
-  border: 1px solid rgba(255,95,0,0.2);
+  background: rgba(255, 95, 0, 0.08);
+  border: 1px solid rgba(255, 95, 0, 0.2);
   color: #ff5f00;
   font-size: 0.85rem;
   font-weight: 600;
@@ -390,15 +440,22 @@ const reasons = [
 }
 
 /* ── How section ── */
-.how-section { background: #fff; }
+.how-section {
+  background: #fff;
+}
 .step-card {
   background: #f8f9fa;
   border-radius: 20px;
   border: 1px solid #eee;
   position: relative;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
 }
-.step-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(3,28,54,0.1); }
+.step-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(3, 28, 54, 0.1);
+}
 .step-number {
   position: absolute;
   top: -16px;
@@ -434,9 +491,14 @@ const reasons = [
   border-radius: 20px;
   border: 1px solid #eee;
   overflow: hidden;
-  transition: transform 0.25s, box-shadow 0.25s;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
 }
-.team-card:hover { transform: translateY(-8px); box-shadow: 0 20px 48px rgba(3,28,54,0.12); }
+.team-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(3, 28, 54, 0.12);
+}
 .team-avatar-wrap {
   position: relative;
   height: 140px;
@@ -449,12 +511,16 @@ const reasons = [
   width: 88px;
   height: 88px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   position: relative;
   z-index: 2;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.team-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .avatar-initial {
   font-size: 2.2rem;
@@ -473,9 +539,9 @@ const reasons = [
   z-index: 1;
 }
 .team-role-badge {
-  background: rgba(255,95,0,0.1);
+  background: rgba(255, 95, 0, 0.1);
   color: #ff5f00;
-  border: 1px solid rgba(255,95,0,0.2);
+  border: 1px solid rgba(255, 95, 0, 0.2);
   font-size: 0.7rem;
   font-weight: 800;
   padding: 3px 12px;
@@ -494,19 +560,33 @@ const reasons = [
   color: #031c36;
   font-size: 0.9rem;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
 }
-.social-link:hover { background: #031c36; color: #fff; transform: scale(1.1); }
+.social-link:hover {
+  background: #031c36;
+  color: #fff;
+  transform: scale(1.1);
+}
 
 /* ── Why section ── */
-.why-section { background: #fff; }
+.why-section {
+  background: #fff;
+}
 .reason-card {
   background: #f8f9fa;
   border-radius: 16px;
   border: 1px solid #eee;
-  transition: transform 0.2s, border-color 0.2s;
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
 }
-.reason-card:hover { transform: translateY(-4px); border-color: #ff5f00; }
+.reason-card:hover {
+  transform: translateY(-4px);
+  border-color: #ff5f00;
+}
 .reason-icon {
   width: 52px;
   height: 52px;
@@ -537,23 +617,39 @@ const reasons = [
   border: none;
   border-radius: 12px;
   font-weight: 700;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
 }
-.btn-cta-primary:hover { background: #e65600; color: #fff; transform: translateY(-2px); }
-.btn-cta-secondary {
-  background: rgba(255,255,255,0.1);
+.btn-cta-primary:hover {
+  background: #e65600;
   color: #fff;
-  border: 1.5px solid rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+}
+.btn-cta-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
   font-weight: 700;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
   backdrop-filter: blur(4px);
 }
-.btn-cta-secondary:hover { background: rgba(255,255,255,0.2); color: #fff; transform: translateY(-2px); }
+.btn-cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transform: translateY(-2px);
+}
 
 /* ── Responsive ── */
 @media (max-width: 576px) {
-  .mission-img { height: 260px; }
-  .hero-title { font-size: 1.6rem; }
+  .mission-img {
+    height: 260px;
+  }
+  .hero-title {
+    font-size: 1.6rem;
+  }
 }
 </style>
