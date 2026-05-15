@@ -38,7 +38,7 @@ const router = createRouter({
 
     // --- User Protected Routes ---
     { path: '/profile',          name: 'profile',        component: ProfileInfo,    meta: { title: 'My Profile',   requiresAuth: true } },
-    { path: '/change-password',  name: 'changePassword', component: ChangePassword, meta: { title: 'Change Password', requiresAuth: true } },
+    { path: '/ChangePassword',  name: 'changePassword', component: ChangePassword, meta: { title: 'Change Password', requiresAuth: true } },
     { path: '/wishlist',         name: 'wishlist',       component: Wishlist,       meta: { title: 'My Wishlist',  requiresAuth: true } },
     { path: '/my-bookings',      name: 'myBookings',     component: MyBookings,     meta: { title: 'My Bookings',  requiresAuth: true } },
     { path: '/my-rented',        name: 'myRented',       component: MyRented,       meta: { title: 'My Rented',    requiresAuth: true } },
