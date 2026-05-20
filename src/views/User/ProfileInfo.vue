@@ -101,21 +101,21 @@
                   <span class="info-label"
                     ><i class="bi bi-telephone me-2 text-orange"></i>លេខទូរសព្ទ</span
                   >
-                  <span class="info-value">{{ user.phone || 'Not set' }}</span>
+                  <span class="info-value">{{ user.phone || 'មិនទាន់កំណត់' }}</span>
                 </div>
                 <div class="info-row">
                   <span class="info-label"
                     ><i class="bi bi-gender-ambiguous me-2 text-orange"></i>ភេទ</span
                   >
                   <span class="info-value">{{
-                    user.gender == 1 ? 'បុរស' : user.gender == 2 ? 'ស្រី្ត' : 'Not set'
+                    user.gender == 1 ? 'បុរស' : user.gender == 2 ? 'ស្រី្ត' : 'មិនទាន់កំណត់'
                   }}</span>
                 </div>
                 <div class="info-row border-0">
                   <span class="info-label"
                     ><i class="bi bi-briefcase me-2 text-orange"></i>ការងារ</span
                   >
-                  <span class="info-value">{{ user.current_job || 'Not set' }}</span>
+                  <span class="info-value">{{ user.current_job || 'មិនទាន់កំណត់' }}</span>
                 </div>
               </div>
             </div>
@@ -202,7 +202,7 @@
                       <i class="bi bi-telephone input-icon"></i>
                       <input
                         v-model="form.phone"
-                        placeholder="Phone number"
+                        placeholder="012 345 678"
                         :readonly="!isEditing"
                       />
                     </div>

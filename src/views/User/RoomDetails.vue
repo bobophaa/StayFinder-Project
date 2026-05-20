@@ -17,17 +17,26 @@
 
     <div v-else-if="roomStore.room" class="container py-4">
       <!-- ── Title row ── -->
-      <div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
-        <div>
-          <h2 class="fw-bold text-navy mb-1">{{ roomStore.room.title }}</h2>
-          <div class="small text-muted">
-            <i class="bi bi-star-fill text-warning me-1"></i>4.8 (New)
-            <span class="mx-2">•</span>
-            <i class="bi bi-geo-alt me-1"></i>{{ roomStore.room.district?.name }}, ភ្នំពេញ
-          </div>
-        </div>
-      </div>
+<div class="mb-3">
+ <button
+  class="btn back-btn border rounded-pill px-4 py-2 shadow-sm"
+  @click="router.push({ name: 'allRooms' })"
+>
+  <i class="bi bi-arrow-left me-2"></i>
+  ត្រឡប់ក្រោយ
+</button>
+</div>
 
+<div class="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-2">
+  <div>
+    <h2 class="fw-bold text-navy mb-1">{{ roomStore.room.title }}</h2>
+    <div class="small text-muted">
+      <i class="bi bi-star-fill text-warning me-1"></i>4.8 (New)
+      <span class="mx-2">•</span>
+      <i class="bi bi-geo-alt me-1"></i>{{ roomStore.room.district?.name }}, ភ្នំពេញ
+    </div>
+  </div>
+</div>
       <!-- ── Gallery ── -->
       <div class="gallery-container mb-5">
         <div class="main-image-wrapper shadow-sm position-relative">
@@ -317,7 +326,7 @@
                       : 'bi-cloud-arrow-up-fill text-orange'
                   "
                 ></i>
-                <span>{{ fileName || 'Click to upload payment screenshot' }}</span>
+                <span>{{ fileName || 'ចុចដើម្បីផ្ទុកភស្តុតាងការទូទាត់' }}</span>
                 <small v-if="!fileName" class="text-muted"
                   >ABA, Wing, ឬ វិកាយប័ត្រការទូទាត់ផ្សេងៗ</small
                 >
@@ -341,7 +350,7 @@
           <button class="btn-bj-submit" @click="handleBooking" :disabled="bookingLoading">
             <span v-if="bookingLoading" class="spinner-border spinner-border-sm me-2"></span>
             <i v-else class="bi bi-check-circle-fill me-2"></i>
-            {{ bookingLoading ? 'Submitting...' : 'Confirm Booking' }}
+            {{ bookingLoading ? 'កំពុងដាក់ស្នើ...' : 'បញ្ជាក់ការកក់' }}
           </button>
         </div>
       </div>
@@ -391,7 +400,7 @@
           <!-- Info box -->
           <div class="rent-info-box mb-4">
             <i class="bi bi-info-circle-fill me-2 text-orange"></i>
-           នៅណេលចុច <strong>Confirm Rent</strong>, សំណើរបស់អ្នកនឹងត្រូវផ្ញើទៅម្ចាស់ផ្ទះសម្រាប់ការអនុម័ត។ សូមផ្ទុកវិក័យប័ត្រទូទាត់របស់អ្នកជាភស្តុតាង។
+           នៅណេលចុច <strong>បញ្ជាក់ការជួល</strong>, សំណើរបស់អ្នកនឹងត្រូវផ្ញើទៅម្ចាស់ផ្ទះសម្រាប់ការអនុម័ត។ សូមផ្ទុកវិក័យប័ត្រទូទាត់របស់អ្នកជាភស្តុតាង។
           </div>
 
           <!-- Success / Error -->
@@ -421,7 +430,7 @@
                       : 'bi-cloud-arrow-up-fill text-orange'
                   "
                 ></i>
-                <span>{{ rentFileName || 'Click to upload payment screenshot' }}</span>
+                <span>{{ rentFileName || 'ចុចដើម្បីផ្ទុកភស្តុតាងការទូទាត់' }}</span>
                 <small v-if="!rentFileName" class="text-muted"
                   >ABA, Wing, ឬ វិកាយប័ត្រការទូទាត់ផ្សេងៗ</small
                 >
@@ -444,7 +453,7 @@
           <button class="btn-bj-submit" @click="handleRent" :disabled="rentLoading">
             <span v-if="rentLoading" class="spinner-border spinner-border-sm me-2"></span>
             <i v-else class="bi bi-house-check-fill me-2"></i>
-            {{ rentLoading ? 'Submitting...' : 'Confirm Rent' }}
+            {{ rentLoading ? 'កំពុងដាក់ស្នើ...' : 'បញ្ជាក់ការជួល' }}
           </button>
         </div>
       </div>
@@ -1057,5 +1066,28 @@ onMounted(async () => {
 .alert-fade-leave-to {
   opacity: 0;
   transform: translateY(-6px);
+}
+.back-btn {
+  font-weight: 600;
+  color: #032142;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #ff5f00;
+  color: white;
+  border-color: #ff5f00;
+  transform: translateX(-3px);
+}
+.back-btn {
+  color: #032142;
+  background: white;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background-color: #ff5f00;
+  border-color: #ff5f00;
+  color: white;
 }
 </style>

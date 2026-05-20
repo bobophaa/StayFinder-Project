@@ -72,7 +72,7 @@
               </div>
             </div>
 
-            <div class="mb-4">
+            <!-- <div class="mb-4">
             <label class="filter-label">តម្រៀបតាម</label>
               <select v-model="filters.sort_col" class="form-select custom-input" @change="applyFilters">
              <option value="id">ថ្មីជាងគេ</option>
@@ -92,7 +92,7 @@
                   <i class="bi bi-sort-down me-1"></i>តម្រៀបពីធំទៅតូច
                 </button>
               </div>
-            </div>
+            </div> -->
 
             <div class="mb-4">
           <label class="filter-label">គ្រែ</label>     
@@ -342,12 +342,11 @@ const filters = reactive({
 })
 
 const priceRanges = [
-  { label: '<$50',    min: 0,   max: 50  },
   { label: '$50-100', min: 50,  max: 100 },
   { label: '$100-200',min: 100, max: 200 },
   { label: '>$200',   min: 200, max: ''  },
 ]
-const bedOptions  = ['1', '2', '3', '4', '5+']
+const bedOptions  = ['1', '2', ]
 const sizeOptions = ['Small', 'Medium', 'Big', 'Extra Large']
 
 /* ── Debounce helper ── */

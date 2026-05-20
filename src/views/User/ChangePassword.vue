@@ -7,7 +7,7 @@
       style="min-height: 60vh"
     >
       <div class="spinner-border text-orange mb-3" style="width: 3rem; height: 3rem"></div>
-      <p class="text-muted fw-semibold">Loading security settings...</p>
+      <p class="text-muted fw-semibold">កំពុងដំណើរការការកំណត់សុវត្ថិភាព...</p>
     </div>
 
     <div v-else>
@@ -37,10 +37,10 @@
               <!-- Avatar Dropdown Menu -->
               <div v-if="showActionsMenu" class="avatar-menu">
                 <div class="avatar-menu-item" @click="triggerUpload">
-                  <i class="bi bi-upload me-2"></i> Upload Photo
+                  <i class="bi bi-upload me-2"></i> ផ្ទុករូបភាព
                 </div>
                 <div class="avatar-menu-item text-danger" @click="removeImage">
-                  <i class="bi bi-trash me-2"></i> Remove Photo
+                  <i class="bi bi-trash me-2"></i> លុបរូបភាព
                 </div>
               </div>
               <input ref="fileInput" type="file" accept="image/*" hidden @change="handleFileUpload" />
@@ -52,7 +52,7 @@
                 <h3 class="fw-bold mb-0">{{ user.name }}</h3>
                 <i class="bi bi-patch-check-fill text-orange fs-5"></i>
               </div>
-              <span class="user-role-badge">{{ user.current_job || 'StayFinder Member' }}</span>
+              <span class="user-role-badge">{{ user.current_job || 'សមាជិក StayFinder' }}</span>
             </div>
           </div>
         </div>
@@ -63,16 +63,16 @@
         <div class="container">
           <div class="tab-bar">
             <router-link to="/profile" class="tab-item">
-              <i class="bi bi-person-fill me-2"></i>Profile
+              <i class="bi bi-person-fill me-2"></i>ប្រវត្តិរូប
             </router-link>
             <router-link to="/my-bookings" class="tab-item">
-              <i class="bi bi-calendar-check-fill me-2"></i>Bookings
+              <i class="bi bi-calendar-check-fill me-2"></i>ការកក់
             </router-link>
             <router-link to="/my-rented" class="tab-item">
-              <i class="bi bi-house-check-fill me-2"></i>Rented
+              <i class="bi bi-house-check-fill me-2"></i>បានជួល
             </router-link>
             <router-link to="/change-password" class="tab-item tab-active">
-              <i class="bi bi-shield-lock-fill me-2"></i>Security
+              <i class="bi bi-shield-lock-fill me-2"></i>សុវត្ថិភាព
             </router-link>
           </div>
         </div>
@@ -99,7 +99,7 @@
                       <input
                         :type="show.current_password ? 'text' : 'password'"
                         v-model="form.current_password"
-                        placeholder="Enter current password to unlock fields"
+                        placeholder="បញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន ដើម្បីបើកការកែប្រែទិន្នន័យ"
                         @input="errors.current_password = ''"
                       />
                       <i
@@ -127,7 +127,7 @@
                       <input
                         :type="show.new_password ? 'text' : 'password'"
                         v-model="form.new_password"
-                        placeholder="New password"
+                        placeholder="ពាក្យសម្ងាត់ថ្មី"
                         :disabled="!isUnlocked"
                         @input="errors.new_password = ''"
                       />
@@ -151,7 +151,7 @@
                         'text-danger': errors.confirm_password,
                         'locked-text': !isUnlocked,
                       }"
-                    >Confirm Password</label>
+                    >បញ្ជាក់ពាក្យសម្ងាត់</label>
                     <div
                       class="input-wrap"
                       :class="{
@@ -163,7 +163,7 @@
                       <input
                         :type="show.confirm_password ? 'text' : 'password'"
                         v-model="form.confirm_password"
-                        placeholder="Confirm password"
+                        placeholder="បញ្ជាក់ពាក្យសម្ងាត់"
                         :disabled="!isUnlocked"
                         @input="errors.confirm_password = ''"
                       />
@@ -183,7 +183,7 @@
                 <div class="mt-5">
                   <button type="submit" class="btn-save-main" :disabled="loading || !isUnlocked">
                     <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-                    {{ loading ? 'Updating...' : 'Save New Password' }}
+                    {{ loading ? 'កំពុងកែប្រែ...' : 'រក្សាទុកពាក្យសម្ងាត់ថ្មី' }}
                   </button>
                 </div>
               </form>
@@ -193,7 +193,7 @@
           <!-- Right: Security Tips -->
           <div class="col-lg-4">
             <div class="side-card">
-              <div class="side-card-header">Security Tips</div>
+              <div class="side-card-header">គន្លឹះសុវត្ថិភាព</div>
               <div class="side-card-body p-4">
                 <div class="d-flex align-items-start gap-3 mb-4">
                   <div class="status-icon" :class="isUnlocked ? 'success' : 'pending'">
@@ -201,7 +201,7 @@
                   </div>
                   <div>
                     <h6 class="fw-bold text-navy mb-1">
-                      {{ isUnlocked ? 'Unlocked' : 'Locked' }}
+                      {{ isUnlocked ? 'បានដោះសោ' : 'បានចាក់សោ' }}
                     </h6>
                     <p class="text-muted small mb-0">
                       បញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន ដើម្បីកែប្រែសុវត្ថិភាពគណនី។

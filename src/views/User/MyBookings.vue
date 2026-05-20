@@ -6,7 +6,7 @@
       style="min-height: 60vh"
     >
       <div class="spinner-border text-orange mb-3" style="width: 3rem; height: 3rem"></div>
-      <p class="text-muted fw-semibold">Loading your bookings...</p>
+      <p class="text-muted fw-semibold">កំពុងដំណើរការ...</p>
     </div>
 
     <div v-else>
