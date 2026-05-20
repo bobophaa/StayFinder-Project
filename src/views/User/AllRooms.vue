@@ -95,7 +95,8 @@
             </div>
 
             <div class="mb-4">
-<label class="filter-label">គ្រែ</label>              <div class="d-flex flex-wrap gap-2">
+          <label class="filter-label">គ្រែ</label>     
+         <div class="d-flex flex-wrap gap-2">
                 <button v-for="b in bedOptions" :key="b" class="btn btn-sm"
                   :class="filters.bed === b ? 'btn-orange' : 'btn-outline-secondary'"
                   @click="toggleBed(b)">{{ b }}</button>
