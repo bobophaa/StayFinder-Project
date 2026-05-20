@@ -50,7 +50,7 @@
             ></i>
           </div>
           <div class="promo-tag" v-if="roomStore.room.percent_promotion > 0">
-            -{{ roomStore.room.percent_promotion }}​បញ្ចុះតម្លៃ​%
+            បញ្ចុះតម្លៃ​{{ roomStore.room.percent_promotion }}​​%
           </div>
         </div>
       </div>
@@ -69,7 +69,7 @@
                 style="object-fit: cover"
               />
               <div>
-                <h6 class="fw-bold mb-0 text-navy">បង្ហោះដោយ {{ roomStore.room.creator?.name }}</h6>
+                <h6 class="fw-bold mb-0 text-navy">​ម្ចាស់ផ្ទះជួល​ : {{ roomStore.room.creator?.name }}</h6>
                 <span class="small text-muted">{{
                   roomStore.room.creator?.current_job || 'Property Owner'
                 }}</span>

@@ -55,14 +55,14 @@
             </div>
 
             <div class="mb-4">
-<label class="filter-label">ចន្លោះតម្លៃ ($/ខែ)</label>              <div class="row g-2">
+<label class="filter-label">ចន្លោះតម្លៃ ($/ក្នុងមួយខែ)</label>              <div class="row g-2">
                 <div class="col-6">
                   <input v-model="filters.price_start" type="number" class="form-control custom-input"
-                    placeholder="Min" min="0" @change="applyFilters" />
+                    placeholder="តម្លៃទាបបំផុត" min="0" @change="applyFilters" />
                 </div>
                 <div class="col-6">
                   <input v-model="filters.price_end" type="number" class="form-control custom-input"
-                    placeholder="Max" min="0" @change="applyFilters" />
+                    placeholder="តម្លៃខ្ពស់បំផុត" min="0" @change="applyFilters" />
                 </div>
               </div>
               <div class="d-flex flex-wrap gap-1 mt-2">
@@ -77,19 +77,19 @@
               <select v-model="filters.sort_col" class="form-select custom-input" @change="applyFilters">
              <option value="id">ថ្មីជាងគេ</option>
            <option value="price">តម្លៃ</option>
-<option value="title">ចំណងជើង (A–Z)</option>
+<option value="title">ចំណងជើង </option>
 
               </select>
               <div class="d-flex gap-2 mt-2">
                 <button class="btn btn-sm flex-fill rounded-2"
                   :class="filters.sort_dir === 'asc' ? 'btn-orange' : 'btn-outline-secondary'"
                   @click="filters.sort_dir = 'asc'; applyFilters()">
-                  <i class="bi bi-sort-up me-1"></i>Asc
+                  <i class="bi bi-sort-up me-1"></i>តម្រៀបពីតូចទៅធំ
                 </button>
                 <button class="btn btn-sm flex-fill rounded-2"
                   :class="filters.sort_dir === 'desc' ? 'btn-orange' : 'btn-outline-secondary'"
                   @click="filters.sort_dir = 'desc'; applyFilters()">
-                  <i class="bi bi-sort-down me-1"></i>Desc
+                  <i class="bi bi-sort-down me-1"></i>តម្រៀបពីធំទៅតូច
                 </button>
               </div>
             </div>
@@ -249,7 +249,7 @@
 
               <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start mb-1">
-                  <div class="room-price">${{ room.price }}<small class="text-muted fw-normal">/ខែ</small></div>
+                  <div class="room-price">${{ room.price }}<small class="text-muted fw-normal">/ក្នុងមួយខែ</small></div>
                   <span v-if="room.district" class="badge district-badge">
                     <i class="bi bi-geo-alt-fill me-1"></i>{{ room.district.name }}
                   </span>
