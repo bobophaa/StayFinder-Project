@@ -58,9 +58,9 @@
               "
             ></i>
           </div>
-          <div class="promo-tag" v-if="roomStore.room.percent_promotion > 0">
-            បញ្ចុះតម្លៃ​{{ roomStore.room.percent_promotion }}​​%
-          </div>
+         <div class="promo-tag" v-if="roomStore.room.percent_promotion > 0">
+  បញ្ចុះតម្លៃ {{ roomStore.room.percent_promotion }}%
+</div>
         </div>
       </div>
 
@@ -184,11 +184,10 @@
                 <span class="h3 fw-bold text-orange">${{ roomStore.room.price }}</span>
                 <span class="text-navy"> /ក្នុងមូយខែ</span>
               </div>
-              <span
+                <span
                 v-if="roomStore.room.percent_promotion > 0"
-                class="badge bg-orange-light text-orange px-3 py-2 fw-bold"
-              >
-                -{{ roomStore.room.percent_promotion }}បញ្ចុះតម្លៃ​%
+                class="badge bg-orange-light text-orange px-3 py-2 fw-bold">
+                បញ្ចុះតម្លៃ {{ roomStore.room.percent_promotion }}%
               </span>
             </div>
 
