@@ -43,7 +43,7 @@
                 </span>
                 <input v-model="filters.search" type="text"
                   class="form-control custom-input border-start-0 ps-0"
-                  placeholder="ចំណងជើងបន្ទប់..." @input="debouncedFetch" />
+                  placeholder="ទីតាំងបន្ទប់..." @input="debouncedFetch" />
               </div>
             </div>
 
