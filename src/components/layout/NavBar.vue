@@ -134,7 +134,7 @@ const handleScroll = () => {
 }
 
 const handleLogout = async () => {
-  const confirmed = await confirmDelete('Log out?')
+  const confirmed = await confirmDelete('តើអ្នកប្រាកដថាចង់ចាកចេញមែនទេ?')
   if (confirmed) {
     navOpen.value = false
     await authStore.logout()

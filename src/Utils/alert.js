@@ -50,8 +50,8 @@ export const confirmDelete = async (title = "តើអ្នកប្រាក�
     showCancelButton: true,
     confirmButtonColor: '#d33', // Red for delete
     cancelButtonColor: '#031c36', // Navy for cancel
-    confirmButtonText: 'Yes',
-    cancelButtonText: 'Cancel'
+    confirmButtonText: 'យល់ព្រម',
+    cancelButtonText: 'បោះបង់'
   });
   return result.isConfirmed;
 };
