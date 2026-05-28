@@ -41,7 +41,7 @@
 
           <button type="submit" class="btn btn-main w-100 py-3 rounded-4 fw-bold mb-4" :disabled="authStore.loading">
             <span v-if="authStore.loading" class="spinner-border spinner-border-sm me-2"></span>
-            {{ authStore.loading ? 'Sending Code...' : 'ផ្ញើរកូដOTP' }}
+            {{ authStore.loading ? 'កំពុងផ្ញើរកូដOTP...' : 'ផ្ញើរកូដOTP' }}
           </button>
 
           <div class="text-center">

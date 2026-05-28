@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
         const user = responseData.user
 
         if (!token) {
-          this.error = 'Authentication failed: សូមពិនិត្យព័ត៌មានរបស់អ្នក។'
+          this.error = 'អុីមែល ឬ ពាក្យសម្ងាត់មិនត្រឹមត្រូវ។'
           return false
         }
         this.token = token
@@ -89,10 +89,33 @@ export const useAuthStore = defineStore('auth', {
         })
         this.successMessage = 'ការចុះឈ្មោះបានជោគជ័យ! សូមចូលគណនីរបស់អ្នក។'
         return true
-      } catch (err) {
-        this.error = err.response?.data?.message || 'ការចុះឈ្មោះបរាជ័យ។ សូមពិនិត្យព័ត៌មានរបស់អ្នក។'
-        return false
-      } finally {
+      } 
+
+catch (err) {
+
+  console.log(err.response?.data)
+
+  // API validation errors
+  const apiErrors = err.response?.data?.data
+
+  // Email already taken
+  if (apiErrors?.email) {
+
+    this.error = 'អ៊ីមែលនេះត្រូវបានប្រើប្រាស់រួចហើយ។'
+
+  } else {
+
+    this.error =
+      err.response?.data?.message ||
+      'ការចុះឈ្មោះបរាជ័យ។'
+
+  }
+
+  return false
+}
+
+
+      finally {
         this.loading = false
       }
     },

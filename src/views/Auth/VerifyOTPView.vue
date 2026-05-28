@@ -10,8 +10,7 @@
           </div>
           <h1 class="fw-bold text-navy mb-1">ផ្ទៀងផ្ទាត់ OTP</h1>
           <p class="text-muted small">
-           យើងបានផ្ញើកូដ ៦ តួអក្សរ ទៅកាន់អ៊ីមែលរបស់អ្នក<br />
-            <!-- ✅ Fixed: use forgotEmail not emailOrPhone -->
+            យើងបានផ្ញើកូដ ៦ តួអក្សរ ទៅកាន់អ៊ីមែលរបស់អ្នក<br />
             <span class="text-orange fw-bold">{{ authStore.forgotEmail || 'អ៊ីមែលរបស់អ្នក' }}</span>
           </p>
         </div>
@@ -31,17 +30,19 @@
 
           <!-- OTP Boxes -->
           <div class="d-flex justify-content-between mb-5">
-            <input
-              v-for="(digit, index) in code"
-              :key="index"
-              type="text"
-              maxlength="1"
-              class="otp-input-glass"
-              v-model="code[index]"
-              @input="handleInput(index, $event)"
-              @keydown.delete="handleDelete(index, $event)"
-              ref="otpInputs"
-            />
+           <input
+  v-for="(digit, index) in code"
+  :key="index"
+  type="text"
+  inputmode="numeric"
+  maxlength="1"
+  class="otp-input-glass"
+  v-model="code[index]"
+  @input="handleInput(index, $event)"
+  @keydown="handleDelete(index, $event)"
+  @paste="handlePaste($event)"
+  ref="otpInputs"
+/>
           </div>
 
           <button type="submit" class="btn btn-main w-100 py-3 rounded-4 fw-bold mb-4" :disabled="authStore.loading">
@@ -51,7 +52,6 @@
 
           <div class="text-center mb-3">
             <p class="small text-muted mb-1">មិនទទួលបានកូដមែនទេ?</p>
-            <!-- ✅ Fixed: calls resendCode() not forgotPassword() -->
             <button
               type="button"
               @click="handleResend"
@@ -100,16 +100,57 @@ const otpInputs = ref([])
 const resendCooldown = ref(0)
 
 const handleInput = (index, event) => {
-  const val = event.target.value
-  if (val && index < 5) {
-    otpInputs.value[index + 1].focus()
+  const raw = event.target.value.replace(/\D/g, '')
+  const char = raw.slice(-1)
+
+  // update state
+  code.value[index] = char
+
+  // sync displayed value
+  event.target.value = char
+
+  // move focus
+  if (char && index < 5) {
+    otpInputs.value[index + 1]?.focus()
   }
 }
 
+
+// ✅ Fix: clear current cell first, then go back if already empty
 const handleDelete = (index, event) => {
-  if (event.key === 'Backspace' && !code.value[index] && index > 0) {
-    otpInputs.value[index - 1].focus()
+  if (event.key === 'Backspace') {
+    if (code.value[index]) {
+      code.value[index] = ''
+      event.target.value = ''
+    } else if (index > 0) {
+      code.value[index - 1] = ''
+      otpInputs.value[index - 1].value = ''
+      otpInputs.value[index - 1]?.focus()
+    }
   }
+
+  // Allow arrow key navigation
+  if (event.key === 'ArrowLeft' && index > 0) {
+    otpInputs.value[index - 1]?.focus()
+  }
+  if (event.key === 'ArrowRight' && index < 5) {
+    otpInputs.value[index + 1]?.focus()
+  }
+}
+
+// ✅ Bonus: handle paste (e.g. paste "123456" and fill all boxes)
+const handlePaste = (event) => {
+  event.preventDefault()
+  const pasted = event.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+  pasted.split('').forEach((char, i) => {
+    code.value[i] = char
+    if (otpInputs.value[i]) {
+      otpInputs.value[i].value = char
+    }
+  })
+  // Focus last filled box or last box
+  const lastIndex = Math.min(pasted.length, 5)
+  otpInputs.value[lastIndex]?.focus()
 }
 
 const startCooldown = () => {
@@ -121,11 +162,11 @@ const startCooldown = () => {
 }
 
 const handleResend = async () => {
-  // ✅ Fixed: use resendCode() which reads forgotEmail from store internally
   const success = await authStore.resendCode()
   if (success) {
     alertSuccess('New code sent!')
     code.value = ['', '', '', '', '', '']
+    otpInputs.value.forEach(input => { if (input) input.value = '' })
     otpInputs.value[0]?.focus()
     startCooldown()
   }
@@ -134,7 +175,7 @@ const handleResend = async () => {
 const handleVerify = async () => {
   const fullCode = code.value.join('')
   if (fullCode.length < 6) {
-    authStore.error = 'Please enter all 6 characters.'
+    authStore.error = 'Please enter all 6 digits.'
     return
   }
   authStore.verificationCode = fullCode
@@ -146,7 +187,6 @@ const handleVerify = async () => {
 }
 
 onMounted(() => {
-  // ✅ Fixed: guard checks forgotEmail not emailOrPhone
   if (!authStore.forgotEmail) {
     router.push({ name: 'forgot-password' })
   }
@@ -260,6 +300,9 @@ onMounted(() => {
   border-radius: var(--border-radius-main);
   transition: all 0.25s ease;
   backdrop-filter: blur(10px);
+  /* Prevent unwanted browser behaviors */
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .otp-input-glass:focus {
@@ -378,5 +421,4 @@ onMounted(() => {
 .alert-fade-leave-to {
   opacity: 0;
 }
-
 </style>

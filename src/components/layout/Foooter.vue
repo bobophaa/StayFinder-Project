@@ -16,7 +16,7 @@
             <li><router-link to="/">ទំព័រដើម</router-link></li>
             <li><router-link to="/rooms">បន្ទប់ទាំងអស់</router-link></li>
             <li><router-link to="/about">អំពីពួកយើង</router-link></li>
-            <li><router-link to="/contact">ទាក់ទាញយើង</router-link></li>
+            <li><router-link to="/contact">ទាក់ទងពួកយើង</router-link></li>
           </ul>
         </div>
 

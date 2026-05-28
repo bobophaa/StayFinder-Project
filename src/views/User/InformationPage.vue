@@ -12,8 +12,8 @@ import Foooter from '@/components/layout/Foooter.vue'
           ក្លាយជាម្ចាស់ផ្ទះជាមួយ <span class="text-orange">StayFinder</span>
         </h1>
         <p class="lead opacity-75 max-width-600 mx-auto">
-          ប្រែបន្ទប់ទំនេររបស់អ្នកទៅជាប្រភពចំណូលអកម្ម។
-          ភ្ជាប់ជាមួយអ្នកជួលដែលបានផ្ទៀងផ្ទាត់នៅភ្នំពេញ ដោយសុវត្ថិភាព និងងាយស្រួល។
+        ប្រែក្លាយបន្ទប់ទំនេររបស់អ្នក ទៅជាចំណូលបន្ថែមប្រចាំខែ។ ភ្ជាប់ទំនាក់ទំនងជាមួយអ្នកជួលដែលទុកចិត្តបាននៅភ្នំពេញ ដោយសុវត្ថិភាព និងងាយស្រួលបំផុត 
+
         </p>
         <a
           href="https://t.me/stayfinder_admin"
@@ -27,7 +27,7 @@ import Foooter from '@/components/layout/Foooter.vue'
 
     <section class="benefits-section py-5">
       <div class="container">
-        <h3 class="fw-bold text-center mb-5">ហេតុអ្វីបានជាក្លាយជាម្ចាស់ផ្ទះជាមួយយើង?</h3>
+        <h3 class="fw-bold text-center mb-5">ហេតុអ្វីត្រូវចូលរួមជាមួយ StayFinder? </h3>
         <div class="row g-4">
           <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4 p-4 h-100 text-center">
@@ -36,7 +36,7 @@ import Foooter from '@/components/layout/Foooter.vue'
               </div>
               <h5 class="fw-bold text-navy">ប្រាក់ចំណូលអតិបរមា</h5>
               <p class="small text-muted mb-0">
-                ចុះបញ្ជីបន្ទប់របស់អ្នកក្នុងតម្លៃដែលអ្នកចង់បាន និងរក្សាទុក ១០០% នៃតម្លៃដែលបានចុះបញ្ជី។ គ្មានថ្លៃលាក់។
+                ចុះបញ្ជីបន្ទប់របស់អ្នកក្នុងតម្លៃដែលអ្នកចង់បាន និងរក្សាទុក ១០០% នៃតម្លៃដែលបានចុះបញ្ជី។ មិនគិតកម្រៃសេវាបន្ថែម
               </p>
             </div>
           </div>

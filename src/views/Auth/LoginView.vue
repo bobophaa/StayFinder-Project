@@ -108,7 +108,7 @@ const handleLogin = async () => {
   submitted.value = true
   const success = await authStore.login()
   if (success) {
-    alertSuccess('Login Successful!')
+    alertSuccess('សូមស្វាគមន៍មកកាន់ StayFinder!')
     router.push({ name: 'home' })
   }
 }
