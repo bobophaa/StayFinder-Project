@@ -43,7 +43,13 @@
                   <i class="bi bi-trash me-2"></i> លុបរូបភាព
                 </div>
               </div>
-              <input ref="fileInput" type="file" accept="image/*" hidden @change="handleFileUpload" />
+              <input
+                ref="fileInput"
+                type="file"
+                accept="image/*"
+                hidden
+                @change="handleFileUpload"
+              />
             </div>
 
             <!-- Name & Role -->
@@ -90,10 +96,9 @@
                 <div class="row g-4">
                   <!-- Current Password -->
                   <div class="col-12">
-                    <label
-                      class="field-label"
-                      :class="{ 'text-danger': errors.current_password }"
-                    >ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
+                    <label class="field-label" :class="{ 'text-danger': errors.current_password }"
+                      >ពាក្យសម្ងាត់បច្ចុប្បន្ន</label
+                    >
                     <div class="input-wrap" :class="{ 'input-err': errors.current_password }">
                       <i class="bi bi-lock input-icon"></i>
                       <input
@@ -118,7 +123,8 @@
                     <label
                       class="field-label"
                       :class="{ 'text-danger': errors.new_password, 'locked-text': !isUnlocked }"
-                    >ពាក្យសម្ងាត់ថ្មី</label>
+                      >ពាក្យសម្ងាត់ថ្មី</label
+                    >
                     <div
                       class="input-wrap"
                       :class="{ 'input-err': errors.new_password, 'input-locked': !isUnlocked }"
@@ -151,7 +157,8 @@
                         'text-danger': errors.confirm_password,
                         'locked-text': !isUnlocked,
                       }"
-                    >បញ្ជាក់ពាក្យសម្ងាត់</label>
+                      >បញ្ជាក់ពាក្យសម្ងាត់</label
+                    >
                     <div
                       class="input-wrap"
                       :class="{
@@ -244,25 +251,56 @@ const fileInput = ref(null)
 const avatarPreview = ref(null)
 const showActionsMenu = ref(false)
 
-const form = reactive({ current_password: '', new_password: '', confirm_password: '' })
-const errors = reactive({ current_password: '', new_password: '', confirm_password: '' })
-const show = reactive({ current_password: false, new_password: false, confirm_password: false })
-const toast = reactive({ show: false, message: '', type: 'success' })
+const form = reactive({
+  current_password: '',
+  new_password: '',
+  confirm_password: '',
+})
 
-// COMPUTED: Lock/Unlock fields
+const errors = reactive({
+  current_password: '',
+  new_password: '',
+  confirm_password: '',
+})
+
+const show = reactive({
+  current_password: false,
+  new_password: false,
+  confirm_password: false,
+})
+
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'success',
+})
+
+// LOCK / UNLOCK
 const isUnlocked = computed(() => form.current_password.length > 0)
 
-const toggleShow = (field) => (show[field] = !show[field])
-const closeMenu = () => (showActionsMenu.value = false)
-const toggleMenu = () => (showActionsMenu.value = !showActionsMenu.value)
+const toggleShow = (field) => {
+  show[field] = !show[field]
+}
+
+const closeMenu = () => {
+  showActionsMenu.value = false
+}
+
+const toggleMenu = () => {
+  showActionsMenu.value = !showActionsMenu.value
+}
 
 const showToast = (msg, type = 'success') => {
   toast.message = msg
   toast.type = type
   toast.show = true
-  setTimeout(() => (toast.show = false), 3200)
+
+  setTimeout(() => {
+    toast.show = false
+  }, 3200)
 }
 
+// FETCH USER
 const fetchUserData = async () => {
   try {
     const res = await api.get('/me')
@@ -272,52 +310,124 @@ const fetchUserData = async () => {
   }
 }
 
+// UPDATE PASSWORD
 const updatePassword = async () => {
-  errors.current_password = errors.new_password = errors.confirm_password = ''
+  // CLEAR OLD ERRORS
+  errors.current_password = ''
+  errors.new_password = ''
+  errors.confirm_password = ''
 
+  // VALIDATION
   if (!form.current_password) {
-    errors.current_password = 'Required'
+    errors.current_password = 'សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្ន'
     return
   }
-  if (!form.new_password || form.new_password.length < 8) {
-    errors.new_password = 'Minimum 8 characters'
+
+  if (!form.new_password) {
+    errors.new_password = 'សូមបញ្ចូលពាក្យសម្ងាត់ថ្មី'
     return
   }
-  if (!form.confirm_password || form.new_password !== form.confirm_password) {
-    errors.confirm_password = 'Passwords do not match'
+
+  if (form.new_password.length < 8) {
+    errors.new_password = 'ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច 8 តួអក្សរ'
+    return
+  }
+
+  if (!form.confirm_password) {
+    errors.confirm_password = 'សូមបញ្ជាក់ពាក្យសម្ងាត់'
+    return
+  }
+
+  if (form.new_password !== form.confirm_password) {
+    errors.confirm_password = 'ពាក្យសម្ងាត់មិនត្រូវគ្នា'
     return
   }
 
   loading.value = true
+
   try {
-    await api.put('/profile/pass', {
+    const response = await api.put('/profile/pass', {
       old_pass: form.current_password,
       new_pass: form.new_password,
       new_pass_confirmation: form.confirm_password,
     })
-    showToast('Password updated!', 'success')
-    form.current_password = form.new_password = form.confirm_password = ''
+
+    const res = response.data
+
+    // ===== SUCCESS =====
+    if (res.success === true) {
+      form.current_password = ''
+      form.new_password = ''
+      form.confirm_password = ''
+
+      showToast('ពាក្យសម្ងាត់បានផ្លាស់ប្តូរដោយជោគជ័យ!', 'success')
+
+      return
+    }
+
+    // ===== BACKEND VALIDATION ERRORS =====
+    if (res.errors) {
+      // CURRENT PASSWORD ERROR
+      if (res.errors.old_pass?.[0]) {
+        errors.current_password = 'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ'
+
+        showToast('ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ', 'error')
+      }
+
+      // NEW PASSWORD ERROR
+      if (res.errors.new_pass?.[0]) {
+        errors.new_password = res.errors.new_pass[0]
+      }
+
+      // CONFIRM PASSWORD ERROR
+      if (res.errors.new_pass_confirmation?.[0]) {
+        errors.confirm_password = res.errors.new_pass_confirmation[0]
+      }
+
+      return
+    }
+
+    // ===== UNKNOWN ERROR =====
+    showToast(res.message || 'មានបញ្ហាក្នុងការកែប្រែពាក្យសម្ងាត់', 'error')
   } catch (err) {
+    console.error(err)
+
     const res = err.response?.data
+
+    // ===== HTTP VALIDATION ERRORS =====
     if (res?.errors) {
-      errors.current_password = res.errors.old_pass?.[0] || 'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ'
-      errors.new_password = res.errors.new_pass?.[0] || ''
-      errors.confirm_password = res.errors.new_pass_confirmation?.[0] || ''
-      if (res.errors.old_pass) {
+      // CURRENT PASSWORD
+      if (res.errors.old_pass?.[0]) {
+        errors.current_password = 'ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ'
+
+        showToast('ពាក្យសម្ងាត់បច្ចុប្បន្នមិនត្រឹមត្រូវ', 'error')
+
+        // CLEAR NEW PASSWORDS
         form.new_password = ''
         form.confirm_password = ''
-        showToast('Incorrect password. Access denied.', 'error')
+      }
+
+      // NEW PASSWORD
+      if (res.errors.new_pass?.[0]) {
+        errors.new_password = res.errors.new_pass[0]
+      }
+
+      // CONFIRM PASSWORD
+      if (res.errors.new_pass_confirmation?.[0]) {
+        errors.confirm_password = res.errors.new_pass_confirmation[0]
       }
     } else {
-      errors.current_password = res?.message || 'Update failed'
-      showToast('Update failed', 'error')
+      // GENERAL ERROR
+      errors.current_password = res?.message || 'មានបញ្ហាក្នុងការកែប្រែពាក្យសម្ងាត់'
+
+      showToast(res?.message || 'ការកែប្រែបានបរាជ័យ', 'error')
     }
   } finally {
     loading.value = false
   }
 }
 
-// Avatar Logic
+// AVATAR
 const triggerUpload = () => {
   fileInput.value.click()
   closeMenu()
@@ -325,17 +435,24 @@ const triggerUpload = () => {
 
 const handleFileUpload = async (e) => {
   const file = e.target.files[0]
+
   if (!file) return
+
   uploadingAvatar.value = true
+
   avatarPreview.value = URL.createObjectURL(file)
+
   const fd = new FormData()
   fd.append('image', file)
+
   try {
     await api.post('/profile/image', fd)
-    showToast('Image updated!', 'success')
+
+    showToast('រូបភាពត្រូវបានធ្វើបច្ចុប្បន្ន!', 'ជោគជ័យ')
+
     fetchUserData()
   } catch {
-    showToast('Upload failed', 'error')
+    showToast('ការផ្ទុកឡើងរូបភាពបានបរាជ័យ', 'មានបញ្ហាក្នុងការផ្ទុកឡើងរូបភាព', 'error')
   } finally {
     uploadingAvatar.value = false
     avatarPreview.value = null
@@ -343,25 +460,33 @@ const handleFileUpload = async (e) => {
 }
 
 const removeImage = async () => {
-  if (!confirm('Delete photo?')) return
+  if (!confirm('តើអ្នកប្រាកដជាចង់លុបរូបភាពនេះមែនទេ?')) return
+
   try {
     await api.delete('/profile/image')
+
     user.value.avatar = null
-    showToast('Image deleted', 'success')
+
+    showToast('រូបភាពត្រូវបានលុប', 'ជោគជ័យ')
+
     closeMenu()
   } catch {
-    showToast('Delete failed', 'error')
+    showToast('ការលុបរូបភាពបានបរាជ័យ', 'មានបញ្ហាក្នុងការលុបរូបភាព', 'error')
   }
 }
 
-// Custom v-click-outside directive
+// CLICK OUTSIDE
 const vClickOutside = {
   mounted(el, binding) {
     el.clickOutsideEvent = (e) => {
-      if (!(el === e.target || el.contains(e.target))) binding.value()
+      if (!(el === e.target || el.contains(e.target))) {
+        binding.value()
+      }
     }
+
     document.addEventListener('click', el.clickOutsideEvent)
   },
+
   unmounted(el) {
     document.removeEventListener('click', el.clickOutsideEvent)
   },
@@ -510,7 +635,9 @@ onMounted(fetchUserData)
   font-weight: 600;
   font-size: 0.85rem;
   border-bottom: 3px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
 .tab-item:hover {
   color: #ff5f00;
@@ -544,7 +671,9 @@ onMounted(fetchUserData)
   border: 1.5px solid #eef0f2;
   border-radius: 12px;
   background: #fafbfc;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 .input-wrap:focus-within:not(.input-locked) {
   border-color: #ff5f00;
@@ -595,7 +724,9 @@ onMounted(fetchUserData)
   font-size: 0.9rem;
   width: 100%;
   max-width: 250px;
-  transition: background 0.3s, transform 0.2s;
+  transition:
+    background 0.3s,
+    transform 0.2s;
   cursor: pointer;
 }
 .btn-save-main:hover:not(:disabled) {
